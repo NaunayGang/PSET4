@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables / local secrets
+.env
+.env.*
+*.env
+
+# Alembic / migrations artifacts
+alembic.ini.backup
+alembic.ini.tmp
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Frontend / Node
+node_modules/
+dist/
+build/
+
+# Docker overrides (keep the main compose file tracked)
+docker-compose.override.yml
