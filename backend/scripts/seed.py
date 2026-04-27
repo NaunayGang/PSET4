@@ -1,4 +1,5 @@
 import os
+
 import psycopg2
 from psycopg2.extras import execute_values
 
@@ -22,7 +23,9 @@ PASSWORD_HASH = "disabled_for_testing_only"
 
 
 def get_connection():
-    db_url = os.getenv("DATABASE_URL", "postgresql://incidentflow:incidentflow@db:5432/incidentflow")
+    db_url = os.getenv(
+        "DATABASE_URL", "postgresql://incidentflow:incidentflow@db:5432/incidentflow"
+    )
     return psycopg2.connect(db_url)
 
 
@@ -68,3 +71,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

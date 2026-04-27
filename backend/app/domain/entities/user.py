@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
+
 from enums import Role
+
 
 @dataclass
 class User:
@@ -10,3 +12,4 @@ class User:
     role: Role
     created_at: datetime
     last_login: datetime | None
+
