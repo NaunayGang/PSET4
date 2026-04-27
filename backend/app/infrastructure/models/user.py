@@ -1,7 +1,9 @@
 from datetime import datetime
+
 from app.domain.enums.role import Role
 from app.infrastructure.database.base import Base
-from sqlalchemy import String, DateTime, ForeignKey, Enum as SAEnum, Integer, func
+from sqlalchemy import DateTime, Integer, String, func
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
@@ -24,3 +26,4 @@ class User(Base):
 
     comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="author")
     incidents: Mapped[list["Incident"]] = relationship("Incident", back_populates="assigned_user")
+

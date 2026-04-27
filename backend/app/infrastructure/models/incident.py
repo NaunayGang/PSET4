@@ -1,9 +1,12 @@
 from datetime import datetime
+
 from app.domain.enums.severity import Severity
 from app.domain.enums.state import State
 from app.infrastructure.database.base import Base
-from sqlalchemy import String, DateTime, ForeignKey, Enum as SAEnum, Integer, func
+from sqlalchemy import DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 
 class Incident(Base):
     __tablename__ = "incidents"
@@ -26,4 +29,7 @@ class Incident(Base):
     )
 
     comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="incident")
-    assigned_user: Mapped["User"] = relationship("User", back_populates="incidents", foreign_keys=[assigned_to])
+    assigned_user: Mapped["User"] = relationship(
+        "User", back_populates="incidents", foreign_keys=[assigned_to]
+    )
+
