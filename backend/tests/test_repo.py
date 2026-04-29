@@ -70,7 +70,7 @@ def create_domain_incident(id=1, title="Test", description="Desc", severity=Seve
         updated_at = datetime.now()
     return Incident(id=id, title=title, description=description, severity=severity,
                     state=state, assigned_to=assigned_to, created_at=created_at,
-                    updated_at=updated_at, summary_id=None)
+                    updated_at=updated_at)
 
 def create_domain_log(id=1, message="msg", log_level=LogLevel.INFO, timestamp=None):
     if timestamp is None:
