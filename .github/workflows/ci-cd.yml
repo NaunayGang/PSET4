@@ -7,7 +7,7 @@ on:
     branches: [main, dev/*]
 
 env:
-  IMAGE_NAME: naunaygang/incidentflow
+  IMAGE_NAME: felipebhrqz/incidentflow
 
 jobs:
   lint:
