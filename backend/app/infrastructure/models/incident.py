@@ -4,6 +4,12 @@ from backend.app.domain.enums.state import State
 from backend.app.infrastructure.database.base import Base
 from sqlalchemy import String, DateTime, ForeignKey, Enum as SAEnum, Integer, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .comment import Comment
+    from .user import User
+
 
 class Incident(Base):
     __tablename__ = "incidents"

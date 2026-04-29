@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
-from backend.app.domain.entities import comment, incident, log, user
+from backend.app.domain.entities import log
 
 class LogRepository(ABC):
     @abstractmethod

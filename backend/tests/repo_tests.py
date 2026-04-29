@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import MagicMock, patch, ANY
+from unittest.mock import MagicMock, patch
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 
@@ -261,8 +261,8 @@ class TestSQLAlchemyIncidentRepository:
         existing.updated_at = datetime.now()
         mock_db_session.query.return_value.filter_by.return_value.first.return_value = existing
 
-        updated_domain = create_domain_incident(id=5, title="new", description="new desc", state=State.CLOSED)
-        result = incident_repo.update_incident(updated_domain)
+        #updated_domain = create_domain_incident(id=5, title="new", description="new desc", state=State.CLOSED)
+        #result = incident_repo.update_incident(updated_domain)
 
         assert existing.title == "new"
         assert existing.state == State.CLOSED

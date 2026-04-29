@@ -1,7 +1,12 @@
 from datetime import datetime
 from backend.app.infrastructure.database.base import Base
-from sqlalchemy import String, DateTime, ForeignKey, Enum as SAEnum, Integer, func
+from sqlalchemy import String, DateTime, ForeignKey, Integer, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .incident import Incident
+    from .user import User
 
 class Comment(Base):
     __tablename__ = "comments"
