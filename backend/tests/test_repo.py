@@ -70,7 +70,7 @@ def create_domain_incident(id=1, title="Test", description="Desc", severity=Seve
         updated_at = datetime.now()
     return Incident(id=id, title=title, description=description, severity=severity,
                     state=state, assigned_to=assigned_to, created_at=created_at,
-                    updated_at=updated_at)
+                    updated_at=updated_at, summary_id=None)
 
 def create_domain_log(id=1, message="msg", log_level=LogLevel.INFO, timestamp=None):
     if timestamp is None:
@@ -263,8 +263,7 @@ class TestSQLAlchemyIncidentRepository:
         existing.updated_at = datetime.now()
         mock_db_session.query.return_value.filter_by.return_value.first.return_value = existing
 
-        #updated_domain = create_domain_incident(id=5, title="new", description="new desc", state=State.CLOSED)
-        #result = incident_repo.update_incident(updated_domain)
+        incident_repo.update_incident(create_domain_incident(id=5, title="new", description="new desc", state=State.CLOSED))
 
         assert existing.title == "new"
         assert existing.state == State.CLOSED
