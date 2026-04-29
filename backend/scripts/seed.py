@@ -1,7 +1,6 @@
 import os
 
 import psycopg2
-from psycopg2.extras import execute_values
 
 ROLES = [
     ("operator", "OPERATOR"),
