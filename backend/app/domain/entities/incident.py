@@ -4,6 +4,7 @@ from datetime import datetime
 from ..enums.severity import Severity
 from ..enums.state import State
 
+
 @dataclass
 class Incident:
     id: int
@@ -14,3 +15,4 @@ class Incident:
     assigned_to: int | None
     created_at: datetime
     updated_at: datetime | None
+

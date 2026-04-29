@@ -28,3 +28,4 @@ class User(Base):
 
     comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="author")
     incidents: Mapped[list["Incident"]] = relationship("Incident", back_populates="assigned_user")
+

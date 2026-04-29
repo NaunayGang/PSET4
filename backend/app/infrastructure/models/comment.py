@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from .incident import Incident
     from .user import User
 
+
 class Comment(Base):
     __tablename__ = "comments"
 
@@ -23,3 +24,4 @@ class Comment(Base):
 
     author: Mapped["User"] = relationship("User", back_populates="comments")
     incident: Mapped["Incident"] = relationship("Incident", back_populates="comments")
+

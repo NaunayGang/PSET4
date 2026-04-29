@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from .user import User
 
 
+
 class Incident(Base):
     __tablename__ = "incidents"
 
@@ -32,4 +33,7 @@ class Incident(Base):
     )
 
     comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="incident")
-    assigned_user: Mapped["User"] = relationship("User", back_populates="incidents", foreign_keys=[assigned_to])
+    assigned_user: Mapped["User"] = relationship(
+        "User", back_populates="incidents", foreign_keys=[assigned_to]
+    )
+
