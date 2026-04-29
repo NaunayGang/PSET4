@@ -54,9 +54,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: |
-          pip install -r backend/requirements.txt pytest psycopg2-binary
-          pip install -e .
+        run: pip install -r backend/requirements.txt pytest psycopg2-binary
 
       - name: Run migrations
         env:
@@ -68,7 +66,7 @@ jobs:
       - name: Run tests
         env:
           DATABASE_URL: postgresql://incidentflow:incidentflow@localhost:5432/incidentflow
-        run: pytest
+        run: PYTHONPATH=. pytest
 
   build-push:
     name: Build & Push
