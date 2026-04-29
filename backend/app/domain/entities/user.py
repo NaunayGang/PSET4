@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from enums import Role
+from backend.app.domain.enums.role import Role
 
 @dataclass
 class User:

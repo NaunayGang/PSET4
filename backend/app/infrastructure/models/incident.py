@@ -1,7 +1,7 @@
 from datetime import datetime
-from app.domain.enums.severity import Severity
-from app.domain.enums.state import State
-from app.infrastructure.database.base import Base
+from backend.app.domain.enums.severity import Severity
+from backend.app.domain.enums.state import State
+from backend.app.infrastructure.database.base import Base
 from sqlalchemy import String, DateTime, ForeignKey, Enum as SAEnum, Integer, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 

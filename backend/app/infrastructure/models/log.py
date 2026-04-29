@@ -1,6 +1,6 @@
 from datetime import datetime
-from app.domain.enums.log_level import LogLevel
-from app.infrastructure.database.base import Base
+from backend.app.domain.enums.log_level import LogLevel
+from backend.app.infrastructure.database.base import Base
 from sqlalchemy import String, DateTime, ForeignKey, Enum as SAEnum, Integer, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
