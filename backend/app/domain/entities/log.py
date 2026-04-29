@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
+
 from backend.app.domain.enums.log_level import LogLevel
 
 

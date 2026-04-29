@@ -1,8 +1,10 @@
 from datetime import datetime
-from backend.app.infrastructure.database.base import Base
-from sqlalchemy import String, DateTime, ForeignKey, Integer, func
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import TYPE_CHECKING
+
+from sqlalchemy import DateTime, ForeignKey, Integer, String, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from backend.app.infrastructure.database.base import Base
 
 if TYPE_CHECKING:
     from .incident import Incident

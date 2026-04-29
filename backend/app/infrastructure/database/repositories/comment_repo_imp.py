@@ -1,11 +1,14 @@
+from datetime import datetime
 from typing import List, Optional
-from sqlalchemy.orm import Session
+
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
+
 from backend.app.domain.entities import comment, log
 from backend.app.domain.repositories.comment_repository import CommentRepository
 from backend.app.domain.repositories.log_repository import LogRepository
 from backend.app.infrastructure.models.comment import Comment as DBComment
-from datetime import datetime
+
 
 class SQLAlchemyCommentRepository(CommentRepository):
     def __init__(self, db_session: Session, log_repository: LogRepository):
@@ -23,7 +26,7 @@ class SQLAlchemyCommentRepository(CommentRepository):
             self.db_session.add(db_comment)
             self.db_session.commit()
             self.db_session.refresh(db_comment)
-        
+
             self.log_repository.create_log(log.Log(
                 message=f"Comment created with ID {db_comment.id} for incident ID {comment.incident_id}",
                 log_level=log.LogLevel.INFO,
@@ -39,7 +42,7 @@ class SQLAlchemyCommentRepository(CommentRepository):
                 timestamp=datetime.now()
             ))
             raise RuntimeError(f"Database error: {str(e)}")
-        
+
     def get_comment_by_id(self, comment_id: int) -> Optional[comment.Comment]:
         try:
             db_comment = self.db_session.query(DBComment).filter_by(id=comment_id).first()
@@ -53,13 +56,13 @@ class SQLAlchemyCommentRepository(CommentRepository):
                 timestamp=datetime.now()
             ))
             raise RuntimeError(f"Database error: {str(e)}")
-        
+
     def update_comment(self, comment: comment.Comment) -> comment.Comment:
         try:
             db_comment = self.db_session.query(DBComment).filter_by(id=comment.id).first()
             if not db_comment:
                 raise ValueError("Comment not found")
-            
+
             db_comment.content = comment.content
             db_comment.timestamp = comment.timestamp
             self.db_session.commit()
@@ -77,7 +80,7 @@ class SQLAlchemyCommentRepository(CommentRepository):
                 timestamp=datetime.now()
             ))
             raise RuntimeError(f"Database error: {str(e)}")
-    
+
     def delete_comment(self, comment_id: int) -> None:
         try:
             db_comment = self.db_session.query(DBComment).filter_by(id=comment_id).first()
@@ -98,7 +101,7 @@ class SQLAlchemyCommentRepository(CommentRepository):
                 timestamp=datetime.now()
             ))
             raise RuntimeError(f"Database error: {str(e)}")
-            
+
     def list_comments_by_incident_id(self, incident_id: int) -> List[comment.Comment]:
         try:
             db_comments = self.db_session.query(DBComment).filter_by(incident_id=incident_id).all()
@@ -110,7 +113,7 @@ class SQLAlchemyCommentRepository(CommentRepository):
                 timestamp=datetime.now()
             ))
             raise RuntimeError(f"Database error: {str(e)}")
-        
+
     def list_comments_by_author_id(self, author_id: int) -> List[comment.Comment]:
         try:
             db_comments = self.db_session.query(DBComment).filter_by(author_id=author_id).all()
@@ -122,7 +125,7 @@ class SQLAlchemyCommentRepository(CommentRepository):
                 timestamp=datetime.now()
             ))
             raise RuntimeError(f"Database error: {str(e)}")
-        
+
     def _to_domain_entity(self, db_comment: DBComment) -> comment.Comment:
         return comment.Comment(
             id=db_comment.id,
