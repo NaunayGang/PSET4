@@ -15,3 +15,4 @@ class Log(Base):
         server_default=func.now(),
     )
     message: Mapped[str] = mapped_column(String(1000), nullable=False)
+

@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Role(str, Enum):
     OPERATOR = "operator"
     INCIDENT_COMMANDER = "incident_commander"
@@ -9,3 +10,4 @@ class Role(str, Enum):
 
     def __str__(self) -> str:
         return self.value
+

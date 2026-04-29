@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from backend.app.domain.enums.role import Role
 
+
 @dataclass
 class User:
     id: int
@@ -10,3 +11,4 @@ class User:
     role: Role
     created_at: datetime
     last_login: datetime | None
+

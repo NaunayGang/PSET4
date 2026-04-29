@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class State(str, Enum):
     OPEN = "open"
     TRIAGED = "triaged"
@@ -11,3 +12,4 @@ class State(str, Enum):
 
     def __str__(self) -> str:
         return self.value
+

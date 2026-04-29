@@ -3,6 +3,7 @@ from backend.app.infrastructure.database.base import Base
 from sqlalchemy import String, DateTime, ForeignKey, Enum as SAEnum, Integer, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+
 class Comment(Base):
     __tablename__ = "comments"
 
@@ -18,3 +19,4 @@ class Comment(Base):
 
     author: Mapped["User"] = relationship("User", back_populates="comments")
     incident: Mapped["Incident"] = relationship("Incident", back_populates="comments")
+
