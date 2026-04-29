@@ -54,7 +54,9 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install -r backend/requirements.txt pytest psycopg2-binary
+        run: |
+          pip install -r backend/requirements.txt pytest psycopg2-binary
+          pip install -e .
 
       - name: Run migrations
         env:
