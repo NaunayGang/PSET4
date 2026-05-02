@@ -13,8 +13,6 @@ if TYPE_CHECKING:
     from .comment import Comment
     from .user import User
 
-
-
 class Incident(Base):
     __tablename__ = "incidents"
 
@@ -34,6 +32,7 @@ class Incident(Base):
         nullable=True,
         onupdate=func.now(),
     )
+    summary_id: Mapped[int | None] = mapped_column(ForeignKey("summaries.id"), nullable=True)
 
     comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="incident")
     assigned_user: Mapped["User"] = relationship(

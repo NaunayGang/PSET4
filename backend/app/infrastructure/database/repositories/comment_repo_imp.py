@@ -5,8 +5,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from backend.app.domain.entities import comment, log
-from backend.app.domain.repositories.comment_repository import CommentRepository
-from backend.app.domain.repositories.log_repository import LogRepository
+from backend.app.application.ports.repositories.comment_repository import CommentRepository
+from backend.app.application.ports.repositories.log_repository import LogRepository
 from backend.app.infrastructure.models.comment import Comment as DBComment
 
 

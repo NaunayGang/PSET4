@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from backend.app.domain.entities import log
-from backend.app.domain.repositories.log_repository import LogRepository
+from backend.app.application.ports.repositories.log_repository import LogRepository
 from backend.app.infrastructure.models.log import Log as DBLog
 
 
