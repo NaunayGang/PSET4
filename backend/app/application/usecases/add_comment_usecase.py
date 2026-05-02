@@ -2,7 +2,7 @@ from datetime import datetime
 
 from backend.app.application.ports.add_comment_port import AddCommentPort
 from backend.app.domain.entities import Comment, Log
-from backend.app.domain.enums import LogLevel
+from backend.app.domain.enums import LogLevel, Role
 
 
 class AddCommentUseCase:
@@ -16,6 +16,7 @@ class AddCommentUseCase:
         # Fetch the incident and user from the repositories
         incident = self.incident_repository.get_incident_by_id(incident_id)
         user = self.user_repository.get_user_by_id(user_id)
+        user_role = user.role if user else "Unknown"
 
         if not incident:
             output_port.present_not_found(incident_id)
@@ -24,9 +25,13 @@ class AddCommentUseCase:
         if not user:
             output_port.present_failure(f"User with ID {user_id} not found.")
             return
+        
+        if user_role not in [Role.ADMIN, Role.OPERATOR, Role.TECHNICAL_RESPONDER]:
+            output_port.present_failure(f"User with ID {user_id} does not have permission to add comments.")
+            return
 
         try:
-            # Create the comment
+            # Create the comment.role != "admin" or user.id != incident.assigned_user_id:
             new_comment = Comment(
                 id=0,  # ID will be set by the repository
                 content=content,

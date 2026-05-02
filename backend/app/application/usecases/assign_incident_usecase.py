@@ -2,7 +2,7 @@ from datetime import datetime
 
 from backend.app.application.ports.assign_incident_port import AssignIncidentPort
 from backend.app.domain.entities import Log
-from backend.app.domain.enums.log_level import LogLevel
+from backend.app.domain.enums import LogLevel, Role
 
 
 class AssignIncidentUseCase:
@@ -14,13 +14,19 @@ class AssignIncidentUseCase:
     def execute(self, incident_id: int, user_id: int, output_port: AssignIncidentPort) -> None:
         # Fetch the incident and user from the repositories
         incident = self.incident_repository.get_incident_by_id(incident_id)
+        user = self.user_repository.get_user_by_id(user_id)
+        user_role = user.role if user else "Unknown"
 
         if not incident:
             output_port.present_not_found(incident_id)
             return
 
-        if not self.user_repository.get_user_by_id(user_id):
+        if not user:
             output_port.present_failure(f"User with ID {user_id} not found.")
+            return
+
+        if user_role not in [Role.ADMIN, Role.INCIDENT_COMMANDER]:
+            output_port.present_failure(f"User with ID {user_id} does not have permission to be assigned to incidents.")
             return
 
         try:

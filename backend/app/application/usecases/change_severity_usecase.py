@@ -1,21 +1,31 @@
 from datetime import datetime
-
 from backend.app.application.ports.change_severity_port import ChangeSeverityPort
-from backend.app.domain.entities import Log
-from backend.app.domain.enums import LogLevel, Severity
+from backend.app.domain.entities import Log, User
+from backend.app.domain.enums import LogLevel, Severity, Role
 
 
 class ChangeSeverityUseCase:
-    def __init__(self, incident_repository, log_repository):
+    def __init__(self, incident_repository, log_repository, user_repository):
         self.incident_repository = incident_repository
         self.log_repository = log_repository
+        self.user_repository = user_repository
 
-    def execute(self, incident_id: int, new_severity: Severity, output_port: ChangeSeverityPort) -> None:
+    def execute(self, user_id: int, incident_id: int, new_severity: Severity, output_port: ChangeSeverityPort) -> None:
         # Fetch the incident from the repository
         incident = self.incident_repository.get_incident_by_id(incident_id)
+        user = self.user_repository.get_user_by_id(user_id)
+        user_role = user.role if user else "Unknown"
 
         if not incident:
             output_port.present_not_found(incident_id)
+            return
+
+        if not user:
+            output_port.present_failure(f"User with ID {user_id} not found.")
+            return
+        
+        if user_role not in [Role.ADMIN, Role.INCIDENT_COMMANDER]:
+            output_port.present_failure(f"User with ID {user_id} does not have permission to change incident severity.")
             return
 
         try:
