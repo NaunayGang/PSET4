@@ -1,7 +1,8 @@
 from datetime import datetime
+
 from backend.app.application.ports.change_severity_port import ChangeSeverityPort
-from backend.app.domain.entities import Log, User
-from backend.app.domain.enums import LogLevel, Severity, Role
+from backend.app.domain.entities import Log
+from backend.app.domain.enums import LogLevel, Role, Severity
 
 
 class ChangeSeverityUseCase:
@@ -23,7 +24,7 @@ class ChangeSeverityUseCase:
         if not user:
             output_port.present_failure(f"User with ID {user_id} not found.")
             return
-        
+
         if user_role not in [Role.ADMIN, Role.INCIDENT_COMMANDER]:
             output_port.present_failure(f"User with ID {user_id} does not have permission to change incident severity.")
             return

@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from backend.app.application.ports.triage_output_port import TriageOutputPort
-from backend.app.domain.entities import log, User
-from backend.app.domain.enums import Severity, Role
+from backend.app.domain.entities import log
+from backend.app.domain.enums import Role, Severity
 
 
 class TriageUseCase:
@@ -19,7 +19,7 @@ class TriageUseCase:
         if not user:
             output_port.present_failure(f"User with ID {user_id} not found.")
             return
-        
+
         if user_role not in [Role.ADMIN, Role.INCIDENT_COMMANDER]:
             output_port.present_failure(f"User with ID {user_id} does not have permission to triage incidents.")
             return

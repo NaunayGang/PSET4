@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from backend.app.application.ports.transition_state_port import TransitionStatePort
-from backend.app.domain.entities import Log, User
-from backend.app.domain.enums import LogLevel, State, Role
+from backend.app.domain.entities import Log
+from backend.app.domain.enums import LogLevel, Role, State
 
 
 class TransitionStateUseCase:

@@ -25,7 +25,7 @@ class AddCommentUseCase:
         if not user:
             output_port.present_failure(f"User with ID {user_id} not found.")
             return
-        
+
         if user_role not in [Role.ADMIN, Role.OPERATOR, Role.TECHNICAL_RESPONDER]:
             output_port.present_failure(f"User with ID {user_id} does not have permission to add comments.")
             return
