@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+
 from backend.app.domain.entities.incident import Incident
+
 
 class TriageOutputPort(ABC):
     @abstractmethod

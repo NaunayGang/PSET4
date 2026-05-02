@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+
 from backend.app.domain.entities import Incident
+
 
 class ChangeSeverityPort(ABC):
     @abstractmethod

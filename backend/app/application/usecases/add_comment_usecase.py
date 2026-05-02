@@ -1,7 +1,9 @@
-from backend.app.application.ports.add_comment_port import AddCommentPort
-from backend.app.domain.entities import Log, Incident, Comment, User
-from backend.app.domain.enums import Severity, State, LogLevel
 from datetime import datetime
+
+from backend.app.application.ports.add_comment_port import AddCommentPort
+from backend.app.domain.entities import Comment, Log
+from backend.app.domain.enums import LogLevel
+
 
 class AddCommentUseCase:
     def __init__(self, incident_repository, user_repository, comment_repository, log_repository):

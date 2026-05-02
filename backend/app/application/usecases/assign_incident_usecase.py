@@ -1,8 +1,9 @@
-from backend.app.application.ports.assign_incident_port import AssignIncidentPort
-from backend.app.domain.entities import Log, Incident, User
 from datetime import datetime
 
+from backend.app.application.ports.assign_incident_port import AssignIncidentPort
+from backend.app.domain.entities import Log
 from backend.app.domain.enums.log_level import LogLevel
+
 
 class AssignIncidentUseCase:
     def __init__(self, incident_repository, user_repository, log_repository):
@@ -24,7 +25,7 @@ class AssignIncidentUseCase:
 
         try:
             # Assign the incident to the user
-            incident.assignIncident(user_id)
+            incident.assign_incident(user_id)
 
             self.incident_repository.update_incident(incident)
 

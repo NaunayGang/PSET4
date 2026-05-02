@@ -1,7 +1,9 @@
-from backend.app.application.ports.change_severity_port import ChangeSeverityPort
-from backend.app.domain.entities import Log, Incident
-from backend.app.domain.enums import Severity, State, LogLevel
 from datetime import datetime
+
+from backend.app.application.ports.change_severity_port import ChangeSeverityPort
+from backend.app.domain.entities import Log
+from backend.app.domain.enums import LogLevel, Severity
+
 
 class ChangeSeverityUseCase:
     def __init__(self, incident_repository, log_repository):
@@ -18,7 +20,7 @@ class ChangeSeverityUseCase:
 
         try:
             # Change the severity of the incident
-            incident.changeSeverity(new_severity)
+            incident.change_severity(new_severity)
 
             self.incident_repository.update_incident(incident)
 

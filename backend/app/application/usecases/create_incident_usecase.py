@@ -1,7 +1,8 @@
-from backend.app.application.ports.create_incident_port import CreateIncidentPort
-from backend.app.domain.entities import Log, Incident
-from backend.app.domain.enums import Severity, State, LogLevel
 from datetime import datetime
+
+from backend.app.application.ports.create_incident_port import CreateIncidentPort
+from backend.app.domain.entities import Incident, Log
+from backend.app.domain.enums import LogLevel, Severity, State
 
 
 class CreateIncidentUseCase:
@@ -11,7 +12,7 @@ class CreateIncidentUseCase:
 
     def execute(self, title, description, severity, output_port: CreateIncidentPort) -> None:
         # Create the incident
-        try:   
+        try:
             new_incident = Incident(
                 id=0,  # ID will be set by the repository
                 title=title,
@@ -34,7 +35,7 @@ class CreateIncidentUseCase:
             ))
 
             output_port.present_incident(incident)
-            
+
         except Exception as e:
             log_message = f"Failed to create incident: {str(e)}"
             self.log_repository.create_log(Log(

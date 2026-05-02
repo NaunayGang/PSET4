@@ -1,7 +1,8 @@
+from datetime import datetime
+
 from backend.app.application.ports.triage_output_port import TriageOutputPort
 from backend.app.domain.entities import log
 from backend.app.domain.enums.severity import Severity
-from datetime import datetime
 
 
 class TriageUseCase:
@@ -19,9 +20,9 @@ class TriageUseCase:
             ))
             output_port.present_not_found(incident_id)
             raise ValueError(f"Incident with ID {incident_id} not found.")
-        
+
         try:
-            incident.triageIncident(priority)
+            incident.triage_incident(priority)
             updated_incident = self.incident_repository.update_incident(incident)
             output_port.present_success(updated_incident)
         except ValueError as e:

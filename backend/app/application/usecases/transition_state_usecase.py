@@ -1,7 +1,9 @@
-from backend.app.application.ports.transition_state_port import TransitionStatePort
-from backend.app.domain.entities import Log, Incident
-from backend.app.domain.enums import Severity, State, LogLevel
 from datetime import datetime
+
+from backend.app.application.ports.transition_state_port import TransitionStatePort
+from backend.app.domain.entities import Log
+from backend.app.domain.enums import LogLevel, State
+
 
 class TransitionStateUseCase:
     def __init__(self, incident_repository, log_repository):
@@ -21,15 +23,15 @@ class TransitionStateUseCase:
             old_state = incident.state
             match new_state:
                 case State.CANCELLED:
-                    incident.cancelIncident()
+                    incident.cancel_incident()
                 case State.ESCALATED:
-                    incident.escalateIncident()
+                    incident.escalate_incident()
                 case State.IN_PROGRESS:
-                    incident.inProgressIncident()
+                    incident.inprogress_incident()
                 case State.RESOLVED:
-                    incident.resolveIncident()
+                    incident.resolve_incident()
                 case State.CLOSED:
-                    incident.closeIncident()
+                    incident.close_incident()
                 case _:
                     raise ValueError(f"Invalid state: {new_state}")
             self.incident_repository.update_incident(incident)
@@ -52,4 +54,3 @@ class TransitionStateUseCase:
             ))
             output_port.present_failure(str(e))
             raise ValueError(f"Failed to transition state: {str(e)}")
-    

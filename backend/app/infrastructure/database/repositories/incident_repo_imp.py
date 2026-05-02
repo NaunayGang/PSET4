@@ -4,9 +4,9 @@ from typing import List, Optional
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from backend.app.domain.entities import incident, log
 from backend.app.application.ports.repositories.incident_repository import IncidentRepository
 from backend.app.application.ports.repositories.log_repository import LogRepository
+from backend.app.domain.entities import incident, log
 from backend.app.infrastructure.models.incident import Incident as DBIncident
 
 
