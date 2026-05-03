@@ -1,15 +1,17 @@
 from datetime import datetime
 
+from backend.app.application.events import IncidentEvent, IncidentEventType
 from backend.app.application.ports.transition_state_port import TransitionStatePort
 from backend.app.domain.entities import Log
 from backend.app.domain.enums import LogLevel, Role, State
 
 
 class TransitionStateUseCase:
-    def __init__(self, incident_repository, log_repository, user_repository):
+    def __init__(self, incident_repository, log_repository, user_repository, event_bus=None):
         self.incident_repository = incident_repository
         self.log_repository = log_repository
         self.user_repository = user_repository
+        self.event_bus = event_bus
 
     def execute(self, user_id: int, incident_id: int, new_state: State, output_port: TransitionStatePort) -> None:
         # Fetch the incident from the repository
@@ -54,6 +56,14 @@ class TransitionStateUseCase:
                 log_level=LogLevel.INFO,
                 timestamp=datetime.now()
             ))
+
+            if self.event_bus and new_state == State.RESOLVED:
+                self.event_bus.publish(IncidentEvent(
+                    event_type=IncidentEventType.INCIDENT_RESOLVED,
+                    incident_id=incident.id,
+                    actor_user_id=user_id,
+                    payload={"creator_id": incident.created_by},
+                ))
 
             output_port.present_incident(incident)
         except Exception as e:

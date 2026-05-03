@@ -1,15 +1,17 @@
 from datetime import datetime
 
+from backend.app.application.events import IncidentEvent, IncidentEventType
 from backend.app.application.ports.triage_output_port import TriageOutputPort
 from backend.app.domain.entities import log
 from backend.app.domain.enums import Role, Severity
 
 
 class TriageUseCase:
-    def __init__(self, incident_repository, log_repository, user_repository):
+    def __init__(self, incident_repository, log_repository, user_repository, event_bus=None):
         self.incident_repository = incident_repository
         self.user_repository = user_repository
         self.log_repository = log_repository
+        self.event_bus = event_bus
 
     def execute(self, user_id: int, incident_id: int, priority: Severity, output_port: TriageOutputPort) -> None:
         user = self.user_repository.get_user_by_id(user_id)
@@ -36,6 +38,15 @@ class TriageUseCase:
         try:
             incident.triage_incident(priority)
             updated_incident = self.incident_repository.update_incident(incident)
+
+            if self.event_bus:
+                self.event_bus.publish(IncidentEvent(
+                    event_type=IncidentEventType.SEVERITY_CHANGED,
+                    incident_id=updated_incident.id,
+                    actor_user_id=user_id,
+                    payload={"new_severity": updated_incident.severity.value},
+                ))
+
             output_port.present_success(updated_incident)
         except ValueError as e:
             self.log_repository.create_log(log.Log(

@@ -3,6 +3,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from backend.app.application.events import InMemoryEventBus
+from backend.app.application.services.notification_service import InMemoryNotificationDispatcher
+from backend.app.application.services.notification_service import NotificationService
 from backend.app.application.usecases import (
     AddCommentUseCase,
     AssignIncidentUseCase,
@@ -50,6 +53,27 @@ def mock_user_repository():
     """Create a mock user repository."""
     repo = MagicMock()
     return repo
+
+
+@pytest.fixture
+def mock_notification_repository():
+    repo = MagicMock()
+
+    def _store(notification):
+        notification.id = 1
+        return notification
+
+    repo.create_notification.side_effect = _store
+    return repo
+
+
+@pytest.fixture
+def event_bus(mock_user_repository, mock_notification_repository):
+    bus = InMemoryEventBus()
+    dispatcher = InMemoryNotificationDispatcher()
+    service = NotificationService(mock_user_repository, mock_notification_repository, dispatcher)
+    service.register(bus)
+    return bus
 
 
 @pytest.fixture
@@ -104,14 +128,14 @@ def presenter():
 
 def test_create_incident_success(
     sample_user, sample_incident, mock_user_repository, mock_incident_repository,
-    mock_log_repository, presenter
+    mock_log_repository, presenter, event_bus
 ):
     """Test CreateIncidentUseCase success path."""
     mock_user_repository.get_user_by_id.return_value = sample_user
     mock_incident_repository.create_incident.return_value = sample_incident
 
     use_case = CreateIncidentUseCase(
-        mock_incident_repository, mock_log_repository, mock_user_repository
+        mock_incident_repository, mock_log_repository, mock_user_repository, event_bus
     )
     use_case.execute(
         user_id=sample_user.id,
@@ -337,7 +361,7 @@ def test_add_comment_nonexistent_incident(
 
 def test_assign_incident_success(
     sample_user, mock_user_repository, mock_incident_repository,
-    mock_log_repository, presenter
+    mock_log_repository, presenter, event_bus
 ):
     """Test AssignIncidentUseCase success path."""
     triaged_incident = Incident(
@@ -356,7 +380,7 @@ def test_assign_incident_success(
     mock_incident_repository.get_incident_by_id.return_value = triaged_incident
 
     use_case = AssignIncidentUseCase(
-        mock_incident_repository, mock_user_repository, mock_log_repository
+        mock_incident_repository, mock_user_repository, mock_log_repository, event_bus
     )
     use_case.execute(
         incident_id=1,
@@ -393,14 +417,14 @@ def test_assign_nonexistent_incident(
 
 def test_change_severity_success(
     sample_user, sample_incident, mock_user_repository, mock_incident_repository,
-    mock_log_repository, presenter
+    mock_log_repository, presenter, event_bus
 ):
     """Test ChangeSeverityUseCase success path."""
     mock_user_repository.get_user_by_id.return_value = sample_user
     mock_incident_repository.get_incident_by_id.return_value = sample_incident
 
     use_case = ChangeSeverityUseCase(
-        mock_incident_repository, mock_log_repository, mock_user_repository
+        mock_incident_repository, mock_log_repository, mock_user_repository, event_bus
     )
     use_case.execute(
         user_id=sample_user.id,
@@ -475,3 +499,238 @@ def test_presenter_comment(sample_comment, presenter):
     assert presenter.comment_dto is not None
     assert presenter.comment_dto.id == 1
     assert presenter.comment_dto.content == "Test comment"
+
+
+def test_notifications_for_critical_incident_created(
+    mock_incident_repository,
+    mock_user_repository,
+    mock_log_repository,
+    mock_notification_repository,
+    presenter,
+):
+    creator = User(
+        id=1,
+        username="creator",
+        password_hash="hash",
+        role=Role.OPERATOR,
+        created_at=datetime.now(),
+        last_login=None,
+    )
+    commander = User(
+        id=2,
+        username="commander",
+        password_hash="hash",
+        role=Role.INCIDENT_COMMANDER,
+        created_at=datetime.now(),
+        last_login=None,
+    )
+    manager = User(
+        id=3,
+        username="manager",
+        password_hash="hash",
+        role=Role.MANAGER,
+        created_at=datetime.now(),
+        last_login=None,
+    )
+
+    incident = Incident(
+        id=11,
+        title="Critical",
+        description="Critical incident",
+        severity=Severity.CRITICAL,
+        state=State.OPEN,
+        assigned_to=None,
+        created_at=datetime.now(),
+        updated_at=None,
+        summary_id=None,
+        created_by=creator.id,
+    )
+
+    mock_user_repository.get_user_by_id.return_value = creator
+    mock_user_repository.list_users.return_value = [creator, commander, manager]
+    mock_incident_repository.create_incident.return_value = incident
+
+    bus = InMemoryEventBus()
+    dispatcher = InMemoryNotificationDispatcher()
+    NotificationService(mock_user_repository, mock_notification_repository, dispatcher).register(bus)
+
+    use_case = CreateIncidentUseCase(
+        mock_incident_repository,
+        mock_log_repository,
+        mock_user_repository,
+        bus,
+    )
+    use_case.execute(
+        user_id=creator.id,
+        title="Critical",
+        description="Critical incident",
+        severity=Severity.CRITICAL,
+        output_port=presenter,
+    )
+
+    called_user_ids = {call.args[0].user_id for call in mock_notification_repository.create_notification.call_args_list}
+    assert called_user_ids == {commander.id, manager.id}
+
+
+def test_notifications_for_assigned_incident(
+    mock_incident_repository,
+    mock_user_repository,
+    mock_log_repository,
+    mock_notification_repository,
+    presenter,
+):
+    assignee = User(
+        id=22,
+        username="assignee",
+        password_hash="hash",
+        role=Role.INCIDENT_COMMANDER,
+        created_at=datetime.now(),
+        last_login=None,
+    )
+    incident = Incident(
+        id=12,
+        title="Triaged",
+        description="T",
+        severity=Severity.HIGH,
+        state=State.TRIAGED,
+        assigned_to=None,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+        summary_id=None,
+        created_by=1,
+    )
+
+    mock_user_repository.get_user_by_id.return_value = assignee
+    mock_incident_repository.get_incident_by_id.return_value = incident
+
+    bus = InMemoryEventBus()
+    dispatcher = InMemoryNotificationDispatcher()
+    NotificationService(mock_user_repository, mock_notification_repository, dispatcher).register(bus)
+
+    use_case = AssignIncidentUseCase(
+        mock_incident_repository,
+        mock_user_repository,
+        mock_log_repository,
+        bus,
+    )
+    use_case.execute(
+        incident_id=incident.id,
+        user_id=assignee.id,
+        output_port=presenter,
+    )
+
+    assert mock_notification_repository.create_notification.call_count == 1
+    assert mock_notification_repository.create_notification.call_args[0][0].user_id == assignee.id
+
+
+def test_notifications_for_severity_change(
+    sample_user,
+    sample_incident,
+    mock_incident_repository,
+    mock_user_repository,
+    mock_log_repository,
+    mock_notification_repository,
+    presenter,
+):
+    commander = User(
+        id=2,
+        username="commander",
+        password_hash="hash",
+        role=Role.INCIDENT_COMMANDER,
+        created_at=datetime.now(),
+        last_login=None,
+    )
+    manager = User(
+        id=3,
+        username="manager",
+        password_hash="hash",
+        role=Role.MANAGER,
+        created_at=datetime.now(),
+        last_login=None,
+    )
+
+    mock_user_repository.get_user_by_id.return_value = sample_user
+    mock_user_repository.list_users.return_value = [sample_user, commander, manager]
+    mock_incident_repository.get_incident_by_id.return_value = sample_incident
+
+    bus = InMemoryEventBus()
+    dispatcher = InMemoryNotificationDispatcher()
+    NotificationService(mock_user_repository, mock_notification_repository, dispatcher).register(bus)
+
+    use_case = ChangeSeverityUseCase(
+        mock_incident_repository,
+        mock_log_repository,
+        mock_user_repository,
+        bus,
+    )
+    use_case.execute(
+        user_id=sample_user.id,
+        incident_id=sample_incident.id,
+        new_severity=Severity.CRITICAL,
+        output_port=presenter,
+    )
+
+    called_user_ids = {call.args[0].user_id for call in mock_notification_repository.create_notification.call_args_list}
+    assert called_user_ids == {commander.id, manager.id}
+
+
+def test_notifications_for_resolved_incident(
+    sample_user,
+    mock_incident_repository,
+    mock_user_repository,
+    mock_log_repository,
+    mock_notification_repository,
+    presenter,
+):
+    manager = User(
+        id=3,
+        username="manager",
+        password_hash="hash",
+        role=Role.MANAGER,
+        created_at=datetime.now(),
+        last_login=None,
+    )
+    creator = User(
+        id=4,
+        username="creator",
+        password_hash="hash",
+        role=Role.OPERATOR,
+        created_at=datetime.now(),
+        last_login=None,
+    )
+    incident = Incident(
+        id=99,
+        title="In progress",
+        description="incident",
+        severity=Severity.HIGH,
+        state=State.IN_PROGRESS,
+        assigned_to=sample_user.id,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+        summary_id=None,
+        created_by=creator.id,
+    )
+
+    mock_user_repository.get_user_by_id.return_value = sample_user
+    mock_user_repository.list_users.return_value = [sample_user, manager, creator]
+    mock_incident_repository.get_incident_by_id.return_value = incident
+
+    bus = InMemoryEventBus()
+    dispatcher = InMemoryNotificationDispatcher()
+    NotificationService(mock_user_repository, mock_notification_repository, dispatcher).register(bus)
+
+    use_case = TransitionStateUseCase(
+        mock_incident_repository,
+        mock_log_repository,
+        mock_user_repository,
+        bus,
+    )
+    use_case.execute(
+        user_id=sample_user.id,
+        incident_id=incident.id,
+        new_state=State.RESOLVED,
+        output_port=presenter,
+    )
+
+    called_user_ids = {call.args[0].user_id for call in mock_notification_repository.create_notification.call_args_list}
+    assert called_user_ids == {manager.id, creator.id}

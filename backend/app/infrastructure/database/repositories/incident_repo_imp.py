@@ -22,6 +22,7 @@ class SQLAlchemyIncidentRepository(IncidentRepository):
                 description=incident.description,
                 severity=incident.severity,
                 state=incident.state,
+                created_by=incident.created_by,
                 assigned_to=incident.assigned_to,
                 created_at=incident.created_at,
                 updated_at=incident.updated_at
@@ -68,6 +69,7 @@ class SQLAlchemyIncidentRepository(IncidentRepository):
             db_incident.description = incident.description
             db_incident.state = incident.state
             db_incident.severity = incident.severity
+            db_incident.created_by = incident.created_by
             db_incident.assigned_to = incident.assigned_to
             db_incident.updated_at = incident.updated_at
 
@@ -164,6 +166,7 @@ class SQLAlchemyIncidentRepository(IncidentRepository):
             description=db_incident.description,
             state=db_incident.state,
             severity=db_incident.severity,
+            created_by=db_incident.created_by,
             assigned_to=db_incident.assigned_to,
             created_at=db_incident.created_at,
             updated_at=db_incident.updated_at,

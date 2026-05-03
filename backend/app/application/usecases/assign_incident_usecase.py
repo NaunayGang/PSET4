@@ -1,15 +1,17 @@
 from datetime import datetime
 
+from backend.app.application.events import IncidentEvent, IncidentEventType
 from backend.app.application.ports.assign_incident_port import AssignIncidentPort
 from backend.app.domain.entities import Log
 from backend.app.domain.enums import LogLevel, Role
 
 
 class AssignIncidentUseCase:
-    def __init__(self, incident_repository, user_repository, log_repository):
+    def __init__(self, incident_repository, user_repository, log_repository, event_bus=None):
         self.incident_repository = incident_repository
         self.user_repository = user_repository
         self.log_repository = log_repository
+        self.event_bus = event_bus
 
     def execute(self, incident_id: int, user_id: int, output_port: AssignIncidentPort) -> None:
         # Fetch the incident and user from the repositories
@@ -42,6 +44,14 @@ class AssignIncidentUseCase:
                 log_level=LogLevel.INFO,
                 timestamp=datetime.now()
             ))
+
+            if self.event_bus:
+                self.event_bus.publish(IncidentEvent(
+                    event_type=IncidentEventType.INCIDENT_ASSIGNED,
+                    incident_id=incident.id,
+                    actor_user_id=user_id,
+                    payload={"assignee_id": user_id},
+                ))
 
             output_port.present_success(incident)
         except Exception as e:
