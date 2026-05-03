@@ -42,7 +42,7 @@ class AddCommentUseCase:
             comment = self.comment_repository.create_comment(new_comment)
 
             # Log the addition of the comment
-            log_message = f"Comment added to incident {incident.id} by user {user.name} (ID: {user.id})"
+            log_message = f"Comment added to incident {incident.id} by user {user.username} (ID: {user.id})"
             self.log_repository.create_log(Log(
                 message=log_message,
                 log_level=LogLevel.INFO,
