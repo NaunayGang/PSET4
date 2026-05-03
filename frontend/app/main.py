@@ -29,11 +29,17 @@ STATE_COLORS = {
 
 st.title("IncidentFlow")
 
-incidents = get_incidents()
+st.page_link("pages/create_incident.py", label="Create incident")
+
+if "incidents" not in st.session_state:
+    st.session_state["incidents"] = get_incidents()
+
+incidents = st.session_state["incidents"]
 
 with st.sidebar:
     st.header("Filters")
     role = st.selectbox("Role (testing)", ["Operator", "Commander", "Manager", "Admin"])
+    st.session_state["active_role"] = role
     query = st.text_input("Search", placeholder="Title or description")
     selected_severities = st.multiselect("Severity", SEVERITIES, default=SEVERITIES)
     selected_states = st.multiselect("State", STATES, default=STATES)

@@ -11,7 +11,10 @@ st.set_page_config(page_title="Incident Detail", layout="wide")
 
 st.title("Incident Detail")
 
-incidents = get_incidents()
+if "incidents" not in st.session_state:
+    st.session_state["incidents"] = get_incidents()
+
+incidents = st.session_state["incidents"]
 incident_map = {incident["id"]: incident for incident in incidents}
 
 query_params = st.query_params
@@ -45,5 +48,47 @@ created_at = selected_incident["created_at"].astimezone(timezone.utc)
 created_at_text = created_at.strftime("%Y-%m-%d %H:%M UTC")
 
 st.caption(f"Created at {created_at_text}")
+
+link_value = f"incident_detail?incident_id={selected_incident['id']}"
+st.text_input("Shareable link", value=link_value, disabled=True)
+if st.button("Copy link"):
+    st.info("Copy the link from the field above.")
+
+st.subheader("Timeline")
+
+timeline = list(selected_incident.get("timeline", [])) + list(selected_incident.get("comments", []))
+timeline.sort(key=lambda entry: entry["timestamp"])
+
+if not timeline:
+    st.info("No timeline events yet.")
+else:
+    for entry in timeline:
+        ts = entry["timestamp"].astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M")
+        actor = entry.get("actor") or "System"
+        st.markdown(f"- [{entry['type'].upper()}] {entry['message']} ({actor}, {ts} UTC)")
+
+st.subheader("Add comment")
+
+is_closed = selected_incident["state"] == "CLOSED"
+if is_closed:
+    st.warning("This incident is closed. Comments are disabled.")
+
+with st.form("comment_form", clear_on_submit=True):
+    comment = st.text_area("Comment", height=120, disabled=is_closed)
+    submitted = st.form_submit_button("Post comment", disabled=is_closed)
+
+if submitted:
+    if not comment.strip():
+        st.error("Comment is required.")
+    else:
+        author = st.session_state.get("active_role", "Operator")
+        entry = {
+            "type": "comment",
+            "message": comment.strip(),
+            "timestamp": datetime.now(timezone.utc),
+            "actor": author,
+        }
+        selected_incident.setdefault("comments", []).append(entry)
+        st.success("Comment added.")
 
 st.page_link("main.py", label="Back to list")

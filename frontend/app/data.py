@@ -7,9 +7,41 @@ SEVERITIES = ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
 STATES = ["OPEN", "TRIAGED", "ASSIGNED", "IN_PROGRESS", "RESOLVED", "CLOSED"]
 
 
+def _timeline_entry(
+    entry_type: str,
+    message: str,
+    timestamp: datetime,
+    actor: str | None = None,
+) -> dict:
+    return {
+        "type": entry_type,
+        "message": message,
+        "timestamp": timestamp,
+        "actor": actor,
+    }
+
+
+def _build_timeline(created_at: datetime, creator: str, severity: str, state: str, assignee: str | None) -> list[dict]:
+    timeline = [
+        _timeline_entry("created", f"Incident created with severity {severity}", created_at, creator),
+    ]
+
+    if assignee:
+        timeline.append(
+            _timeline_entry("assignment", f"Assigned to {assignee}", created_at + timedelta(minutes=15), creator)
+        )
+
+    if state not in {"OPEN", "ASSIGNED"}:
+        timeline.append(
+            _timeline_entry("state", f"State changed to {state}", created_at + timedelta(hours=1), creator)
+        )
+
+    return timeline
+
+
 def get_incidents() -> list[dict]:
     base_time = datetime(2026, 5, 1, 12, 0, 0, tzinfo=timezone.utc)
-    return [
+    incidents = [
         {
             "id": 101,
             "title": "Database connection spikes",
@@ -131,6 +163,25 @@ def get_incidents() -> list[dict]:
             "created_at": base_time - timedelta(days=2, hours=3),
         },
     ]
+
+    for incident in incidents:
+        incident["timeline"] = _build_timeline(
+            incident["created_at"],
+            incident["creator"],
+            incident["severity"],
+            incident["state"],
+            incident["assigned_to"],
+        )
+        incident["comments"] = [
+            _timeline_entry(
+                "comment",
+                "Initial report logged.",
+                incident["created_at"] + timedelta(minutes=5),
+                incident["creator"],
+            )
+        ]
+
+    return incidents
 
 
 def filter_incidents(
