@@ -3,7 +3,9 @@ from typing import List
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from backend.app.application.ports.repositories.notification_repository import NotificationRepository
+from backend.app.application.ports.repositories.notification_repository import (
+    NotificationRepository,
+)
 from backend.app.domain.entities import Notification
 from backend.app.infrastructure.models.notification import Notification as DBNotification
 

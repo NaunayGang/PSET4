@@ -4,8 +4,10 @@ from unittest.mock import MagicMock
 import pytest
 
 from backend.app.application.events import InMemoryEventBus
-from backend.app.application.services.notification_service import InMemoryNotificationDispatcher
-from backend.app.application.services.notification_service import NotificationService
+from backend.app.application.services.notification_service import (
+    InMemoryNotificationDispatcher,
+    NotificationService,
+)
 from backend.app.application.usecases import (
     AddCommentUseCase,
     AssignIncidentUseCase,
