@@ -1,15 +1,17 @@
 from datetime import datetime
 
+from backend.app.application.events import IncidentEvent, IncidentEventType
 from backend.app.application.ports.create_incident_port import CreateIncidentPort
 from backend.app.domain.entities import Incident, Log
 from backend.app.domain.enums import LogLevel, Role, Severity, State
 
 
 class CreateIncidentUseCase:
-    def __init__(self, incident_repository, log_repository, user_repository):
+    def __init__(self, incident_repository, log_repository, user_repository, event_bus=None):
         self.incident_repository = incident_repository
         self.log_repository = log_repository
         self.user_repository = user_repository
+        self.event_bus = event_bus
 
     def execute(self, user_id: int, title: str, description: str, severity: Severity, output_port: CreateIncidentPort) -> None:
         # Create the incident
@@ -32,6 +34,7 @@ class CreateIncidentUseCase:
                 description=description,
                 severity=Severity(severity),
                 state=State.OPEN,
+                created_by=user_id,
                 assigned_to=None,
                 created_at=datetime.now(),
                 updated_at=None,
@@ -46,6 +49,14 @@ class CreateIncidentUseCase:
                 log_level=LogLevel.INFO,
                 timestamp=datetime.now()
             ))
+
+            if self.event_bus:
+                self.event_bus.publish(IncidentEvent(
+                    event_type=IncidentEventType.INCIDENT_CREATED,
+                    incident_id=incident.id,
+                    actor_user_id=user_id,
+                    payload={"severity": incident.severity.value},
+                ))
 
             output_port.present_incident(incident)
 

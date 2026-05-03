@@ -1,15 +1,17 @@
 from datetime import datetime
 
+from backend.app.application.events import IncidentEvent, IncidentEventType
 from backend.app.application.ports.change_severity_port import ChangeSeverityPort
 from backend.app.domain.entities import Log
 from backend.app.domain.enums import LogLevel, Role, Severity
 
 
 class ChangeSeverityUseCase:
-    def __init__(self, incident_repository, log_repository, user_repository):
+    def __init__(self, incident_repository, log_repository, user_repository, event_bus=None):
         self.incident_repository = incident_repository
         self.log_repository = log_repository
         self.user_repository = user_repository
+        self.event_bus = event_bus
 
     def execute(self, user_id: int, incident_id: int, new_severity: Severity, output_port: ChangeSeverityPort) -> None:
         # Fetch the incident from the repository
@@ -48,6 +50,14 @@ class ChangeSeverityUseCase:
                 log_level=log_level,
                 timestamp=datetime.now()
             ))
+
+            if self.event_bus:
+                self.event_bus.publish(IncidentEvent(
+                    event_type=IncidentEventType.SEVERITY_CHANGED,
+                    incident_id=incident.id,
+                    actor_user_id=user_id,
+                    payload={"new_severity": incident.severity.value},
+                ))
 
             output_port.present_success(incident)
         except Exception as e:

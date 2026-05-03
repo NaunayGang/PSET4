@@ -16,6 +16,7 @@ class Incident:
     created_at: datetime
     updated_at: datetime | None
     summary_id: int | None
+    created_by: int | None = None
 
     def cancel_incident(self) -> None:
 

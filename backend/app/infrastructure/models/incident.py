@@ -11,6 +11,7 @@ from backend.app.infrastructure.database.base import Base
 
 if TYPE_CHECKING:
     from .comment import Comment
+    from .notification import Notification
     from .user import User
 
 class Incident(Base):
@@ -21,6 +22,7 @@ class Incident(Base):
     description: Mapped[str | None] = mapped_column(String(1000), nullable=True)
     severity: Mapped[Severity] = mapped_column(SAEnum(Severity), nullable=False)
     state: Mapped[State] = mapped_column(SAEnum(State), nullable=False)
+    created_by: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     assigned_to: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -35,6 +37,7 @@ class Incident(Base):
     summary_id: Mapped[int | None] = mapped_column(ForeignKey("summaries.id"), nullable=True)
 
     comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="incident")
+    notifications: Mapped[list["Notification"]] = relationship("Notification")
     assigned_user: Mapped["User"] = relationship(
         "User", back_populates="incidents", foreign_keys=[assigned_to]
     )

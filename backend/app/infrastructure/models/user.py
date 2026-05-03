@@ -11,6 +11,7 @@ from backend.app.infrastructure.database.base import Base
 if TYPE_CHECKING:
     from .comment import Comment
     from .incident import Incident
+    from .notification import Notification
 
 class User(Base):
     __tablename__ = "users"
@@ -31,4 +32,5 @@ class User(Base):
 
     comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="author")
     incidents: Mapped[list["Incident"]] = relationship("Incident", back_populates="assigned_user")
+    notifications: Mapped[list["Notification"]] = relationship("Notification")
 
