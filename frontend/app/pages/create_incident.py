@@ -41,7 +41,7 @@ if submitted:
             "title": title.strip(),
             "description": description.strip(),
             "severity": severity,
-            "state": "OPEN",
+            "state": "open",
             "creator": creator,
             "assigned_to": None,
             "created_at": created_at,

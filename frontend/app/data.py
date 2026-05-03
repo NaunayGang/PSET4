@@ -3,8 +3,10 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from typing import Iterable
 
-SEVERITIES = ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
-STATES = ["OPEN", "TRIAGED", "ASSIGNED", "IN_PROGRESS", "RESOLVED", "CLOSED"]
+import streamlit as st
+
+SEVERITIES = ["low", "medium", "high", "critical"]
+STATES = ["open", "triaged", "assigned", "in_progress", "resolved", "closed"]
 
 
 def _timeline_entry(
@@ -31,7 +33,7 @@ def _build_timeline(created_at: datetime, creator: str, severity: str, state: st
             _timeline_entry("assignment", f"Assigned to {assignee}", created_at + timedelta(minutes=15), creator)
         )
 
-    if state not in {"OPEN", "ASSIGNED"}:
+    if state not in {"open", "assigned"}:
         timeline.append(
             _timeline_entry("state", f"State changed to {state}", created_at + timedelta(hours=1), creator)
         )
@@ -46,8 +48,8 @@ def get_incidents() -> list[dict]:
             "id": 101,
             "title": "Database connection spikes",
             "description": "Intermittent connection errors from the API layer.",
-            "severity": "HIGH",
-            "state": "IN_PROGRESS",
+            "severity": "high",
+            "state": "in_progress",
             "creator": "Laura",
             "assigned_to": "Marco",
             "created_at": base_time - timedelta(hours=3),
@@ -56,8 +58,8 @@ def get_incidents() -> list[dict]:
             "id": 102,
             "title": "Latency increase on metrics pipeline",
             "description": "Processing latency exceeded SLO for 10 minutes.",
-            "severity": "MEDIUM",
-            "state": "TRIAGED",
+            "severity": "medium",
+            "state": "triaged",
             "creator": "Felipe",
             "assigned_to": "Nina",
             "created_at": base_time - timedelta(hours=6),
@@ -66,8 +68,8 @@ def get_incidents() -> list[dict]:
             "id": 103,
             "title": "Critical payment failures",
             "description": "Payment gateway returning 502 in prod.",
-            "severity": "CRITICAL",
-            "state": "ASSIGNED",
+            "severity": "critical",
+            "state": "assigned",
             "creator": "Maria",
             "assigned_to": "Carlos",
             "created_at": base_time - timedelta(hours=1, minutes=25),
@@ -76,8 +78,8 @@ def get_incidents() -> list[dict]:
             "id": 104,
             "title": "Search indexing backlog",
             "description": "Index queue is growing after batch release.",
-            "severity": "LOW",
-            "state": "OPEN",
+            "severity": "low",
+            "state": "open",
             "creator": "Dario",
             "assigned_to": None,
             "created_at": base_time - timedelta(days=1, hours=2),
@@ -86,8 +88,8 @@ def get_incidents() -> list[dict]:
             "id": 105,
             "title": "Login errors for EU region",
             "description": "Spike in 401 errors for EU tenants.",
-            "severity": "HIGH",
-            "state": "IN_PROGRESS",
+            "severity": "high",
+            "state": "in_progress",
             "creator": "Sara",
             "assigned_to": "Nina",
             "created_at": base_time - timedelta(hours=9, minutes=10),
@@ -96,8 +98,8 @@ def get_incidents() -> list[dict]:
             "id": 106,
             "title": "Webhook delivery delays",
             "description": "Outbound webhooks delayed by 20 minutes.",
-            "severity": "MEDIUM",
-            "state": "OPEN",
+            "severity": "medium",
+            "state": "open",
             "creator": "Andre",
             "assigned_to": None,
             "created_at": base_time - timedelta(days=2, hours=4),
@@ -106,8 +108,8 @@ def get_incidents() -> list[dict]:
             "id": 107,
             "title": "Cache eviction storm",
             "description": "Cache evictions causing request spikes.",
-            "severity": "HIGH",
-            "state": "RESOLVED",
+            "severity": "high",
+            "state": "resolved",
             "creator": "Sofia",
             "assigned_to": "Marco",
             "created_at": base_time - timedelta(days=1, hours=6),
@@ -116,8 +118,8 @@ def get_incidents() -> list[dict]:
             "id": 108,
             "title": "Notification retries stuck",
             "description": "Retry queue is not draining as expected.",
-            "severity": "MEDIUM",
-            "state": "ASSIGNED",
+            "severity": "medium",
+            "state": "assigned",
             "creator": "Ken",
             "assigned_to": "Carlos",
             "created_at": base_time - timedelta(hours=4, minutes=45),
@@ -126,8 +128,8 @@ def get_incidents() -> list[dict]:
             "id": 109,
             "title": "Frontend bundle regression",
             "description": "Main bundle size grew by 20 percent.",
-            "severity": "LOW",
-            "state": "CLOSED",
+            "severity": "low",
+            "state": "closed",
             "creator": "Luis",
             "assigned_to": "Irene",
             "created_at": base_time - timedelta(days=3, hours=1),
@@ -136,8 +138,8 @@ def get_incidents() -> list[dict]:
             "id": 110,
             "title": "Critical API timeouts",
             "description": "Requests timing out for premium customers.",
-            "severity": "CRITICAL",
-            "state": "IN_PROGRESS",
+            "severity": "critical",
+            "state": "in_progress",
             "creator": "Maya",
             "assigned_to": "Irene",
             "created_at": base_time - timedelta(hours=2, minutes=5),
@@ -146,8 +148,8 @@ def get_incidents() -> list[dict]:
             "id": 111,
             "title": "Audit log missing entries",
             "description": "Some audit entries missing after deployment.",
-            "severity": "MEDIUM",
-            "state": "OPEN",
+            "severity": "medium",
+            "state": "open",
             "creator": "Camilo",
             "assigned_to": None,
             "created_at": base_time - timedelta(days=1, hours=9),
@@ -156,8 +158,8 @@ def get_incidents() -> list[dict]:
             "id": 112,
             "title": "On-call handoff incomplete",
             "description": "Handoff notes not synced.",
-            "severity": "LOW",
-            "state": "TRIAGED",
+            "severity": "low",
+            "state": "triaged",
             "creator": "Gina",
             "assigned_to": "Nina",
             "created_at": base_time - timedelta(days=2, hours=3),
@@ -214,6 +216,11 @@ def filter_incidents(
     return results
 
 
-def get_assignee_options(incidents: Iterable[dict]) -> list[str]:
+def _get_assignee_options(incidents: Iterable[dict]) -> list[str]:
     assignees = sorted({incident["assigned_to"] for incident in incidents if incident["assigned_to"]})
     return ["All", "Unassigned"] + assignees
+
+
+@st.cache_data
+def get_assignee_options(_incidents: list[dict]) -> list[str]:
+    return _get_assignee_options(_incidents)

@@ -12,18 +12,18 @@ st.set_page_config(page_title="IncidentFlow", layout="wide")
 
 
 SEVERITY_COLORS = {
-    "LOW": "#7FB069",
-    "MEDIUM": "#F2B705",
-    "HIGH": "#E76F51",
-    "CRITICAL": "#D00000",
+    "low": "#7FB069",
+    "medium": "#F2B705",
+    "high": "#E76F51",
+    "critical": "#D00000",
 }
 STATE_COLORS = {
-    "OPEN": "#4C78A8",
-    "TRIAGED": "#8F63FF",
-    "ASSIGNED": "#2A9D8F",
-    "IN_PROGRESS": "#F4A261",
-    "RESOLVED": "#43AA8B",
-    "CLOSED": "#6C757D",
+    "open": "#4C78A8",
+    "triaged": "#8F63FF",
+    "assigned": "#2A9D8F",
+    "in_progress": "#F4A261",
+    "resolved": "#43AA8B",
+    "closed": "#6C757D",
 }
 
 
@@ -62,7 +62,11 @@ if not filtered:
     st.stop()
 
 total_pages = max(1, math.ceil(len(filtered) / page_size))
-page = st.number_input("Page", min_value=1, max_value=total_pages, value=1, step=1)
+current_page = st.session_state.get("current_page", 1)
+if current_page > total_pages:
+    current_page = total_pages
+page = st.number_input("Page", min_value=1, max_value=total_pages, value=current_page, step=1)
+st.session_state["current_page"] = page
 start = (page - 1) * page_size
 end = start + page_size
 

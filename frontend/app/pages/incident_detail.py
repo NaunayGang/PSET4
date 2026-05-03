@@ -69,7 +69,7 @@ else:
 
 st.subheader("Add comment")
 
-is_closed = selected_incident["state"] == "CLOSED"
+is_closed = selected_incident["state"] == "closed"
 if is_closed:
     st.warning("This incident is closed. Comments are disabled.")
 
