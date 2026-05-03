@@ -1,0 +1,3 @@
+"Module for Data Transfer Objects (DTOs) used in the application layer. DTOs are simple data structures that carry data between processes, often used to transfer data from the domain layer to the presentation layer or vice versa. This module can include DTOs for incidents, logs, and any other entities that need to be transferred across different layers of the application."
+
+from .incident_dto import IncidentDTO as IncidentDTO

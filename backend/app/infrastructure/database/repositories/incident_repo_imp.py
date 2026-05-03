@@ -4,9 +4,9 @@ from typing import List, Optional
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
+from backend.app.application.ports.repositories.incident_repository import IncidentRepository
+from backend.app.application.ports.repositories.log_repository import LogRepository
 from backend.app.domain.entities import incident, log
-from backend.app.domain.repositories.incident_repository import IncidentRepository
-from backend.app.domain.repositories.log_repository import LogRepository
 from backend.app.infrastructure.models.incident import Incident as DBIncident
 
 
@@ -166,5 +166,6 @@ class SQLAlchemyIncidentRepository(IncidentRepository):
             severity=db_incident.severity,
             assigned_to=db_incident.assigned_to,
             created_at=db_incident.created_at,
-            updated_at=db_incident.updated_at
+            updated_at=db_incident.updated_at,
+            summary_id=db_incident.summary_id
         )
