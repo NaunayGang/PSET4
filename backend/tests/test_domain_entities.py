@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from uuid import uuid4
 
 from backend.app.domain.entities import Comment, Incident, Log, Notification
-from backend.app.domain.enums import IncidentState, Role, Severity
+from backend.app.domain.enums import Role, Severity, State
 
 
 @pytest.fixture
@@ -26,7 +26,7 @@ def sample_incident(sample_user_id, sample_incident_id):
         title="Payment service down",
         description="Customers cannot complete transactions",
         severity=Severity.CRITICAL,
-        state=IncidentState.OPEN,
+        state=State.OPEN,
         creator_id=sample_user_id,
         created_at=datetime.utcnow(),
         updated_at=datetime.utcnow(),
@@ -81,7 +81,7 @@ class TestIncidentEntity:
         """Test that incident can be created with valid attributes"""
         assert sample_incident.title == "Payment service down"
         assert sample_incident.severity == Severity.CRITICAL
-        assert sample_incident.state == IncidentState.OPEN
+        assert sample_incident.state == State.OPEN
         assert sample_incident.assignee_id is None
 
     def test_incident_is_critical(self, sample_incident):
@@ -93,7 +93,7 @@ class TestIncidentEntity:
             title="Minor issue",
             description="Low severity",
             severity=Severity.LOW,
-            state=IncidentState.OPEN,
+            state=State.OPEN,
             creator_id=uuid4(),
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow(),
@@ -145,24 +145,24 @@ class TestSeverityEnum:
         assert str(Severity.CRITICAL) in ["Severity.CRITICAL", "CRITICAL"]
 
 
-class TestIncidentStateEnum:
-    """Tests for IncidentState enumeration"""
+class TestStateEnum:
+    """Tests for State enumeration"""
 
     def test_all_state_values_exist(self):
         """Test that all required states exist"""
-        assert hasattr(IncidentState, "OPEN")
-        assert hasattr(IncidentState, "TRIAGED")
-        assert hasattr(IncidentState, "ASSIGNED")
-        assert hasattr(IncidentState, "IN_PROGRESS")
-        assert hasattr(IncidentState, "RESOLVED")
-        assert hasattr(IncidentState, "CLOSED")
-        assert hasattr(IncidentState, "ESCALATED")
-        assert hasattr(IncidentState, "CANCELLED")
+        assert hasattr(State, "OPEN")
+        assert hasattr(State, "TRIAGED")
+        assert hasattr(State, "ASSIGNED")
+        assert hasattr(State, "IN_PROGRESS")
+        assert hasattr(State, "RESOLVED")
+        assert hasattr(State, "CLOSED")
+        assert hasattr(State, "ESCALATED")
+        assert hasattr(State, "CANCELLED")
 
     def test_state_equality(self):
         """Test state enum comparison"""
-        assert IncidentState.OPEN == IncidentState.OPEN
-        assert IncidentState.OPEN != IncidentState.CLOSED
+        assert State.OPEN == State.OPEN
+        assert State.OPEN != State.CLOSED
 
 
 class TestRoleEnum:
@@ -266,7 +266,7 @@ class TestIncidentCriticalRestrictions:
             title="Low priority",
             description="Can close without summary",
             severity=Severity.LOW,
-            state=IncidentState.OPEN,
+            state=State.OPEN,
             creator_id=uuid4(),
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow(),
@@ -274,12 +274,12 @@ class TestIncidentCriticalRestrictions:
         assert incident.is_critical() is False
 
 
-class TestIncidentStateTransitionRules:
+class TestStateTransitionRules:
     """Tests for state transition business rules"""
 
     def test_incident_starts_in_open_state(self, sample_incident):
         """Test new incident is in OPEN state"""
-        assert sample_incident.state == IncidentState.OPEN
+        assert sample_incident.state == State.OPEN
 
     def test_cannot_enter_in_progress_without_assignee(self, sample_incident):
         """Test incident cannot go to IN_PROGRESS without assignee"""
@@ -288,19 +288,19 @@ class TestIncidentStateTransitionRules:
 
     def test_closed_incident_cannot_transition(self, sample_incident):
         """Test CLOSED incident is terminal"""
-        sample_incident.state = IncidentState.CLOSED
+        sample_incident.state = State.CLOSED
         # Should not be able to transition from CLOSED
 
     def test_state_sequence(self):
         """Test valid state progression"""
         states = [
-            IncidentState.OPEN,
-            IncidentState.TRIAGED,
-            IncidentState.ASSIGNED,
-            IncidentState.IN_PROGRESS,
-            IncidentState.RESOLVED,
-            IncidentState.CLOSED,
+            State.OPEN,
+            State.TRIAGED,
+            State.ASSIGNED,
+            State.IN_PROGRESS,
+            State.RESOLVED,
+            State.CLOSED,
         ]
         assert len(states) > 0
-        assert states[0] == IncidentState.OPEN
-        assert states[-1] == IncidentState.CLOSED
+        assert states[0] == State.OPEN
+        assert states[-1] == State.CLOSED
