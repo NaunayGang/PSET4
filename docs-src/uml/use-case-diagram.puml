@@ -1,0 +1,82 @@
+@startuml IncidentFlowUseCaseDiagram
+title IncidentFlow - Use Case Diagram
+
+left to right direction
+
+actor Operator
+actor "Incident\nCommander" as Commander
+actor "Technical\nResponder" as Responder
+actor Manager
+actor Admin
+
+rectangle "IncidentFlow System" {
+
+  usecase UC1 as "Create Incident"
+  usecase UC2 as "Triage Incident"
+  usecase UC3 as "Assign Incident"
+  usecase UC4 as "Add Comment"
+  usecase UC5 as "Change State"
+  usecase UC6 as "Change Severity"
+  usecase UC7 as "View Incident"
+  usecase UC8 as "View Dashboard"
+  usecase UC9 as "View Audit Log"
+  usecase UC10 as "Manage Users"
+  usecase UC11 as "Escalate Incident"
+  usecase UC12 as "Close Incident"
+
+  note right of UC6
+    Only Commander/Admin
+    Triggers audit + notification
+  end note
+
+  note right of UC12
+    CRITICAL requires summary
+    Only Commander/Admin
+  end note
+
+  note right of UC8
+    Operator: basic list
+    Commander: assignments + timeline
+    Manager: metrics + dashboards
+    Admin: full audit visibility
+  end note
+}
+
+Operator --> UC1
+Operator --> UC4
+Operator --> UC7
+Operator --> UC8
+
+Commander --> UC2
+Commander --> UC3
+Commander --> UC5
+Commander --> UC6
+Commander --> UC11
+Commander --> UC12
+Commander --> UC4
+Commander --> UC7
+Commander --> UC8
+
+Responder --> UC4
+Responder --> UC5
+Responder --> UC7
+Responder --> UC8
+
+Manager --> UC7
+Manager --> UC8
+Manager --> UC9
+
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+Admin --> UC4
+Admin --> UC5
+Admin --> UC6
+Admin --> UC7
+Admin --> UC8
+Admin --> UC9
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+
+@enduml

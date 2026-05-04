@@ -1,0 +1,136 @@
+@startuml IncidentFlowClassDiagram
+title IncidentFlow - Class Diagram (Domain Model)
+
+package "Domain Layer" {
+
+  enum Severity {
+    LOW
+    MEDIUM
+    HIGH
+    CRITICAL
+  }
+
+  enum IncidentState {
+    OPEN
+    TRIAGED
+    ASSIGNED
+    IN_PROGRESS
+    RESOLVED
+    CLOSED
+    CANCELLED
+    ESCALATED
+  }
+
+  enum Role {
+    OPERATOR
+    COMMANDER
+    RESPONDER
+    MANAGER
+    ADMIN
+  }
+
+  class User {
+    - id: UUID
+    - email: str
+    - name: str
+    - role: Role
+    - active: bool
+    - created_at: DateTime
+  }
+
+  class Incident {
+    - id: UUID
+    - title: str
+    - description: str
+    - severity: Severity
+    - state: IncidentState
+    - creator_id: UUID
+    - assignee_id: UUID (nullable)
+    - created_at: DateTime
+    - updated_at: DateTime
+    - resolved_at: DateTime (nullable)
+    - closed_at: DateTime (nullable)
+    - resolution_summary: str (nullable)
+    --
+    + transition_state(new_state, user)
+    + assign(user, commander)
+    + add_comment(text, user)
+    + change_severity(new_severity, user)
+    + can_close(): bool
+    + is_critical(): bool
+  }
+
+  class Comment {
+    - id: UUID
+    - incident_id: UUID
+    - author_id: UUID
+    - text: str
+    - created_at: DateTime
+    --
+    + get_author(): User
+  }
+
+  class AuditLog {
+    - id: UUID
+    - incident_id: UUID
+    - user_id: UUID
+    - action: str
+    - old_value: str (nullable)
+    - new_value: str (nullable)
+    - timestamp: DateTime
+    - details: JSON
+  }
+
+  class Notification {
+    - id: UUID
+    - user_id: UUID
+    - incident_id: UUID
+    - event_type: str
+    - message: str
+    - read: bool
+    - created_at: DateTime
+  }
+
+  interface IIncidentRepository {
+    + create(incident): Incident
+    + get_by_id(id): Incident
+    + update(incident): Incident
+    + delete(id): void
+    + list_by_state(state): List[Incident]
+    + list_by_severity(severity): List[Incident]
+    + list_by_assignee(user_id): List[Incident]
+  }
+
+  interface ICommentRepository {
+    + create(comment): Comment
+    + list_by_incident(incident_id): List[Comment]
+  }
+
+  interface IAuditLogRepository {
+    + create(audit_log): AuditLog
+    + list_by_incident(incident_id): List[AuditLog]
+  }
+
+  interface IUserRepository {
+    + get_by_id(id): User
+    + get_by_email(email): User
+    + list_all(): List[User]
+  }
+}
+
+Incident --> User : creator
+Incident --> User : assignee
+Incident --> Severity : has
+Incident --> IncidentState : current_state
+Incident "1" --> "0..*" Comment : has
+Incident "1" --> "0..*" AuditLog : logged_in
+Incident "1" --> "0..*" Notification : triggers
+
+Comment --> User : written_by
+AuditLog --> User : performed_by
+Notification --> User : for
+Notification --> Incident : about
+
+User --> Role : has
+
+@enduml

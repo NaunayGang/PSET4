@@ -1,0 +1,94 @@
+@startuml IncidentFlowSequenceCritical
+title IncidentFlow - Sequence: CRITICAL Incident Creation & Escalation
+
+actor Operator
+participant Frontend
+participant "API\n(FastAPI)" as API
+participant "Application\nLayer" as App
+participant Database
+participant "Event Bus" as EventBus
+actor Commander
+actor Manager
+
+Operator -> Frontend: Create CRITICAL incident\n(title, description, severity)
+Frontend -> API: POST /incidents\n{severity: CRITICAL}
+API -> App: CreateIncident(incident_data)
+App -> App: validate_incident()
+App -> Database: save(incident)
+Database --> App: incident_id
+App -> EventBus: publish(INCIDENT_CREATED)
+EventBus --> App: ✓
+
+alt CRITICAL Severity
+  App -> EventBus: publish(NOTIFY_COMMANDER)
+  EventBus --> CommanderNotifications: queue notification
+  App -> EventBus: publish(NOTIFY_MANAGER)
+  EventBus --> ManagerNotifications: queue notification
+else
+  note over EventBus: Non-CRITICAL incidents\ndon't notify immediately
+end
+
+App --> API: {id, state: OPEN, severity: CRITICAL}
+API --> Frontend: 201 Created
+Frontend --> Operator: ✓ Incidente creado
+
+note over Commander: Receives immediate\nnotification (push/banner)
+note over Manager: Receives immediate\nnotification (push/banner)
+
+Commander -> Frontend: View incident details
+Frontend -> API: GET /incidents/{id}
+API -> Database: fetch(incident)
+Database --> API: incident_data
+API --> Frontend: incident_details
+Frontend --> Commander: Display incident
+
+Commander -> Frontend: Assign to responder\nChange to ASSIGNED
+Frontend -> API: PATCH /incidents/{id}/state\n{state: ASSIGNED, assignee_id: X}
+
+API -> App: TransitionState(incident, ASSIGNED, commander_user)
+App -> App: validate_transition()\n(checks: not CLOSED, has_assignee)
+App -> Database: update(incident.state = ASSIGNED)
+App -> Database: create_audit_log(who, what, when)
+App -> EventBus: publish(INCIDENT_ASSIGNED)
+
+EventBus --> Responder: notify(assigned_to_incident)
+API --> Frontend: 200 OK
+Frontend --> Commander: ✓ Estado actualizado
+
+Responder -> Frontend: Start working
+Frontend -> API: PATCH /incidents/{id}/state\n{state: IN_PROGRESS}
+API -> App: TransitionState(IN_PROGRESS, responder_user)
+App -> App: validate_transition()
+App -> Database: update(incident.state = IN_PROGRESS)
+App -> EventBus: publish(INCIDENT_IN_PROGRESS)
+
+Responder -> Frontend: Add comment with resolution
+Frontend -> API: POST /incidents/{id}/comments\n{text: "Fixed by restarting service X"}
+API -> App: AddComment(incident_id, comment_text, user)
+App -> Database: create_comment()
+App -> Database: create_audit_log()
+App -> EventBus: publish(COMMENT_ADDED)
+
+Responder -> Frontend: Resolve incident
+Frontend -> API: PATCH /incidents/{id}/state\n{state: RESOLVED, summary: "..."}
+API -> App: TransitionState(RESOLVED, responder)
+App -> Database: update(incident.state = RESOLVED)
+App -> EventBus: publish(INCIDENT_RESOLVED)
+
+EventBus --> ManagerNotifications: notify(incident_resolved)
+
+Commander -> Frontend: Close incident\n(only Commander/Admin can do this)
+Frontend -> API: PATCH /incidents/{id}/state\n{state: CLOSED}
+
+API -> App: TransitionState(CLOSED, commander)
+App -> App: validate_transition()\nif CRITICAL: require summary ✓
+App -> Database: update(incident.state = CLOSED)
+App -> Database: create_audit_log()
+App -> EventBus: publish(INCIDENT_CLOSED)
+
+EventBus --> ManagerNotifications: notify(incident_closed)
+API --> Frontend: 200 OK
+
+Frontend --> Commander: ✓ Incident closed\nTimeline & audit logged
+
+@enduml
