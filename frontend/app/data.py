@@ -255,3 +255,89 @@ def _get_assignee_options(incidents: Iterable[dict]) -> list[str]:
 @st.cache_data
 def get_assignee_options(_incidents: list[dict]) -> list[str]:
     return _get_assignee_options(_incidents)
+
+
+def get_available_transitions(current_state: str) -> list[str]:
+    return STATE_TRANSITIONS.get(current_state, [])
+
+
+def can_transition(current_state: str, target_state: str) -> bool:
+    return target_state in STATE_TRANSITIONS.get(current_state, [])
+
+
+def validate_transition(incident: dict, target_state: str, resolution_summary: str = None) -> tuple[bool, str]:
+    current_state = incident["state"]
+    severity = incident["severity"]
+    assignee = incident.get("assigned_to")
+
+    if target_state == "closed" and severity == "critical" and not resolution_summary:
+        return False, "Cannot close CRITICAL incident without resolution summary."
+
+    if target_state == "in_progress" and not assignee:
+        return False, "Cannot move to IN_PROGRESS without assignee."
+
+    valid_transitions = STATE_TRANSITIONS.get(current_state, [])
+    if target_state not in valid_transitions:
+        return False, f"Invalid transition from {current_state} to {target_state}."
+
+    return True, ""
+
+
+def transition_incident(
+    incident: dict,
+    target_state: str,
+    actor: str,
+    resolution_summary: str = None,
+    new_severity: str = None,
+    new_assignee: str = None,
+) -> tuple[bool, str]:
+    valid, error = validate_transition(incident, target_state, resolution_summary)
+    if not valid:
+        return False, error
+
+    timestamp = datetime.now(timezone.utc)
+    current_state = incident["state"]
+
+    if target_state != current_state:
+        incident["state"] = target_state
+        incident.setdefault("timeline", []).append({
+            "type": "state",
+            "message": f"State changed from {current_state} to {target_state}",
+            "timestamp": timestamp,
+            "actor": actor,
+        })
+        if resolution_summary:
+            incident.setdefault("timeline", []).append({
+                "type": "resolution",
+                "message": f"Resolution: {resolution_summary}",
+                "timestamp": timestamp,
+                "actor": actor,
+            })
+
+    if new_severity and new_severity != incident.get("severity"):
+        old_severity = incident.get("severity")
+        incident["severity"] = new_severity
+        incident.setdefault("timeline", []).append({
+            "type": "severity",
+            "message": f"Severity changed from {old_severity} to {new_severity}",
+            "timestamp": timestamp,
+            "actor": actor,
+        })
+
+    if new_assignee and new_assignee != incident.get("assigned_to"):
+        old_assignee = incident.get("assigned_to") or "Unassigned"
+        if new_assignee == "Unassigned":
+            new_assignee_value = None
+            new_assignee_display = "Unassigned"
+        else:
+            new_assignee_value = new_assignee
+            new_assignee_display = new_assignee
+        incident["assigned_to"] = new_assignee_value
+        incident.setdefault("timeline", []).append({
+            "type": "assignment",
+            "message": f"Assigned from {old_assignee} to {new_assignee_display}",
+            "timestamp": timestamp,
+            "actor": actor,
+        })
+
+    return True, "Transition applied successfully."
