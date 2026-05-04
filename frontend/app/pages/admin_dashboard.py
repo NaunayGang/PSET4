@@ -34,12 +34,25 @@ if not is_manager:
     st.page_link("main.py", label="Back to list")
     st.stop()
 
-auto_refresh = st.checkbox("Auto-refresh (30s)", value=True)
+
+def render_auto_refresh(interval_seconds: int = 30):
+    st.markdown(
+        f"""
+        <meta http-equiv="refresh" content="{interval_seconds}">
+        <script>
+            setTimeout(function(){{
+                window.location.reload();
+            }}, {interval_seconds * 1000});
+        </script>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+auto_refresh = st.checkbox("Auto-refresh (30s)", value=False, key="admin_refresh")
 
 if auto_refresh:
-    import time
-    time.sleep(30)
-    st.rerun()
+    render_auto_refresh(30)
 
 st.header("Overview")
 
@@ -92,21 +105,24 @@ if is_admin:
             incident_map = {i["id"]: i for i in incidents}
             selected_incident = incident_map.get(assign_incident_id)
             if selected_incident:
-                new_assignee = st.selectbox("Assign to", USERS)
-                if st.button("Assign", key="reassign_btn"):
-                    success, msg = transition_incident(
-                        selected_incident,
-                        None,
-                        "Admin",
-                        None,
-                        None,
-                        new_assignee,
-                    )
-                    if success:
-                        st.success(msg)
-                        st.rerun()
-                    else:
-                        st.error(msg)
+                with st.form("reassign_form"):
+                    new_assignee = st.selectbox("Assign to", USERS)
+                    submitted = st.form_submit_button("Assign")
+                    
+                    if submitted:
+                        success, msg = transition_incident(
+                            selected_incident,
+                            "assigned",
+                            "Admin",
+                            None,
+                            None,
+                            new_assignee,
+                        )
+                        if success:
+                            st.success(msg)
+                            st.rerun()
+                        else:
+                            st.error(msg)
         else:
             st.info("No unassigned incidents")
 

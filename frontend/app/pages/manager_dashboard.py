@@ -29,12 +29,26 @@ if not is_manager:
     st.page_link("main.py", label="Back to list")
     st.stop()
 
-auto_refresh = st.checkbox("Auto-refresh (30s)", value=False)
+
+def render_auto_refresh(interval_seconds: int = 30):
+    st.markdown(
+        f"""
+        <meta http-equiv="refresh" content="{interval_seconds}">
+        <script>
+            setTimeout(function(){{
+                window.location.reload();
+            }}, {interval_seconds * 1000});
+        </script>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+auto_refresh = st.checkbox("Auto-refresh (30s)", value=False, key="mgr_refresh")
 
 if auto_refresh:
-    import time
-    time.sleep(30)
-    st.rerun()
+    render_auto_refresh(30)
+
 
 st.header("Metrics")
 
@@ -52,8 +66,9 @@ with col4:
     st.metric("Low", severity_counts.get("low", 0))
 
 st.header("State Distribution")
-state_cols = st.columns(len(STATES))
-for idx, state in enumerate(STATES):
+state_cols = st.columns(len(st.session_state.get("states", ["open", "triaged", "assigned", "in_progress", "resolved", "closed"])))
+state_list = ["open", "triaged", "assigned", "in_progress", "resolved", "closed"]
+for idx, state in enumerate(state_list):
     with state_cols[idx]:
         st.metric(state.title().replace("_", " "), state_counts.get(state, 0))
 
