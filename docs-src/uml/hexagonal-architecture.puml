@@ -7,137 +7,66 @@ skinparam rectangle {
   FontColor #01579B
 }
 
-package "Frontend Layer" {
-  rectangle "Streamlit UI" as StreamlitUI {
-    - Incident List
-    - Incident Detail
-    - Comments Timeline
-    - State Transitions
-    - Dashboards
-  }
+rectangle "FRONTEND LAYER" {
+  rectangle "Streamlit UI" as StreamlitUI
 }
 
-package "API Layer" {
-  rectangle "FastAPI" as FastAPI {
-    - REST Endpoints
-    - Request Validation
-    - Response Serialization
-    - Permission Decorators
-  }
+rectangle "API LAYER" {
+  rectangle "FastAPI REST Endpoints" as FastAPI
 }
 
-package "Application Layer" {
-  rectangle "Use Cases" as UseCases {
-    - CreateIncident
-    - TriageIncident
-    - AssignIncident
-    - TransitionState
-    - AddComment
-    - ChangeSeverity
-  }
+rectangle "APPLICATION LAYER" {
+  rectangle "Use Cases\nCreateIncident, TriageIncident,\nAssignIncident, TransitionState,\nAddComment, ChangeSeverity" as UseCases
 
-  rectangle "DTOs & Validators" as DTOs {
-    - IncidentCreateDTO
-    - IncidentUpdateDTO
-    - CommentDTO
-  }
+  rectangle "DTOs & Validators\nIncidentCreateDTO,\nIncidentUpdateDTO,\nCommentDTO" as DTOs
 }
 
-package "Domain Layer (Core Business Logic)" {
-  rectangle "Entities" as Entities {
-    - Incident (aggregate root)
-    - Comment
-    - User & Role
-    - AuditLog
-    - Notification
-  }
+rectangle "DOMAIN LAYER (Core Business)" {
+  rectangle "Entities\nIncident, Comment,\nUser, AuditLog, Notification" as Entities
 
-  rectangle "Value Objects" as ValueObjects {
-    - Severity enum
-    - IncidentState enum
-    - Role enum
-  }
+  rectangle "Value Objects\nSeverity, IncidentState,\nRole enums" as ValueObjects
 
-  rectangle "Business Rules" as Rules {
-    - State Machine
-    - CRITICAL Rules
-    - Permission Rules
-    - Validation Rules
-  }
+  rectangle "Business Rules\nState Machine,\nCRITICAL Rules,\nPermission Rules" as Rules
 
-  rectangle "Abstractions" as Abstractions {
-    interface IIncidentRepository
-    interface ICommentRepository
-    interface IAuditLogRepository
-    interface IUserRepository
-    interface IEventBus
-  }
+  rectangle "Abstractions (Interfaces)\nIIncidentRepository,\nICommentRepository,\nIAuditLogRepository,\nIUserRepository, IEventBus" as Abstractions
 }
 
-package "Infrastructure Layer" {
-  rectangle "Database" as DB {
-    - PostgreSQL
-    - ORM (SQLAlchemy)
-    - Migrations (Alembic)
-  }
+rectangle "INFRASTRUCTURE LAYER" {
+  rectangle "PostgreSQL Database\nSQLAlchemy ORM,\nAlembic Migrations" as DB
 
-  rectangle "Repositories" as Repositories {
-    - IncidentRepositoryImpl
-    - CommentRepositoryImpl
-    - AuditLogRepositoryImpl
-    - UserRepositoryImpl
-  }
+  rectangle "Repository Implementations\nIncidentRepositoryImpl,\nCommentRepositoryImpl,\nAuditLogRepositoryImpl" as Repositories
 
-  rectangle "Event Bus" as EventBus {
-    - In-Memory Event Pub/Sub
-    - Event Handler Registry
-    - Notification Service
-  }
-
-  rectangle "Configuration" as Config {
-    - Database Connection
-    - Environment Variables
-    - Dependency Injection
-  }
+  rectangle "Event Bus\nIn-Memory Pub/Sub,\nNotification Service" as EventBus
 }
 
-StreamlitUI --> FastAPI : HTTP REST
-FastAPI --> UseCases : Uses
-UseCases --> DTOs : Validates
-UseCases --> Entities : Creates/Manipulates
-UseCases --> Abstractions : Depends on
+StreamlitUI --> FastAPI
+FastAPI --> UseCases
+UseCases --> DTOs
+UseCases --> Entities
+UseCases --> Abstractions
 
-Entities --> ValueObjects : Uses
-Entities --> Rules : Enforces
-Rules --> Abstractions : Abstracts DB/Events
+Entities --> ValueObjects
+Entities --> Rules
+Rules --> Abstractions
 
-Repositories -.-> Abstractions : Implements
-Repositories --> DB : Queries/Inserts
-Repositories --> EventBus : Publishes Events
+Repositories .up.> Abstractions
+Repositories --> DB
+EventBus .up.> Abstractions
 
-EventBus -.-> Abstractions : Implements
-EventBus --> DB : Stores Notifications
-EventBus --> Repositories : Updates via
-
-Config --> Repositories : Injects Dependencies
-Config --> EventBus : Initializes
-
-note right of Entities
+note bottom of Entities
   Pure business logic
   No external dependencies
   Testable in isolation
 end note
 
-note right of Repositories
-  Concrete implementations
-  DB-specific queries
-  Dependency inversion
+note bottom of Repositories
+  Concrete DB implementations
+  Dependency inversion pattern
 end note
 
-note right of Rules
-  All state transitions
-  All permission checks
-  All validations
+note bottom of Rules
+  All state transitions,
+  permission checks, validations
   NO DATABASE CALLS
 end note
 

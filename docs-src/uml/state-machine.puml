@@ -32,9 +32,9 @@ note right of OPEN
   un incidente
 end note
 
-note right of CRITICAL
+note right of RESOLVED
+  Para CRITICAL: debe haber resumen
   Requiere notificación inmediata
-  No puede cerrarse sin resumen
   Debe tener responsable asignado
 end note
 
