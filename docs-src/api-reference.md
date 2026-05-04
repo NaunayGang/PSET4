@@ -8,66 +8,44 @@ IncidentFlow exposes a REST API built with FastAPI for all operations. This docu
 
 **Base URL**: `http://localhost:8000` (development)
 
-**Authentication**: Bearer token in `Authorization` header
+**Authentication**: Bearer token in `Authorization` header (JWT)
 
 ```bash
-curl -H "Authorization: Bearer <token>" http://localhost:8000/api/incidents
+curl -H "Authorization: Bearer <token>" http://localhost:8000/incidents
 ```
 
 ---
 
-## Authentication & Authorization
+## Severity Levels
 
-### Login
-
-**POST** `/api/auth/login`
-
-Authenticate user and get session token.
-
-**Request:**
-```json
-{
-  "email": "operator@company.com",
-  "password": "password123"
-}
-```
-
-**Response:** `200 OK`
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user_id": "550e8400-e29b-41d4-a716-446655440000",
-  "role": "OPERATOR",
-  "email": "operator@company.com"
-}
-```
-
-**Error Response:** `401 Unauthorized`
-```json
-{
-  "detail": "Invalid credentials"
-}
-```
+Valid severity values (case-sensitive, title-case):
+- `Low` - Minor issues, can wait
+- `Medium` - Affects some users, should be resolved today
+- `High` - Affects many users, needs immediate attention
+- `Critical` - Service down, requires Commander immediate attention
 
 ---
 
-### Logout
+## Incident States
 
-**POST** `/api/auth/logout`
+Valid states for transition (case-sensitive, UPPERCASE):
+- `OPEN` - Initial state when created
+- `IN_PROGRESS` - Work in progress
+- `RESOLVED` - Solution implemented
+- `CLOSED` - Formally closed
+- `CANCELLED` - Cancelled/false alarm
+- `ESCALATED` - Escalated to higher level
 
-End current session.
+---
 
-**Headers:**
-```
-Authorization: Bearer <token>
-```
+## Roles
 
-**Response:** `200 OK`
-```json
-{
-  "message": "Logged out successfully"
-}
-```
+Valid role names in the system (case-sensitive):
+- `Admin` - Full access
+- `Operator` - Create incidents, add comments
+- `Incident_commander` - Coordinate incidents, assign, change states
+- `Technical_responder` - Add comments, do technical work
+- `Incident_manager` - View and change severity
 
 ---
 
@@ -75,9 +53,9 @@ Authorization: Bearer <token>
 
 ### Create Incident
 
-**POST** `/api/incidents`
+**POST** `/incidents`
 
-Create a new incident. Only Operator and Commander roles can create.
+Create a new incident. Requires `Admin` or `Operator` role.
 
 **Headers:**
 ```
@@ -90,181 +68,49 @@ Content-Type: application/json
 {
   "title": "Payment service down",
   "description": "Customers cannot complete transactions. Error 500 in payment API.",
-  "severity": "CRITICAL"
+  "severity": "Critical"
 }
 ```
 
-**Severity Options:**
-- `LOW` - Minor issues, can wait
-- `MEDIUM` - Affects some users, should be resolved today
-- `HIGH` - Affects many users, needs immediate attention
-- `CRITICAL` - Service down, requires Commander immediate attention
-
-**Response:** `201 Created`
+**Response:** `200 OK`
 ```json
 {
-  "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "id": 1,
   "title": "Payment service down",
   "description": "Customers cannot complete transactions...",
-  "severity": "CRITICAL",
+  "severity": "Critical",
   "state": "OPEN",
-  "creator_id": "550e8400-e29b-41d4-a716-446655440000",
+  "creator_id": 1,
+  "assigned_user_id": null,
   "created_at": "2026-05-03T10:30:00Z",
-  "updated_at": "2026-05-03T10:30:00Z",
-  "assignee_id": null,
-  "resolved_at": null,
-  "closed_at": null,
-  "resolution_summary": null
+  "updated_at": "2026-05-03T10:30:00Z"
 }
 ```
 
 **Error Response:** `400 Bad Request`
 ```json
 {
-  "detail": "Title is required and must be between 5 and 200 characters"
+  "detail": "Invalid severity level: CRITICAL"
 }
 ```
 
 **Error Response:** `403 Forbidden`
 ```json
 {
-  "detail": "You don't have permission to create incidents"
+  "detail": "Not enough permissions"
 }
 ```
 
 ---
 
-### List Incidents
+### Triage Incident
 
-**GET** `/api/incidents`
+**POST** `/incidents/{incident_id}/triage`
 
-Get paginated list of incidents with optional filters.
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Query Parameters:**
-```
-?page=1
-&limit=20
-&state=IN_PROGRESS
-&severity=CRITICAL
-&assignee_id=550e8400-e29b-41d4-a716-446655440000
-&search=payment
-&sort_by=created_at
-&sort_order=desc
-```
-
-**Parameters:**
-- `page` (int, default: 1) - Page number for pagination
-- `limit` (int, default: 20, max: 100) - Results per page
-- `state` (string) - Filter by state: OPEN, TRIAGED, ASSIGNED, IN_PROGRESS, RESOLVED, CLOSED, ESCALATED, CANCELLED
-- `severity` (string) - Filter by severity: LOW, MEDIUM, HIGH, CRITICAL
-- `assignee_id` (UUID) - Filter by assigned user
-- `search` (string) - Search in title and description
-- `sort_by` (string) - Sort field: created_at, updated_at, severity
-- `sort_order` (string) - Sort order: asc, desc
-
-**Response:** `200 OK`
-```json
-{
-  "total": 15,
-  "page": 1,
-  "limit": 20,
-  "results": [
-    {
-      "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-      "title": "Payment service down",
-      "severity": "CRITICAL",
-      "state": "IN_PROGRESS",
-      "creator_id": "550e8400-e29b-41d4-a716-446655440000",
-      "assignee_id": "550e8400-e29b-41d4-a716-446655440001",
-      "created_at": "2026-05-03T10:30:00Z",
-      "updated_at": "2026-05-03T10:45:00Z"
-    }
-  ]
-}
-```
-
----
-
-### Get Incident by ID
-
-**GET** `/api/incidents/{incident_id}`
-
-Get full details of a specific incident including timeline.
+Evaluate and triage an incident (change its severity). Requires `Admin` or `Incident_commander` role.
 
 **Path Parameters:**
-- `incident_id` (UUID) - The incident ID
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Response:** `200 OK`
-```json
-{
-  "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "title": "Payment service down",
-  "description": "Customers cannot complete transactions...",
-  "severity": "CRITICAL",
-  "state": "IN_PROGRESS",
-  "creator_id": "550e8400-e29b-41d4-a716-446655440000",
-  "assignee_id": "550e8400-e29b-41d4-a716-446655440001",
-  "created_at": "2026-05-03T10:30:00Z",
-  "updated_at": "2026-05-03T10:45:00Z",
-  "resolved_at": null,
-  "closed_at": null,
-  "resolution_summary": null,
-  "comments": [
-    {
-      "id": "comment-id-1",
-      "author_id": "550e8400-e29b-41d4-a716-446655440001",
-      "text": "Started investigating payment service logs",
-      "created_at": "2026-05-03T10:35:00Z"
-    }
-  ],
-  "audit_log": [
-    {
-      "id": "audit-1",
-      "user_id": "550e8400-e29b-41d4-a716-446655440000",
-      "action": "INCIDENT_CREATED",
-      "old_value": null,
-      "new_value": "OPEN",
-      "timestamp": "2026-05-03T10:30:00Z"
-    },
-    {
-      "id": "audit-2",
-      "user_id": "550e8400-e29b-41d4-a716-446655440002",
-      "action": "INCIDENT_ASSIGNED",
-      "old_value": null,
-      "new_value": "550e8400-e29b-41d4-a716-446655440001",
-      "timestamp": "2026-05-03T10:32:00Z"
-    }
-  ]
-}
-```
-
-**Error Response:** `404 Not Found`
-```json
-{
-  "detail": "Incident not found"
-}
-```
-
----
-
-### Update Incident State
-
-**PATCH** `/api/incidents/{incident_id}/state`
-
-Change incident state. Only Incident Commander and Admin can do this.
-
-**Path Parameters:**
-- `incident_id` (UUID)
+- `incident_id` (int) - The incident ID
 
 **Headers:**
 ```
@@ -275,25 +121,67 @@ Content-Type: application/json
 **Request Body:**
 ```json
 {
-  "state": "IN_PROGRESS"
+  "new_severity": "Critical"
 }
-```
-
-**Valid State Transitions:**
-```
-OPEN → TRIAGED
-TRIAGED → ASSIGNED
-ASSIGNED → IN_PROGRESS
-IN_PROGRESS → RESOLVED
-RESOLVED → CLOSED
-Any → ESCALATED
-Any → CANCELLED
 ```
 
 **Response:** `200 OK`
 ```json
 {
-  "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "id": 1,
+  "severity": "Critical",
+  "state": "OPEN",
+  "updated_at": "2026-05-03T10:35:00Z"
+}
+```
+
+**Error Response:** `404 Not Found`
+```json
+{
+  "detail": "Incident with ID 999 not found."
+}
+```
+
+---
+
+### Transition State
+
+**POST** `/incidents/{incident_id}/transition-state`
+
+Change incident state. Requires `Admin` or `Incident_commander` role.
+
+**Path Parameters:**
+- `incident_id` (int)
+
+**Headers:**
+```
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "new_state": "IN_PROGRESS"
+}
+```
+
+**Valid State Transitions:**
+```
+OPEN → IN_PROGRESS
+OPEN → CANCELLED
+OPEN → ESCALATED
+IN_PROGRESS → RESOLVED
+IN_PROGRESS → ESCALATED
+RESOLVED → CLOSED
+Any state → CANCELLED
+Any state → ESCALATED
+```
+
+**Response:** `200 OK`
+```json
+{
+  "id": 1,
   "state": "IN_PROGRESS",
   "updated_at": "2026-05-03T10:40:00Z"
 }
@@ -302,21 +190,14 @@ Any → CANCELLED
 **Error Response:** `400 Bad Request` (Invalid transition)
 ```json
 {
-  "detail": "Cannot transition from IN_PROGRESS to TRIAGED"
-}
-```
-
-**Error Response:** `400 Bad Request` (Missing assignee for IN_PROGRESS)
-```json
-{
-  "detail": "Cannot move to IN_PROGRESS without an assignee"
+  "detail": "Invalid state transition or incident state"
 }
 ```
 
 **Error Response:** `403 Forbidden`
 ```json
 {
-  "detail": "Only Incident Commander can change state"
+  "detail": "Not enough permissions"
 }
 ```
 
@@ -324,12 +205,12 @@ Any → CANCELLED
 
 ### Assign Incident
 
-**PATCH** `/api/incidents/{incident_id}/assignee`
+**POST** `/incidents/{incident_id}/assign`
 
-Assign incident to a technical responder. Only Incident Commander and Admin.
+Assign incident to a technical responder. Requires `Admin` or `Incident_commander` role.
 
 **Path Parameters:**
-- `incident_id` (UUID)
+- `incident_id` (int)
 
 **Headers:**
 ```
@@ -340,16 +221,16 @@ Content-Type: application/json
 **Request Body:**
 ```json
 {
-  "assignee_id": "550e8400-e29b-41d4-a716-446655440001"
+  "assigned_user_id": 5
 }
 ```
 
 **Response:** `200 OK`
 ```json
 {
-  "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "assignee_id": "550e8400-e29b-41d4-a716-446655440001",
-  "state": "ASSIGNED",
+  "id": 1,
+  "assigned_user_id": 5,
+  "state": "IN_PROGRESS",
   "updated_at": "2026-05-03T10:40:00Z"
 }
 ```
@@ -357,7 +238,7 @@ Content-Type: application/json
 **Error Response:** `400 Bad Request`
 ```json
 {
-  "detail": "User not found or not active"
+  "detail": "User not found or invalid assignment"
 }
 ```
 
@@ -365,12 +246,12 @@ Content-Type: application/json
 
 ### Change Severity
 
-**PATCH** `/api/incidents/{incident_id}/severity`
+**POST** `/incidents/{incident_id}/change_severity`
 
-Change incident severity. Only Incident Commander and Admin. If CRITICAL, notifies Commander and Manager.
+Change incident severity. Requires `Admin` or `Incident_manager` role.
 
 **Path Parameters:**
-- `incident_id` (UUID)
+- `incident_id` (int)
 
 **Headers:**
 ```
@@ -381,15 +262,15 @@ Content-Type: application/json
 **Request Body:**
 ```json
 {
-  "severity": "CRITICAL"
+  "new_severity": "Critical"
 }
 ```
 
 **Response:** `200 OK`
 ```json
 {
-  "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "severity": "CRITICAL",
+  "id": 1,
+  "severity": "Critical",
   "updated_at": "2026-05-03T10:40:00Z"
 }
 ```
@@ -400,12 +281,12 @@ Content-Type: application/json
 
 ### Add Comment
 
-**POST** `/api/incidents/{incident_id}/comments`
+**POST** `/incidents/{incident_id}/comments`
 
-Add a comment to incident timeline. All authenticated users can comment.
+Add a comment to incident timeline. Requires `Admin`, `Operator`, or `Technical_responder` role.
 
 **Path Parameters:**
-- `incident_id` (UUID)
+- `incident_id` (int)
 
 **Headers:**
 ```
@@ -416,251 +297,28 @@ Content-Type: application/json
 **Request Body:**
 ```json
 {
-  "text": "Investigation underway. Found issue in payment-gateway service logs."
+  "content": "Investigation underway. Found issue in payment-gateway service logs."
 }
 ```
 
-**Response:** `201 Created`
+**Response:** `200 OK`
 ```json
 {
-  "id": "comment-id-1",
-  "incident_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "author_id": "550e8400-e29b-41d4-a716-446655440001",
-  "text": "Investigation underway. Found issue in payment-gateway service logs.",
-  "created_at": "2026-05-03T10:40:00Z"
+  "comment_id": 42
 }
 ```
 
 **Error Response:** `400 Bad Request`
 ```json
 {
-  "detail": "Comment text cannot be empty"
+  "detail": "Comment content is required"
 }
 ```
 
----
-
-### List Comments
-
-**GET** `/api/incidents/{incident_id}/comments`
-
-Get all comments for an incident.
-
-**Path Parameters:**
-- `incident_id` (UUID)
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Query Parameters:**
-```
-?page=1
-&limit=50
-```
-
-**Response:** `200 OK`
+**Error Response:** `404 Not Found`
 ```json
 {
-  "total": 5,
-  "page": 1,
-  "results": [
-    {
-      "id": "comment-id-1",
-      "author_id": "550e8400-e29b-41d4-a716-446655440001",
-      "text": "Investigation underway...",
-      "created_at": "2026-05-03T10:40:00Z"
-    }
-  ]
-}
-```
-
----
-
-## Audit Log
-
-### Get Audit Log
-
-**GET** `/api/incidents/{incident_id}/audit`
-
-Get audit log for an incident. Only Manager and Admin can view.
-
-**Path Parameters:**
-- `incident_id` (UUID)
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Query Parameters:**
-```
-?page=1
-&limit=50
-&action=SEVERITY_CHANGED
-&user_id=550e8400-e29b-41d4-a716-446655440000
-```
-
-**Response:** `200 OK`
-```json
-{
-  "total": 8,
-  "page": 1,
-  "results": [
-    {
-      "id": "audit-1",
-      "incident_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-      "user_id": "550e8400-e29b-41d4-a716-446655440000",
-      "action": "INCIDENT_CREATED",
-      "old_value": null,
-      "new_value": "OPEN",
-      "timestamp": "2026-05-03T10:30:00Z",
-      "details": {
-        "severity": "CRITICAL",
-        "creator": "operator@company.com"
-      }
-    },
-    {
-      "id": "audit-2",
-      "incident_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-      "user_id": "550e8400-e29b-41d4-a716-446655440002",
-      "action": "SEVERITY_CHANGED",
-      "old_value": "HIGH",
-      "new_value": "CRITICAL",
-      "timestamp": "2026-05-03T10:35:00Z",
-      "details": {
-        "reason": "More users affected than initially thought"
-      }
-    }
-  ]
-}
-```
-
-**Error Response:** `403 Forbidden`
-```json
-{
-  "detail": "Only Manager and Admin can view audit logs"
-}
-```
-
----
-
-## Notifications
-
-### Get Notifications
-
-**GET** `/api/notifications`
-
-Get user's notifications.
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Query Parameters:**
-```
-?page=1
-&limit=20
-&read=false
-```
-
-**Response:** `200 OK`
-```json
-{
-  "total": 3,
-  "unread": 2,
-  "results": [
-    {
-      "id": "notif-1",
-      "incident_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-      "event_type": "INCIDENT_ASSIGNED",
-      "message": "You have been assigned to incident: Payment service down",
-      "read": false,
-      "created_at": "2026-05-03T10:32:00Z"
-    }
-  ]
-}
-```
-
----
-
-### Mark Notification as Read
-
-**PATCH** `/api/notifications/{notification_id}/read`
-
-Mark a notification as read.
-
-**Path Parameters:**
-- `notification_id` (UUID)
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Response:** `200 OK`
-```json
-{
-  "id": "notif-1",
-  "read": true
-}
-```
-
----
-
-## Users & Roles
-
-### Get Current User
-
-**GET** `/api/users/me`
-
-Get current authenticated user info.
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Response:** `200 OK`
-```json
-{
-  "id": "550e8400-e29b-41d4-a716-446655440001",
-  "email": "commander@company.com",
-  "name": "Sarah Johnson",
-  "role": "COMMANDER",
-  "active": true,
-  "created_at": "2026-04-15T08:00:00Z"
-}
-```
-
----
-
-### List Users (Admin Only)
-
-**GET** `/api/users`
-
-Get all users. Admin only.
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Response:** `200 OK`
-```json
-{
-  "total": 12,
-  "results": [
-    {
-      "id": "550e8400-e29b-41d4-a716-446655440001",
-      "email": "commander@company.com",
-      "name": "Sarah Johnson",
-      "role": "COMMANDER",
-      "active": true
-    }
-  ]
+  "detail": "Incident with ID 999 not found."
 }
 ```
 
@@ -671,129 +329,102 @@ Authorization: Bearer <token>
 | Code | Meaning |
 |------|---------|
 | 200 | OK - Request succeeded |
-| 201 | Created - Resource created successfully |
-| 400 | Bad Request - Invalid input |
-| 401 | Unauthorized - Missing or invalid token |
-| 403 | Forbidden - Don't have permission |
+| 400 | Bad Request - Invalid input or invalid state transition |
+| 403 | Forbidden - Insufficient permissions |
 | 404 | Not Found - Resource doesn't exist |
-| 409 | Conflict - Invalid state transition |
 | 500 | Internal Server Error |
 
 ---
 
 ## Error Format
 
-All errors follow this format:
+Errors follow this format:
 
 ```json
 {
-  "detail": "Human-readable error message",
-  "error_code": "ERROR_CODE",
-  "timestamp": "2026-05-03T10:40:00Z"
+  "detail": "Human-readable error message"
 }
 ```
 
 ---
 
-## Rate Limiting
+## Role Permission Matrix
 
-API has rate limiting:
-- 100 requests per minute per user
-- Returns `429 Too Many Requests` when exceeded
-
----
-
-## Pagination
-
-List endpoints return paginated results:
-
-```json
-{
-  "total": 100,
-  "page": 1,
-  "limit": 20,
-  "results": [...]
-}
-```
-
-Navigate pages with `page` and `limit` query parameters.
-
----
-
-## Postman Collection
-
-A Postman collection with all endpoints is available at: `/docs/postman-collection.json`
-
-Import it into Postman to test all endpoints with example requests.
+| Action | Admin | Operator | Incident_commander | Technical_responder | Incident_manager |
+|--------|-------|----------|-------------------|-------------------|------------------|
+| Create Incident | ✓ | ✓ | ✗ | ✗ | ✗ |
+| Triage | ✓ | ✗ | ✓ | ✗ | ✗ |
+| Transition State | ✓ | ✗ | ✓ | ✗ | ✗ |
+| Assign | ✓ | ✗ | ✓ | ✗ | ✗ |
+| Change Severity | ✓ | ✗ | ✗ | ✗ | ✓ |
+| Add Comment | ✓ | ✓ | ✓ | ✓ | ✗ |
 
 ---
 
 ## Examples
 
-### Example 1: Create and Resolve a CRITICAL Incident
+### Example 1: Create and Process an Incident
 
 ```bash
-# 1. Login
-curl -X POST http://localhost:8000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"operator@company.com","password":"pass123"}'
-
-# Response: {"token": "eyJ..."}
-
-# 2. Create CRITICAL incident
+# 1. Create Critical incident
 TOKEN="eyJ..."
-curl -X POST http://localhost:8000/api/incidents \
+curl -X POST http://localhost:8000/incidents \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Database connection pool exhausted",
     "description": "All database connections are in use, queries failing",
-    "severity": "CRITICAL"
+    "severity": "Critical"
   }'
 
-# Response: {"id": "incident-uuid", "state": "OPEN", ...}
+# Response: {"id": 1, "state": "OPEN", ...}
 
-# 3. View incident (notifications should be sent to Commander/Manager)
-INCIDENT_ID="incident-uuid"
-curl http://localhost:8000/api/incidents/$INCIDENT_ID \
-  -H "Authorization: Bearer $TOKEN"
-
-# 4. Assign to technical responder (as Commander)
-COMMANDER_TOKEN="eyJ..."
-RESPONDER_ID="responder-uuid"
-curl -X PATCH http://localhost:8000/api/incidents/$INCIDENT_ID/assignee \
-  -H "Authorization: Bearer $COMMANDER_TOKEN" \
+# 2. Triage the incident
+INCIDENT_ID=1
+curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/triage \
+  -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d "{\"assignee_id\": \"$RESPONDER_ID\"}"
+  -d '{"new_severity": "Critical"}'
 
-# 5. Add comment
-curl -X POST http://localhost:8000/api/incidents/$INCIDENT_ID/comments \
-  -H "Authorization: Bearer $COMMANDER_TOKEN" \
+# 3. Assign to responder (user_id = 5)
+curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/assign \
+  -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"text": "Added more database servers to connection pool"}'
+  -d '{"assigned_user_id": 5}'
 
-# 6. Resolve
-curl -X PATCH http://localhost:8000/api/incidents/$INCIDENT_ID/state \
-  -H "Authorization: Bearer $COMMANDER_TOKEN" \
+# 4. Add comment
+curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/comments \
+  -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"state": "RESOLVED"}'
+  -d '{"content": "Added 10 more database servers"}'
 
-# 7. Close with summary
-curl -X PATCH http://localhost:8000/api/incidents/$INCIDENT_ID/state \
-  -H "Authorization: Bearer $COMMANDER_TOKEN" \
+# 5. Transition to IN_PROGRESS
+curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/transition-state \
+  -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{
-    "state": "CLOSED",
-    "resolution_summary": "Added 10 more database servers. Connections now handling peak load."
-  }'
+  -d '{"new_state": "IN_PROGRESS"}'
+
+# 6. Transition to RESOLVED
+curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/transition-state \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"new_state": "RESOLVED"}'
+
+# 7. Close the incident
+curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/transition-state \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"new_state": "CLOSED"}'
 ```
 
 ---
 
 ## Development Notes
 
+- All incident IDs are integers (not UUIDs)
 - All timestamps are in UTC (ISO 8601 format)
-- All IDs are UUIDs (v4)
-- Severity is case-sensitive: use CRITICAL not Critical
-- States are case-sensitive: use IN_PROGRESS not In_Progress
-- Empty string for search means no filtering
+- Severity values are title-case: `Low`, `Medium`, `High`, `Critical`
+- State values are UPPERCASE: `OPEN`, `IN_PROGRESS`, `RESOLVED`, `CLOSED`, `CANCELLED`, `ESCALATED`
+- Role names use underscores: `Incident_commander`, `Technical_responder`, `Incident_manager`
+- User IDs are integers
+- All POST endpoints that modify return the updated incident or object
