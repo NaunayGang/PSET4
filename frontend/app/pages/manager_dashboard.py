@@ -3,6 +3,7 @@ from __future__ import annotations
 import streamlit as st
 
 from data import (
+    STATES,
     get_counts_by_severity,
     get_counts_by_state,
     get_critical_recent,
@@ -66,7 +67,7 @@ with col4:
     st.metric("Low", severity_counts.get("low", 0))
 
 st.header("State Distribution")
-state_cols = st.columns(len(st.session_state.get("states", ["open", "triaged", "assigned", "in_progress", "resolved", "closed"])))
+state_cols = st.columns(len(STATES))
 state_list = ["open", "triaged", "assigned", "in_progress", "resolved", "closed"]
 for idx, state in enumerate(state_list):
     with state_cols[idx]:

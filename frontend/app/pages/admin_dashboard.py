@@ -112,7 +112,7 @@ if is_admin:
                     if submitted:
                         success, msg = transition_incident(
                             selected_incident,
-                            "assigned",
+                            None,
                             "Admin",
                             None,
                             None,
