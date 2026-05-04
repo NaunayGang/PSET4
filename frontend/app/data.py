@@ -8,6 +8,17 @@ import streamlit as st
 SEVERITIES = ["low", "medium", "high", "critical"]
 STATES = ["open", "triaged", "assigned", "in_progress", "resolved", "closed"]
 
+STATE_TRANSITIONS = {
+    "open": ["triaged"],
+    "triaged": ["assigned"],
+    "assigned": ["in_progress"],
+    "in_progress": ["resolved"],
+    "resolved": ["closed", "triaged"],
+    "closed": [],
+}
+
+USERS = ["Marco", "Nina", "Carlos", "Irene", "Laura", "Felipe", "Sara", "Andre"]
+
 
 def _timeline_entry(
     entry_type: str,
@@ -224,3 +235,75 @@ def _get_assignee_options(incidents: Iterable[dict]) -> list[str]:
 @st.cache_data
 def get_assignee_options(_incidents: list[dict]) -> list[str]:
     return _get_assignee_options(_incidents)
+
+
+def get_counts_by_severity(incidents: list[dict]) -> dict[str, int]:
+    counts = {"critical": 0, "high": 0, "medium": 0, "low": 0}
+    for incident in incidents:
+        severity = incident.get("severity", "low")
+        if severity in counts:
+            counts[severity] += 1
+    return counts
+
+
+def get_counts_by_state(incidents: list[dict]) -> dict[str, int]:
+    counts = {}
+    for state in STATES:
+        counts[state] = 0
+    for incident in incidents:
+        state = incident.get("state")
+        if state in counts:
+            counts[state] += 1
+    return counts
+
+
+def get_critical_recent(incidents: list[dict], hours: int = 24) -> list[dict]:
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+    recent = []
+    for incident in incidents:
+        if incident.get("severity") == "critical":
+            created = incident.get("created_at")
+            if created and created > cutoff:
+                recent.append(incident)
+    return recent
+
+
+def get_unassigned(incidents: list[dict]) -> list[dict]:
+    return [i for i in incidents if not i.get("assigned_to")]
+
+
+def get_incidents_by_day(incidents: list[dict], days: int = 7) -> dict[str, int]:
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+    by_day = {}
+    for i in range(days):
+        day = (datetime.now(timezone.utc) - timedelta(days=i)).strftime("%Y-%m-%d")
+        by_day[day] = 0
+    for incident in incidents:
+        created = incident.get("created_at")
+        if created and created > cutoff:
+            day = created.strftime("%Y-%m-%d")
+            if day in by_day:
+                by_day[day] += 1
+    return by_day
+
+
+def get_audit_logs(incidents: list[dict], actor_filter: str = None, type_filter: str = None) -> list[dict]:
+    logs = []
+    for incident in incidents:
+        timeline = incident.get("timeline", [])
+        for entry in timeline:
+            if entry.get("type") in ("state", "severity", "assignment"):
+                if actor_filter and entry.get("actor") != actor_filter:
+                    continue
+                if type_filter and entry.get("type") != type_filter:
+                    continue
+                logs.append({
+                    "incident_id": incident["id"],
+                    "incident_title": incident["title"],
+                    "type": entry.get("type"),
+                    "message": entry.get("message"),
+                    "actor": entry.get("actor"),
+                    "timestamp": entry.get("timestamp"),
+                })
+    logs.sort(key=lambda x: x.get("timestamp", datetime.min), reverse=True)
+    return logs

@@ -31,6 +31,13 @@ st.title("IncidentFlow")
 
 st.page_link("pages/create_incident.py", label="Create incident")
 
+current_role = st.session_state.get("active_role", "Operator")
+if current_role in ("Manager", "Admin"):
+    st.page_link("pages/manager_dashboard.py", label="Dashboard")
+
+if current_role == "Admin":
+    st.page_link("pages/admin_dashboard.py", label="Admin Panel")
+
 if "incidents" not in st.session_state:
     st.session_state["incidents"] = get_incidents()
 
