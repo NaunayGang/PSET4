@@ -8,16 +8,36 @@ import streamlit as st
 SEVERITIES = ["low", "medium", "high", "critical"]
 STATES = ["open", "triaged", "assigned", "in_progress", "resolved", "closed"]
 
-STATE_TRANSITIONS = {
-    "open": ["triaged"],
-    "triaged": ["assigned"],
-    "assigned": ["in_progress"],
-    "in_progress": ["resolved"],
-    "resolved": ["closed", "triaged"],
-    "closed": [],
-}
+TOAST_DURATION = 3
 
-USERS = ["Marco", "Nina", "Carlos", "Irene", "Laura", "Felipe", "Sara", "Andre"]
+
+def show_toast(message: str, icon: str = "info"):
+    toast_icons = {
+        "success": "✅",
+        "error": "❌",
+        "warning": "⚠️",
+        "info": "ℹ️",
+    }
+    icon_str = toast_icons.get(icon, "ℹ️")
+    st.toast(f"{icon_str} {message}")
+
+
+def validate_required(value: str, field_name: str) -> tuple[bool, str]:
+    if not value or not value.strip():
+        return False, f"{field_name} is required."
+    return True, ""
+
+
+def validate_min_length(value: str, field_name: str, min_len: int) -> tuple[bool, str]:
+    if len(value.strip()) < min_len:
+        return False, f"{field_name} must be at least {min_len} characters."
+    return True, ""
+
+
+def validate_selection(value: str, field_name: str) -> tuple[bool, str]:
+    if not value or value == "":
+        return False, f"Please select a {field_name}."
+    return True, ""
 
 
 def _timeline_entry(
