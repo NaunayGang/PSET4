@@ -1,0 +1,47 @@
+@startuml IncidentFlowStateMachine
+title IncidentFlow - State Machine Diagram
+
+[*] --> OPEN
+
+OPEN --> TRIAGED : triage()
+OPEN --> CANCELLED : cancel()
+OPEN --> ESCALATED : escalate()
+
+TRIAGED --> ASSIGNED : assign(responsable)
+TRIAGED --> CANCELLED : cancel()
+TRIAGED --> ESCALATED : escalate()
+
+ASSIGNED --> IN_PROGRESS : start_work()
+ASSIGNED --> CANCELLED : cancel()
+ASSIGNED --> ESCALATED : escalate()
+
+IN_PROGRESS --> RESOLVED : resolve(summary)
+IN_PROGRESS --> ESCALATED : escalate()
+
+RESOLVED --> CLOSED : close()\n(CRITICAL must have summary)
+RESOLVED --> IN_PROGRESS : reopen()\n(if not from CLOSED)
+
+ESCALATED --> ASSIGNED : reasign_and_continue()
+ESCALATED --> IN_PROGRESS : continue_work()
+
+CANCELLED --> [*]
+CLOSED --> [*]
+
+note right of OPEN
+  Estado inicial cuando se reporta
+  un incidente
+end note
+
+note right of RESOLVED
+  Para CRITICAL: debe haber resumen
+  Requiere notificación inmediata
+  Debe tener responsable asignado
+end note
+
+note right of CLOSED
+  Final - no vuelve a IN_PROGRESS
+  AuditLog registrado
+  Timeline completado
+end note
+
+@enduml
