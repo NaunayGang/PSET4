@@ -1,0 +1,73 @@
+@startuml IncidentFlowArchitecture
+title IncidentFlow - Hexagonal Architecture
+
+skinparam rectangle {
+  BackgroundColor #E1F5FE
+  BorderColor #01579B
+  FontColor #01579B
+}
+
+rectangle "FRONTEND LAYER" {
+  rectangle "Streamlit UI" as StreamlitUI
+}
+
+rectangle "API LAYER" {
+  rectangle "FastAPI REST Endpoints" as FastAPI
+}
+
+rectangle "APPLICATION LAYER" {
+  rectangle "Use Cases\nCreateIncident, TriageIncident,\nAssignIncident, TransitionState,\nAddComment, ChangeSeverity" as UseCases
+
+  rectangle "DTOs & Validators\nIncidentCreateDTO,\nIncidentUpdateDTO,\nCommentDTO" as DTOs
+}
+
+rectangle "DOMAIN LAYER (Core Business)" {
+  rectangle "Entities\nIncident, Comment,\nUser, AuditLog, Notification" as Entities
+
+  rectangle "Value Objects\nSeverity, IncidentState,\nRole enums" as ValueObjects
+
+  rectangle "Business Rules\nState Machine,\nCRITICAL Rules,\nPermission Rules" as Rules
+
+  rectangle "Abstractions (Interfaces)\nIIncidentRepository,\nICommentRepository,\nIAuditLogRepository,\nIUserRepository, IEventBus" as Abstractions
+}
+
+rectangle "INFRASTRUCTURE LAYER" {
+  rectangle "PostgreSQL Database\nSQLAlchemy ORM,\nAlembic Migrations" as DB
+
+  rectangle "Repository Implementations\nIncidentRepositoryImpl,\nCommentRepositoryImpl,\nAuditLogRepositoryImpl" as Repositories
+
+  rectangle "Event Bus\nIn-Memory Pub/Sub,\nNotification Service" as EventBus
+}
+
+StreamlitUI --> FastAPI
+FastAPI --> UseCases
+UseCases --> DTOs
+UseCases --> Entities
+UseCases --> Abstractions
+
+Entities --> ValueObjects
+Entities --> Rules
+Rules --> Abstractions
+
+Repositories .up.> Abstractions
+Repositories --> DB
+EventBus .up.> Abstractions
+
+note bottom of Entities
+  Pure business logic
+  No external dependencies
+  Testable in isolation
+end note
+
+note bottom of Repositories
+  Concrete DB implementations
+  Dependency inversion pattern
+end note
+
+note bottom of Rules
+  All state transitions,
+  permission checks, validations
+  NO DATABASE CALLS
+end note
+
+@enduml
