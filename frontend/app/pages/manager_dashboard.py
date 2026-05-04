@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
-
 import streamlit as st
 
 from data import (
@@ -36,6 +34,7 @@ auto_refresh = st.checkbox("Auto-refresh (30s)", value=False)
 if auto_refresh:
     import time
     time.sleep(30)
+    st.rerun()
 
 st.header("Metrics")
 

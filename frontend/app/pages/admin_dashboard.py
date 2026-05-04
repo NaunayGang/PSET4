@@ -1,14 +1,10 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
-
 import streamlit as st
 
 from data import (
-    SEVERITIES,
     STATES,
     USERS,
-    get_assignee_options,
     get_audit_logs,
     get_counts_by_severity,
     get_counts_by_state,
@@ -43,6 +39,7 @@ auto_refresh = st.checkbox("Auto-refresh (30s)", value=True)
 if auto_refresh:
     import time
     time.sleep(30)
+    st.rerun()
 
 st.header("Overview")
 
