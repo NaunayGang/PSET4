@@ -1,6 +1,6 @@
+from datetime import datetime
+
 import pytest
-from datetime import datetime, timedelta
-from uuid import uuid4
 
 from backend.app.domain.entities import Comment, Incident, Log, Notification
 from backend.app.domain.enums import Role, Severity, State
