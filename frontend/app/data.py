@@ -8,6 +8,17 @@ import streamlit as st
 SEVERITIES = ["low", "medium", "high", "critical"]
 STATES = ["open", "triaged", "assigned", "in_progress", "resolved", "closed"]
 
+STATE_TRANSITIONS = {
+    "open": ["triaged"],
+    "triaged": ["assigned"],
+    "assigned": ["in_progress"],
+    "in_progress": ["resolved"],
+    "resolved": ["closed", "triaged"],
+    "closed": [],
+}
+
+USERS = ["Marco", "Nina", "Carlos", "Irene", "Laura", "Felipe", "Sara", "Andre"]
+
 TOAST_DURATION = 3
 
 
