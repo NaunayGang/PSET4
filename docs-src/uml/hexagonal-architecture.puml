@@ -1,0 +1,144 @@
+@startuml IncidentFlowArchitecture
+title IncidentFlow - Hexagonal Architecture
+
+skinparam rectangle {
+  BackgroundColor #E1F5FE
+  BorderColor #01579B
+  FontColor #01579B
+}
+
+package "Frontend Layer" {
+  rectangle "Streamlit UI" as StreamlitUI {
+    - Incident List
+    - Incident Detail
+    - Comments Timeline
+    - State Transitions
+    - Dashboards
+  }
+}
+
+package "API Layer" {
+  rectangle "FastAPI" as FastAPI {
+    - REST Endpoints
+    - Request Validation
+    - Response Serialization
+    - Permission Decorators
+  }
+}
+
+package "Application Layer" {
+  rectangle "Use Cases" as UseCases {
+    - CreateIncident
+    - TriageIncident
+    - AssignIncident
+    - TransitionState
+    - AddComment
+    - ChangeSeverity
+  }
+
+  rectangle "DTOs & Validators" as DTOs {
+    - IncidentCreateDTO
+    - IncidentUpdateDTO
+    - CommentDTO
+  }
+}
+
+package "Domain Layer (Core Business Logic)" {
+  rectangle "Entities" as Entities {
+    - Incident (aggregate root)
+    - Comment
+    - User & Role
+    - AuditLog
+    - Notification
+  }
+
+  rectangle "Value Objects" as ValueObjects {
+    - Severity enum
+    - IncidentState enum
+    - Role enum
+  }
+
+  rectangle "Business Rules" as Rules {
+    - State Machine
+    - CRITICAL Rules
+    - Permission Rules
+    - Validation Rules
+  }
+
+  rectangle "Abstractions" as Abstractions {
+    interface IIncidentRepository
+    interface ICommentRepository
+    interface IAuditLogRepository
+    interface IUserRepository
+    interface IEventBus
+  }
+}
+
+package "Infrastructure Layer" {
+  rectangle "Database" as DB {
+    - PostgreSQL
+    - ORM (SQLAlchemy)
+    - Migrations (Alembic)
+  }
+
+  rectangle "Repositories" as Repositories {
+    - IncidentRepositoryImpl
+    - CommentRepositoryImpl
+    - AuditLogRepositoryImpl
+    - UserRepositoryImpl
+  }
+
+  rectangle "Event Bus" as EventBus {
+    - In-Memory Event Pub/Sub
+    - Event Handler Registry
+    - Notification Service
+  }
+
+  rectangle "Configuration" as Config {
+    - Database Connection
+    - Environment Variables
+    - Dependency Injection
+  }
+}
+
+StreamlitUI --> FastAPI : HTTP REST
+FastAPI --> UseCases : Uses
+UseCases --> DTOs : Validates
+UseCases --> Entities : Creates/Manipulates
+UseCases --> Abstractions : Depends on
+
+Entities --> ValueObjects : Uses
+Entities --> Rules : Enforces
+Rules --> Abstractions : Abstracts DB/Events
+
+Repositories -.-> Abstractions : Implements
+Repositories --> DB : Queries/Inserts
+Repositories --> EventBus : Publishes Events
+
+EventBus -.-> Abstractions : Implements
+EventBus --> DB : Stores Notifications
+EventBus --> Repositories : Updates via
+
+Config --> Repositories : Injects Dependencies
+Config --> EventBus : Initializes
+
+note right of Entities
+  Pure business logic
+  No external dependencies
+  Testable in isolation
+end note
+
+note right of Repositories
+  Concrete implementations
+  DB-specific queries
+  Dependency inversion
+end note
+
+note right of Rules
+  All state transitions
+  All permission checks
+  All validations
+  NO DATABASE CALLS
+end note
+
+@enduml
