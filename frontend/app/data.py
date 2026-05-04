@@ -304,10 +304,15 @@ def transition_incident(
             "actor": actor,
         })
 
-    if new_assignee is not None and new_assignee != incident.get("assigned_to"):
+    if new_assignee and new_assignee != incident.get("assigned_to"):
         old_assignee = incident.get("assigned_to") or "Unassigned"
-        new_assignee_display = new_assignee if new_assignee else "Unassigned"
-        incident["assigned_to"] = new_assignee
+        if new_assignee == "Unassigned":
+            new_assignee_value = None
+            new_assignee_display = "Unassigned"
+        else:
+            new_assignee_value = new_assignee
+            new_assignee_display = new_assignee
+        incident["assigned_to"] = new_assignee_value
         incident.setdefault("timeline", []).append({
             "type": "assignment",
             "message": f"Assigned from {old_assignee} to {new_assignee_display}",

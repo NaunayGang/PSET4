@@ -90,7 +90,7 @@ if can_edit:
             st.caption("No transitions available")
 
     with trans_col2:
-        user_options = [""] + USERS
+        user_options = ["Unassigned"] + USERS
         new_assignee = st.selectbox(
             "Assign to",
             user_options,
@@ -114,7 +114,7 @@ if can_edit:
 
     if apply_transition:
         target_state = new_state if new_state else None
-        assignee_value = new_assignee if new_assignee else None
+        assignee_value = new_assignee if new_assignee and new_assignee != "Unassigned" else None
         severity_value = new_severity if new_severity else None
 
         if target_state or assignee_value or (severity_value and severity_value != selected_incident["severity"]):
