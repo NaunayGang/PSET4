@@ -1,8 +1,9 @@
 import pytest
 from datetime import datetime, timedelta
-from backend.app.domain.entities import Incident, Comment, AuditLog, Notification
-from backend.app.domain.enums import Severity, IncidentState, Role
 from uuid import uuid4
+
+from backend.app.domain.entities import Comment, Incident, Log, Notification
+from backend.app.domain.enums import IncidentState, Role, Severity
 
 
 @pytest.fixture
@@ -47,7 +48,7 @@ def sample_comment(sample_incident_id, sample_user_id):
 @pytest.fixture
 def sample_audit_log(sample_incident_id, sample_user_id):
     """Fixture for creating a sample audit log"""
-    return AuditLog(
+    return Log(
         id=uuid4(),
         incident_id=sample_incident_id,
         user_id=sample_user_id,
@@ -208,7 +209,7 @@ class TestCommentEntity:
 
 
 class TestAuditLogEntity:
-    """Tests for AuditLog domain entity"""
+    """Tests for Log (AuditLog) domain entity"""
 
     def test_audit_log_creation(self, sample_audit_log):
         """Test audit log can be created"""

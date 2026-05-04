@@ -1,11 +1,11 @@
 import pytest
 from datetime import datetime
 from uuid import uuid4
+
 from fastapi.testclient import TestClient
 
-# These imports will need to be adjusted based on actual structure
 from backend.app.api.main import app
-from backend.app.domain.enums import Severity, IncidentState, Role
+from backend.app.domain.enums import IncidentState, Role, Severity
 
 
 @pytest.fixture

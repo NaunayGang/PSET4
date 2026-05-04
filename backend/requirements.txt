@@ -1,6 +1,7 @@
 alembic==1.13.1
 argon2-cffi
 fastapi==0.136.1
+httpx
 psycopg2-binary==2.9.9
 PyJWT==2.12.1
 pydantic==2.13.3
