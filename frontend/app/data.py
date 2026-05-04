@@ -8,6 +8,17 @@ import streamlit as st
 SEVERITIES = ["low", "medium", "high", "critical"]
 STATES = ["open", "triaged", "assigned", "in_progress", "resolved", "closed"]
 
+STATE_TRANSITIONS = {
+    "open": ["triaged"],
+    "triaged": ["assigned"],
+    "assigned": ["in_progress"],
+    "in_progress": ["resolved"],
+    "resolved": ["closed", "triaged"],
+    "closed": [],
+}
+
+USERS = ["Marco", "Nina", "Carlos", "Irene", "Laura", "Felipe", "Sara", "Andre"]
+
 TOAST_DURATION = 3
 
 
@@ -337,19 +348,26 @@ def can_transition(current_state: str, target_state: str) -> bool:
     return target_state in STATE_TRANSITIONS.get(current_state, [])
 
 
-def validate_transition(incident: dict, target_state: str, resolution_summary: str = None) -> tuple[bool, str]:
+def validate_transition(
+    incident: dict,
+    target_state: str,
+    resolution_summary: str = None,
+    new_assignee: str = None,
+) -> tuple[bool, str]:
     current_state = incident["state"]
     severity = incident["severity"]
     assignee = incident.get("assigned_to")
 
+    effective_assignee = new_assignee if new_assignee else assignee
+
     if target_state == "closed" and severity == "critical" and not resolution_summary:
         return False, "Cannot close CRITICAL incident without resolution summary."
 
-    if target_state == "in_progress" and not assignee:
+    if target_state == "in_progress" and not effective_assignee:
         return False, "Cannot move to IN_PROGRESS without assignee."
 
     valid_transitions = STATE_TRANSITIONS.get(current_state, [])
-    if target_state not in valid_transitions:
+    if target_state and target_state not in valid_transitions:
         return False, f"Invalid transition from {current_state} to {target_state}."
 
     return True, ""
@@ -363,7 +381,7 @@ def transition_incident(
     new_severity: str = None,
     new_assignee: str = None,
 ) -> tuple[bool, str]:
-    valid, error = validate_transition(incident, target_state, resolution_summary)
+    valid, error = validate_transition(incident, target_state, resolution_summary, new_assignee)
     if not valid:
         return False, error
 
