@@ -5,7 +5,14 @@ import math
 
 import streamlit as st
 
-from data import SEVERITIES, STATES, filter_incidents, get_assignee_options, get_incidents
+from data import (
+    SEVERITIES,
+    STATES,
+    filter_incidents,
+    get_assignee_options,
+    get_incidents,
+    show_toast,
+)
 
 
 st.set_page_config(page_title="IncidentFlow", layout="wide")
@@ -38,10 +45,20 @@ if current_role in ("Manager", "Admin"):
 if current_role == "Admin":
     st.page_link("pages/admin_dashboard.py", label="Admin Panel")
 
-if "incidents" not in st.session_state:
-    st.session_state["incidents"] = get_incidents()
+try:
+    if "incidents" not in st.session_state:
+        st.session_state["incidents"] = get_incidents()
+    
+    incidents = st.session_state["incidents"]
+    
+    if not incidents:
+        st.warning("No incidents found. Create one to get started.")
+        st.stop()
 
-incidents = st.session_state["incidents"]
+except Exception as e:
+    st.error(f"Failed to load incidents: {str(e)}")
+    show_toast("Connection error. Please refresh.", "error")
+    st.stop()
 
 with st.sidebar:
     st.header("Filters")
@@ -50,7 +67,13 @@ with st.sidebar:
     query = st.text_input("Search", placeholder="Title or description")
     selected_severities = st.multiselect("Severity", SEVERITIES, default=SEVERITIES)
     selected_states = st.multiselect("State", STATES, default=STATES)
-    assignee_options = get_assignee_options(incidents)
+    
+    try:
+        assignee_options = get_assignee_options(incidents)
+    except Exception as e:
+        st.warning("Failed to load assignees")
+        assignee_options = ["All", "Unassigned"]
+    
     selected_assignee = st.selectbox("Assignee", assignee_options)
     page_size = st.selectbox("Page size", [5, 10, 20], index=1)
 
@@ -72,6 +95,7 @@ total_pages = max(1, math.ceil(len(filtered) / page_size))
 current_page = st.session_state.get("current_page", 1)
 if current_page > total_pages:
     current_page = total_pages
+
 page = st.number_input("Page", min_value=1, max_value=total_pages, value=current_page, step=1)
 st.session_state["current_page"] = page
 start = (page - 1) * page_size
@@ -117,4 +141,5 @@ for incident in filtered[start:end]:
         st.caption(f"Created by {created_by} | Assigned to {assignee} | {created_at}")
         st.markdown(f"[Open details](incident_detail?incident_id={incident['id']})")
 
-st.caption(f"Showing {min(end, len(filtered))} of {len(filtered)} incidents")
+display_count = min(end, len(filtered))
+st.caption(f"Showing {display_count} of {len(filtered)} incidents")

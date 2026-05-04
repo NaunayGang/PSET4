@@ -19,6 +19,37 @@ STATE_TRANSITIONS = {
 
 USERS = ["Marco", "Nina", "Carlos", "Irene", "Laura", "Felipe", "Sara", "Andre"]
 
+TOAST_DURATION = 3
+
+
+def show_toast(message: str, icon: str = "info"):
+    toast_icons = {
+        "success": "✅",
+        "error": "❌",
+        "warning": "⚠️",
+        "info": "ℹ️",
+    }
+    icon_str = toast_icons.get(icon, "ℹ️")
+    st.toast(f"{icon_str} {message}")
+
+
+def validate_required(value: str, field_name: str) -> tuple[bool, str]:
+    if not value or not value.strip():
+        return False, f"{field_name} is required."
+    return True, ""
+
+
+def validate_min_length(value: str, field_name: str, min_len: int) -> tuple[bool, str]:
+    if len(value.strip()) < min_len:
+        return False, f"{field_name} must be at least {min_len} characters."
+    return True, ""
+
+
+def validate_selection(value: str, field_name: str) -> tuple[bool, str]:
+    if not value or value == "":
+        return False, f"Please select a {field_name}."
+    return True, ""
+
 
 def _timeline_entry(
     entry_type: str,
@@ -317,19 +348,26 @@ def can_transition(current_state: str, target_state: str) -> bool:
     return target_state in STATE_TRANSITIONS.get(current_state, [])
 
 
-def validate_transition(incident: dict, target_state: str, resolution_summary: str = None) -> tuple[bool, str]:
+def validate_transition(
+    incident: dict,
+    target_state: str,
+    resolution_summary: str = None,
+    new_assignee: str = None,
+) -> tuple[bool, str]:
     current_state = incident["state"]
     severity = incident["severity"]
     assignee = incident.get("assigned_to")
 
+    effective_assignee = new_assignee if new_assignee else assignee
+
     if target_state == "closed" and severity == "critical" and not resolution_summary:
         return False, "Cannot close CRITICAL incident without resolution summary."
 
-    if target_state == "in_progress" and not assignee:
+    if target_state == "in_progress" and not effective_assignee:
         return False, "Cannot move to IN_PROGRESS without assignee."
 
     valid_transitions = STATE_TRANSITIONS.get(current_state, [])
-    if target_state not in valid_transitions:
+    if target_state and target_state not in valid_transitions:
         return False, f"Invalid transition from {current_state} to {target_state}."
 
     return True, ""
@@ -343,7 +381,7 @@ def transition_incident(
     new_severity: str = None,
     new_assignee: str = None,
 ) -> tuple[bool, str]:
-    valid, error = validate_transition(incident, target_state, resolution_summary)
+    valid, error = validate_transition(incident, target_state, resolution_summary, new_assignee)
     if not valid:
         return False, error
 
