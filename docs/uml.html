@@ -11,7 +11,7 @@
             name="viewport"
             content="width=device-width, initial-scale=1.0, user-scalable=yes"
         />
-                   <title>README</title>
+                   <title>uml</title>
         <style>
             code{white-space: pre-wrap;}
             span.smallcaps{font-variant: small-caps;}
@@ -544,455 +544,322 @@
         </script>
     </head>
     <body>
-                  <nav id="TOC" role="doc-toc">
+                 <header id="title-block-header">
+            <div class="left">
+                <h1 class="title">UML Diagrams - IncidentFlow System
+Design</h1>
+                            </div>
+            <div class="right">
+                             </div>
+        </header>
+                 <nav id="TOC" role="doc-toc">
              <ul>
-<li><a href="#incidentflow" id="toc-incidentflow">IncidentFlow</a>
+<li><a href="#overview" id="toc-overview">Overview</a></li>
+<li><a href="#state-machine-diagram"
+id="toc-state-machine-diagram">State Machine Diagram</a>
 <ul>
-<li><a href="#caso-de-negocio" id="toc-caso-de-negocio">Caso de
-Negocio</a></li>
-<li><a href="#integrantes" id="toc-integrantes">Integrantes</a></li>
-<li><a href="#descripción-del-problema"
-id="toc-descripción-del-problema">Descripción del Problema</a></li>
-<li><a href="#stack-técnico" id="toc-stack-técnico">Stack
-Técnico</a></li>
-<li><a href="#arquitectura-propuesta"
-id="toc-arquitectura-propuesta">Arquitectura Propuesta</a></li>
-<li><a href="#descripción-del-flujo"
-id="toc-descripción-del-flujo">Descripción del Flujo</a>
+<li><a href="#state-descriptions" id="toc-state-descriptions">State
+Descriptions</a></li>
+<li><a href="#valid-transitions" id="toc-valid-transitions">Valid
+Transitions</a></li>
+</ul></li>
+<li><a href="#class-diagram" id="toc-class-diagram">Class Diagram</a>
 <ul>
-<li><a href="#estados-principales" id="toc-estados-principales">Estados
-Principales</a></li>
-<li><a href="#roles-y-permisos" id="toc-roles-y-permisos">Roles y
-Permisos</a></li>
-<li><a href="#reglas-críticas" id="toc-reglas-críticas">Reglas
-Críticas</a></li>
+<li><a href="#core-entities" id="toc-core-entities">Core
+Entities</a></li>
+<li><a href="#enumerations" id="toc-enumerations">Enumerations</a></li>
+<li><a href="#repository-interfaces-dependency-inversion"
+id="toc-repository-interfaces-dependency-inversion">Repository
+Interfaces (Dependency Inversion)</a></li>
 </ul></li>
-<li><a href="#interfaces-de-usuario"
-id="toc-interfaces-de-usuario">Interfaces de Usuario</a>
+<li><a href="#sequence-diagram-critical-incident-flow"
+id="toc-sequence-diagram-critical-incident-flow">Sequence Diagram:
+CRITICAL Incident Flow</a>
 <ul>
-<li><a href="#lista-principal-de-incidentes"
-id="toc-lista-principal-de-incidentes">Lista Principal de
-Incidentes</a></li>
-<li><a href="#formulario-de-creación"
-id="toc-formulario-de-creación">Formulario de Creación</a></li>
-<li><a href="#detalle-e-historial" id="toc-detalle-e-historial">Detalle
-e Historial</a></li>
-<li><a href="#filtros-y-paginación"
-id="toc-filtros-y-paginación">Filtros y Paginación</a></li>
-<li><a href="#dashboard-de-manager"
-id="toc-dashboard-de-manager">Dashboard de Manager</a></li>
-<li><a href="#dashboard-de-admin" id="toc-dashboard-de-admin">Dashboard
-de Admin</a></li>
+<li><a href="#flow-steps" id="toc-flow-steps">Flow Steps</a></li>
 </ul></li>
-<li><a href="#cómo-correr-localmente"
-id="toc-cómo-correr-localmente">Cómo Correr Localmente</a>
+<li><a href="#use-case-diagram" id="toc-use-case-diagram">Use Case
+Diagram</a>
 <ul>
-<li><a href="#requisitos-previos" id="toc-requisitos-previos">Requisitos
-Previos</a></li>
-<li><a href="#con-docker-compose-recomendado"
-id="toc-con-docker-compose-recomendado">Con Docker Compose
-(Recomendado)</a></li>
-<li><a href="#sin-docker-desarrollo-local"
-id="toc-sin-docker-desarrollo-local">Sin Docker (Desarrollo
-Local)</a></li>
+<li><a href="#role-capabilities" id="toc-role-capabilities">Role
+Capabilities</a></li>
 </ul></li>
-<li><a href="#cómo-correr-docker-compose"
-id="toc-cómo-correr-docker-compose">Cómo Correr Docker Compose</a></li>
-<li><a href="#flujo-de-github-actions"
-id="toc-flujo-de-github-actions">Flujo de GitHub Actions</a>
+<li><a href="#hexagonal-architecture-diagram"
+id="toc-hexagonal-architecture-diagram">Hexagonal Architecture
+Diagram</a>
 <ul>
-<li><a href="#en-branch-dev" id="toc-en-branch-dev">En branch
-<code>dev</code></a></li>
-<li><a href="#en-branch-main" id="toc-en-branch-main">En branch
-<code>main</code></a></li>
+<li><a href="#layers-explained" id="toc-layers-explained">Layers
+Explained</a></li>
+<li><a href="#key-architectural-principles"
+id="toc-key-architectural-principles">Key Architectural
+Principles</a></li>
 </ul></li>
-<li><a href="#documentación" id="toc-documentación">Documentación</a>
-<ul>
-<li><a href="#compilar-documentación"
-id="toc-compilar-documentación">Compilar Documentación</a></li>
-<li><a href="#servir-documentación-localmente"
-id="toc-servir-documentación-localmente">Servir Documentación
-Localmente</a></li>
-<li><a href="#secciones-de-documentación"
-id="toc-secciones-de-documentación">Secciones de Documentación</a></li>
-</ul></li>
-<li><a href="#nix" id="toc-nix">Nix</a>
-<ul>
-<li><a href="#obtener-nix" id="toc-obtener-nix">Obtener Nix</a></li>
-</ul></li>
-<li><a href="#github-project-issues"
-id="toc-github-project-issues">GitHub Project &amp; Issues</a></li>
-<li><a href="#environment-setup" id="toc-environment-setup">Environment
-Setup</a></li>
-<li><a href="#links-a-render" id="toc-links-a-render">Links a
-Render</a></li>
-<li><a href="#contributing" id="toc-contributing">Contributing</a></li>
-<li><a href="#próximas-fases" id="toc-próximas-fases">Próximas
-Fases</a></li>
-<li><a href="#licencia" id="toc-licencia">Licencia</a></li>
-</ul></li>
+<li><a href="#diagram-generation" id="toc-diagram-generation">Diagram
+Generation</a></li>
+<li><a href="#next-steps" id="toc-next-steps">Next Steps</a></li>
 </ul>
         </nav>
-         <h1 id="incidentflow">IncidentFlow</h1>
-<p><strong>Sistema de escalamiento centralizado para incidentes
-operativos críticos</strong></p>
-<h2 id="caso-de-negocio">Caso de Negocio</h2>
-<p>La empresa opera servicios críticos donde incidentes (pagos fallidos,
-integraciones caídas, alertas de seguridad) requieren coordinación
-inmediata. Actualmente, los equipos se coordinan por chats dispersos, lo
-que genera pérdida de contexto, responsables poco claros y poca
-visibilidad.</p>
-<p><strong>IncidentFlow</strong> centraliza la gestión de incidentes con
-responsables claramente asignados, estados bien definidos, timeline
-confiable y notificaciones inmediatas para casos críticos.</p>
-<h2 id="integrantes">Integrantes</h2>
+         <h2 id="overview">Overview</h2>
+<p>This document contains the PlantUML diagrams that visualize the
+IncidentFlow system architecture, domain model, workflows, and use
+cases. These diagrams are essential for understanding the system design
+and serve as a reference for implementation.</p>
+<h2 id="state-machine-diagram">State Machine Diagram</h2>
+<p>The state machine diagram shows the lifecycle of an incident and all
+valid transitions between states.</p>
+<figure>
+<img src="../resources/images/IncidentFlowStateMachine.svg"
+alt="State Machine Diagram" />
+<figcaption aria-hidden="true">State Machine Diagram</figcaption>
+</figure>
+<h3 id="state-descriptions">State Descriptions</h3>
 <ul>
-<li><strong><span class="citation"
-data-cites="nikotov">@nikotov</span></strong> - Backend (Python,
-FastAPI, Clean Architecture)</li>
-<li><strong><span class="citation"
-data-cites="FelipeBhrqz">@FelipeBhrqz</span></strong> - Frontend
-(Streamlit)</li>
-<li><strong><span class="citation"
-data-cites="Nicothekiller">@Nicothekiller</span></strong> - DevOps
-(Docker, GitHub Actions, Render)</li>
-<li><strong><span class="citation"
-data-cites="yuuhikaze">@yuuhikaze</span></strong> - Documentación, UML,
-Tests (PlantUML, pytest)</li>
+<li><strong>OPEN</strong>: Initial state when an incident is
+reported</li>
+<li><strong>TRIAGED</strong>: Incident has been evaluated for severity
+and impact</li>
+<li><strong>ASSIGNED</strong>: Incident has been assigned to a technical
+responder</li>
+<li><strong>IN_PROGRESS</strong>: The assigned responder is actively
+working on the solution</li>
+<li><strong>RESOLVED</strong>: The solution has been implemented but not
+yet formally closed</li>
+<li><strong>CLOSED</strong>: Incident is formally closed with summary
+and audit trail complete</li>
+<li><strong>ESCALATED</strong>: Can be triggered from any state;
+incident escalated to higher level</li>
+<li><strong>CANCELLED</strong>: Incident was a false alarm or no longer
+relevant</li>
 </ul>
-<h2 id="descripción-del-problema">Descripción del Problema</h2>
-<p>Durante un incidente no queda claro: - Quién está a cargo - Qué
-severidad tiene - Qué acciones se tomaron - Quién fue notificado - Si el
-incidente está resuelto - Qué se aprendió al final</p>
-<h2 id="stack-técnico">Stack Técnico</h2>
-<table>
-<thead>
-<tr>
-<th>Componente</th>
-<th>Tecnología</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Backend</strong></td>
-<td>FastAPI (Python)</td>
-</tr>
-<tr>
-<td><strong>Frontend</strong></td>
-<td>Streamlit</td>
-</tr>
-<tr>
-<td><strong>Base de Datos</strong></td>
-<td>PostgreSQL</td>
-</tr>
-<tr>
-<td><strong>ORM</strong></td>
-<td>SQLAlchemy</td>
-</tr>
-<tr>
-<td><strong>Arquitectura</strong></td>
-<td>Hexagonal</td>
-</tr>
-<tr>
-<td><strong>Contenedores</strong></td>
-<td>Docker Compose</td>
-</tr>
-<tr>
-<td><strong>CI/CD</strong></td>
-<td>GitHub Actions</td>
-</tr>
-<tr>
-<td><strong>Deploy</strong></td>
-<td>Render (dev/prod)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="arquitectura-propuesta">Arquitectura Propuesta</h2>
-<p>La solución sigue <strong>Arquitectura Hexagonal</strong> en 4
-capas:</p>
-<pre><code>┌─────────────────────────────────────────┐
-│           Frontend (Streamlit)          │
-└─────────────────────┬───────────────────┘
-                      │
-┌─────────────────────┴───────────────────┐
-│              API Layer (FastAPI)         │
-├─────────────────────────────────────────┤
-│          Application Layer               │
-│     (Use Cases, Service Orchestration)   │
-├─────────────────────────────────────────┤
-│            Domain Layer                  │
-│  (Entities, Value Objects, Rules)        │
-├─────────────────────────────────────────┤
-│         Infrastructure Layer             │
-│    (DB, Repositories, Event Bus)         │
-└─────────────────────────────────────────┘</code></pre>
-<h2 id="descripción-del-flujo">Descripción del Flujo</h2>
-<h3 id="estados-principales">Estados Principales</h3>
-<pre><code>OPEN → TRIAGED → ASSIGNED → IN_PROGRESS → RESOLVED → CLOSED</code></pre>
-<h3 id="roles-y-permisos">Roles y Permisos</h3>
-<table>
-<thead>
-<tr>
-<th>Rol</th>
-<th>Crear</th>
-<th>Asignar</th>
-<th>Cambiar Estado</th>
-<th>Comentar</th>
-<th>Leer</th>
-<th>Auditar</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Operator</td>
-<td>✓</td>
-<td>✗</td>
-<td>✗</td>
-<td>✓</td>
-<td>✓</td>
-<td>✗</td>
-</tr>
-<tr>
-<td>Commander</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✗</td>
-</tr>
-<tr>
-<td>Responder</td>
-<td>✗</td>
-<td>✗</td>
-<td>✗</td>
-<td>✓</td>
-<td>✓</td>
-<td>✗</td>
-</tr>
-<tr>
-<td>Manager</td>
-<td>✗</td>
-<td>✗</td>
-<td>✗</td>
-<td>✗</td>
-<td>✓</td>
-<td>✓</td>
-</tr>
-<tr>
-<td>Admin</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-</tr>
-</tbody>
-</table>
-<h3 id="reglas-críticas">Reglas Críticas</h3>
+<h3 id="valid-transitions">Valid Transitions</h3>
+<p>From <strong>OPEN</strong>: - → TRIAGED (after evaluation) - →
+CANCELLED (if false alarm) - → ESCALATED (if needs immediate
+escalation)</p>
+<p>From <strong>TRIAGED</strong>: - → ASSIGNED (when responder assigned)
+- → CANCELLED (if determined not urgent) - → ESCALATED (if escalation
+needed)</p>
+<p>From <strong>ASSIGNED</strong>: - → IN_PROGRESS (when work starts) -
+→ CANCELLED (if not needed) - → ESCALATED (for escalation)</p>
+<p>From <strong>IN_PROGRESS</strong>: - → RESOLVED (when solution
+implemented) - → ESCALATED (for escalation)</p>
+<p>From <strong>RESOLVED</strong>: - → CLOSED (only Commander/Admin can
+close; CRITICAL requires summary) - → IN_PROGRESS (if issue
+resurfaces)</p>
+<p>From <strong>ESCALATED</strong>: - → ASSIGNED (reassign and continue)
+- → IN_PROGRESS (continue from escalation)</p>
+<p>From <strong>CANCELLED</strong> or <strong>CLOSED</strong>: - → [End]
+(Terminal states)</p>
+<h2 id="class-diagram">Class Diagram</h2>
+<p>The class diagram shows the domain entities, their attributes,
+relationships, and key interfaces for the repository pattern.</p>
+<figure>
+<img src="../resources/images/IncidentFlowClassDiagram.svg"
+alt="Class Diagram" />
+<figcaption aria-hidden="true">Class Diagram</figcaption>
+</figure>
+<h3 id="core-entities">Core Entities</h3>
+<p><strong>User</strong> - id: UUID - email: str - name: str - role:
+Role (Operator, Commander, Responder, Manager, Admin) - active: bool -
+created_at: DateTime</p>
+<p><strong>Incident</strong> (Aggregate Root) - id: UUID - title: str -
+description: str - severity: Severity (LOW, MEDIUM, HIGH, CRITICAL) -
+state: IncidentState - creator_id: UUID (references User) - assignee_id:
+UUID (references User, nullable) - created_at: DateTime - updated_at:
+DateTime - resolved_at: DateTime (nullable) - closed_at: DateTime
+(nullable) - resolution_summary: str (nullable)</p>
+<p>Key methods: - <code>transition_state(new_state, user)</code>:
+Changes incident state with validation -
+<code>assign(user, commander)</code>: Assigns incident to a user -
+<code>add_comment(text, user)</code>: Adds a comment to incident
+timeline - <code>change_severity(new_severity, user)</code>: Changes
+severity with audit trail - <code>can_close()</code>: Validates if
+incident can be closed (CRITICAL requires summary) -
+<code>is_critical()</code>: Returns true if severity is CRITICAL</p>
+<p><strong>Comment</strong> - id: UUID - incident_id: UUID (references
+Incident) - author_id: UUID (references User) - text: str - created_at:
+DateTime</p>
+<p><strong>AuditLog</strong> (for compliance and debugging) - id: UUID -
+incident_id: UUID (references Incident) - user_id: UUID (references
+User) - action: str (what changed: state, severity, assignment, etc) -
+old_value: str (nullable) - new_value: str (nullable) - timestamp:
+DateTime - details: JSON (additional context)</p>
+<p><strong>Notification</strong> - id: UUID - user_id: UUID (references
+User) - incident_id: UUID (references Incident) - event_type: str
+(INCIDENT_CREATED, SEVERITY_CHANGED, etc) - message: str - read: bool -
+created_at: DateTime</p>
+<h3 id="enumerations">Enumerations</h3>
+<p><strong>Severity</strong> - LOW - MEDIUM - HIGH - CRITICAL</p>
+<p><strong>IncidentState</strong> - OPEN - TRIAGED - ASSIGNED -
+IN_PROGRESS - RESOLVED - CLOSED - ESCALATED - CANCELLED</p>
+<p><strong>Role</strong> - OPERATOR - COMMANDER - RESPONDER - MANAGER -
+ADMIN</p>
+<h3 id="repository-interfaces-dependency-inversion">Repository
+Interfaces (Dependency Inversion)</h3>
+<p>All infrastructure layer implementations depend on these domain
+interfaces:</p>
 <ul>
-<li>Incidentes <strong>CRITICAL</strong> notifican inmediatamente a
-Commander y Manager</li>
-<li><strong>CRITICAL</strong> no puede cerrarse sin resumen de
-resolución</li>
-<li>No se puede pasar a <strong>IN_PROGRESS</strong> sin responsable
-asignado</li>
-<li>Una vez <strong>CLOSED</strong>, un incidente no vuelve a
-<strong>IN_PROGRESS</strong></li>
-<li>Cambios de severidad deben auditarse</li>
-<li>Solo Commander/Admin pueden resolver o cerrar incidentes</li>
+<li><strong>IIncidentRepository</strong>: CRUD operations on incidents,
+filtering by state/severity/assignee</li>
+<li><strong>ICommentRepository</strong>: Create and retrieve comments
+for incidents</li>
+<li><strong>IAuditLogRepository</strong>: Create and retrieve audit
+logs</li>
+<li><strong>IUserRepository</strong>: Retrieve user information by ID or
+email</li>
+<li><strong>IEventBus</strong>: Publish events, subscribe to event
+handlers</li>
 </ul>
-<h2 id="interfaces-de-usuario">Interfaces de Usuario</h2>
-<h3 id="lista-principal-de-incidentes">Lista Principal de
-Incidentes</h3>
+<h2 id="sequence-diagram-critical-incident-flow">Sequence Diagram:
+CRITICAL Incident Flow</h2>
+<p>This sequence diagram illustrates the entire lifecycle of a CRITICAL
+severity incident from creation through resolution and closure.</p>
 <figure>
-<img src="docs-src/resources/images/incident-list-main-page.jpeg"
-alt="Incident List" />
-<figcaption aria-hidden="true">Incident List</figcaption>
+<img src="../resources/images/IncidentFlowSequenceCritical.svg"
+alt="Sequence Diagram" />
+<figcaption aria-hidden="true">Sequence Diagram</figcaption>
 </figure>
-<h3 id="formulario-de-creación">Formulario de Creación</h3>
-<figure>
-<img src="docs-src/resources/images/create-new-incident-form.jpeg"
-alt="Create Incident" />
-<figcaption aria-hidden="true">Create Incident</figcaption>
-</figure>
-<h3 id="detalle-e-historial">Detalle e Historial</h3>
-<figure>
-<img src="docs-src/resources/images/incident-detail-and-timeline.jpeg"
-alt="Incident Detail" />
-<figcaption aria-hidden="true">Incident Detail</figcaption>
-</figure>
-<h3 id="filtros-y-paginación">Filtros y Paginación</h3>
-<figure>
-<img
-src="docs-src/resources/images/incident-list-with-filters-and-pagination.jpeg"
-alt="Incident List Filters" />
-<figcaption aria-hidden="true">Incident List Filters</figcaption>
-</figure>
-<h3 id="dashboard-de-manager">Dashboard de Manager</h3>
-<figure>
-<img src="docs-src/resources/images/manager-dashboard-reduced-view.jpeg"
-alt="Manager Dashboard" />
-<figcaption aria-hidden="true">Manager Dashboard</figcaption>
-</figure>
-<h3 id="dashboard-de-admin">Dashboard de Admin</h3>
-<figure>
-<img src="docs-src/resources/images/admin-dashboard.jpeg"
-alt="Admin Dashboard" />
-<figcaption aria-hidden="true">Admin Dashboard</figcaption>
-</figure>
-<h2 id="cómo-correr-localmente">Cómo Correr Localmente</h2>
-<h3 id="requisitos-previos">Requisitos Previos</h3>
-<p><strong>Nix (para reproducibilidad):</strong> - Linux/macOS/Windows
-(WSL2) - Instala Nix desde: https://nixos.org/download/</p>
-<p>Si no tienes Nix, necesitas: - Python 3.11+ - Docker &amp; Docker
-Compose - Node.js 18+ (opcional, para frontend tools)</p>
-<h3 id="con-docker-compose-recomendado">Con Docker Compose
-(Recomendado)</h3>
-<div class="sourceCode" id="cb3"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clonar repositorio</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/NaunayGang/PSET4.git</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> PSET4</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Levantar stack completo</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Backend: http://localhost:8000</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Frontend: http://localhost:8501</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># PostgreSQL: localhost:5432</span></span></code></pre></div>
-<h3 id="sin-docker-desarrollo-local">Sin Docker (Desarrollo Local)</h3>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Entrar al entorno Nix</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Backend</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> backend</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">DATABASE_URL</span><span class="op">=</span><span class="st">&quot;postgresql://user:password@localhost:5432/incidentflow&quot;</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uvicorn</span> app.api.main:app <span class="at">--reload</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Frontend (en otra terminal)</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> frontend</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="ex">streamlit</span> run app/main.py</span></code></pre></div>
-<h2 id="cómo-correr-docker-compose">Cómo Correr Docker Compose</h2>
-<div class="sourceCode" id="cb5"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Levantar servicios</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver logs</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> logs <span class="at">-f</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Apagar servicios</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> down</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruir imágenes</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span> <span class="at">--build</span></span></code></pre></div>
-<h2 id="flujo-de-github-actions">Flujo de GitHub Actions</h2>
-<h3 id="en-branch-dev">En branch <code>dev</code></h3>
-<p>Cuando hay push a <code>dev</code>: 1. Instalar dependencias 2. Lint
-(flake8/ruff) 3. Tests (pytest) 4. Build Docker backend 5. Push a Docker
-Hub con tag <code>dev</code> 6. Deploy automático a Render dev
-environment</p>
-<h3 id="en-branch-main">En branch <code>main</code></h3>
-<p>Cuando hay push a <code>main</code> (solo mediante merge de PR): 1.
-Todas las validaciones de <code>dev</code> 2. Build Docker con tag
-<code>latest</code> y <code>prod</code> 3. Push a Docker Hub 4. Deploy
-automático a Render prod environment</p>
-<p><strong>Nota</strong>: No se acepta deploy directo a producción desde
-branches feature.</p>
-<h2 id="documentación">Documentación</h2>
-<p>La documentación está ubicada en <code>/</code> y se compila a
-HTML.</p>
-<h3 id="compilar-documentación">Compilar Documentación</h3>
-<div class="sourceCode" id="cb6"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop path:. <span class="at">--command</span> tern-core</span></code></pre></div>
-<p>Esto genera archivos HTML en la carpeta <code>docs/</code>.</p>
-<h3 id="servir-documentación-localmente">Servir Documentación
-Localmente</h3>
-<p>Sirve la documentación compilada (HTML) con:</p>
-<div class="sourceCode" id="cb7"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop <span class="st">&#39;path:.#resources&#39;</span> <span class="at">--command</span> miniserve <span class="at">--color-scheme</span> monokai docs</span></code></pre></div>
-<p>Luego abre tu navegador en: http://localhost:8080</p>
-<h3 id="secciones-de-documentación">Secciones de Documentación</h3>
-<ul>
-<li><strong>discovery.html</strong>: Descubrimiento de requerimientos,
-contexto del negocio, reglas</li>
-<li><strong>requirements.html</strong>: Requerimientos funcionales y no
-funcionales</li>
-<li><strong>uml/</strong>: Diagramas (State Machine, Class, Sequence,
-Use Cases)</li>
-<li><strong>API Reference</strong>: Documentación de endpoints (generada
-a partir de docstrings)</li>
-</ul>
-<h2 id="nix">Nix</h2>
-<p>Nix es un gestor de paquetes declarativo que asegura
-reproducibilidad.</p>
-<h3 id="obtener-nix">Obtener Nix</h3>
-<p>Nix está disponible para todas las plataformas. Visita:
-https://nixos.org/download/</p>
-<p>Soportado en: - <strong>Linux</strong>: NixOS, Ubuntu, Fedora,
-Debian, Arch, y más - <strong>macOS</strong>: Intel y Apple Silicon -
-<strong>Windows</strong>: WSL2 (con Nix instalado en el subsistema)</p>
-<p>Sigue las instrucciones del sitio oficial para tu plataforma
-específica.</p>
-<h2 id="github-project-issues">GitHub Project &amp; Issues</h2>
-<p>El proyecto usa GitHub Project con columnas: -
-<strong>Backlog</strong>: Issues sin asignar o no priorizadas -
-<strong>Todo</strong>: Listas de trabajos por hacer - <strong>In
-Progress</strong>: Trabajo actual - <strong>In Review</strong>: En
-revisión (PR abierta) - <strong>Done</strong>: Completado</p>
-<p>Cada issue es una historia de usuario en formato: &gt; Como [rol],
-quiero [acción], para [beneficio].</p>
-<h2 id="environment-setup">Environment Setup</h2>
+<h3 id="flow-steps">Flow Steps</h3>
 <ol type="1">
-<li>Copy the template and create your local env file:</li>
-</ol>
-<div class="sourceCode" id="cb8"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env</span></code></pre></div>
-<ol start="2" type="1">
-<li>Edit <code>.env</code> and set your local values. At minimum:</li>
-</ol>
-<pre class="env"><code>DATABASE_URL=postgresql://app_user:YOUR_PASSWORD@localhost:5432/incident_flow_db</code></pre>
-<ol start="3" type="1">
-<li>Run Alembic commands with this project’s
-<code>DATABASE_URL</code>:</li>
-</ol>
-<div class="sourceCode" id="cb10"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">DATABASE_URL</span><span class="op">=</span>postgresql://app_user:YOUR_PASSWORD@localhost:5432/incident_flow_db</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">alembic</span> current</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">alembic</span> heads</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">alembic</span> upgrade head</span></code></pre></div>
-<p>Notes: - Do not commit <code>.env</code>. - Commit
-<code>.env.example</code> only. - Keep one dedicated database per
-project to avoid migration conflicts.</p>
-<h2 id="links-a-render">Links a Render</h2>
+<li><strong>Operator creates CRITICAL incident</strong> via Streamlit
+UI</li>
+<li><strong>Frontend sends POST /incidents</strong> request to API</li>
+<li><strong>API layer validates</strong> and routes to Application
+layer</li>
+<li><strong>Application layer:</strong>
 <ul>
-<li><strong>Dev</strong>: https://incidentflow-dev.onrender.com
-(auto-deploya desde <code>dev</code>)</li>
-<li><strong>Prod</strong>: https://incidentflow-prod.onrender.com
-(auto-deploya desde <code>main</code>)</li>
+<li>Validates incident data</li>
+<li>Saves to database</li>
+<li>Publishes INCIDENT_CREATED event</li>
+<li>Because severity=CRITICAL, publishes notification events</li>
+</ul></li>
+<li><strong>Event Bus notifies</strong> Commander and Manager
+immediately (in-memory notifications)</li>
+<li><strong>Commander receives notification</strong> and views incident
+details</li>
+<li><strong>Commander assigns</strong> incident to a Technical Responder
+and changes state to ASSIGNED</li>
+<li><strong>System audits</strong> the assignment and publishes
+INCIDENT_ASSIGNED event</li>
+<li><strong>Responder is notified</strong> of assignment</li>
+<li><strong>Responder starts work</strong>, transitions to
+IN_PROGRESS</li>
+<li><strong>Responder adds comment</strong> with investigation
+details</li>
+<li><strong>Responder resolves</strong> the incident and transitions to
+RESOLVED</li>
+<li><strong>System notifies</strong> Manager of resolution</li>
+<li><strong>Commander closes</strong> the incident (only Commander/Admin
+can do this for CRITICAL)</li>
+<li><strong>System validates</strong> that CRITICAL incident has a
+summary before allowing closure</li>
+<li><strong>System audits</strong> the closure and publishes
+INCIDENT_CLOSED event</li>
+<li><strong>Final state</strong>: Incident is CLOSED with complete
+timeline and audit trail</li>
+</ol>
+<h2 id="use-case-diagram">Use Case Diagram</h2>
+<p>The use case diagram shows what actions each role can perform in the
+IncidentFlow system.</p>
+<figure>
+<img src="../resources/images/IncidentFlowUseCaseDiagram.svg"
+alt="Use Case Diagram" />
+<figcaption aria-hidden="true">Use Case Diagram</figcaption>
+</figure>
+<h3 id="role-capabilities">Role Capabilities</h3>
+<p><strong>Operator</strong> - Create Incident - Add Comment - View
+Incident - View Dashboard (basic list)</p>
+<p><strong>Incident Commander</strong> (Most Actions) - Create Incident
+- Triage Incident - Assign Incident - Add Comment - Change State (with
+restrictions) - Change Severity - View Incident - View Dashboard (with
+assignments and timeline focus) - Escalate Incident - Close Incident
+(restricted: CRITICAL needs summary)</p>
+<p><strong>Technical Responder</strong> - Add Comment - Change State
+(limited: can move to IN_PROGRESS, RESOLVED) - View Incident - View
+Dashboard (their assigned incidents)</p>
+<p><strong>Manager</strong> (Read-Only + Audit) - View Incident
+(read-only) - View Dashboard (metrics, incident distribution, unassigned
+count) - View Audit Log (full visibility for compliance)</p>
+<p><strong>Admin</strong> (Full Access) - All actions from all roles -
+Create/Manage Users - Reassign Incidents - Full Audit Log Access</p>
+<h2 id="hexagonal-architecture-diagram">Hexagonal Architecture
+Diagram</h2>
+<p>This diagram shows how the system is organized in a hexagonal (clean)
+architecture with clear separation of concerns.</p>
+<figure>
+<img src="../resources/images/IncidentFlowArchitecture.svg"
+alt="Hexagonal Architecture" />
+<figcaption aria-hidden="true">Hexagonal Architecture</figcaption>
+</figure>
+<h3 id="layers-explained">Layers Explained</h3>
+<h4 id="frontend-layer">Frontend Layer</h4>
+<ul>
+<li><strong>Streamlit UI</strong>: Multi-page interface for different
+user roles</li>
+<li>Handles presentation logic and user interaction</li>
+<li>Calls Backend API endpoints</li>
 </ul>
-<h2 id="contributing">Contributing</h2>
+<h4 id="api-layer">API Layer</h4>
+<ul>
+<li><strong>FastAPI REST Endpoints</strong>: All external
+communication</li>
+<li>Request validation and response serialization</li>
+<li>Permission decorators for authorization</li>
+</ul>
+<h4 id="application-layer">Application Layer</h4>
+<ul>
+<li><strong>Use Cases</strong>: Business operations (CreateIncident,
+TriageIncident, etc)</li>
+<li>Orchestrates domain entities and infrastructure services</li>
+<li>No direct database calls; depends on repository interfaces</li>
+<li>DTOs validate input and shape output</li>
+</ul>
+<h4 id="domain-layer-core---no-external-dependencies">Domain Layer (Core
+- No External Dependencies)</h4>
+<ul>
+<li><strong>Entities</strong>: Business objects with identity (Incident,
+User, Comment)</li>
+<li><strong>Value Objects</strong>: Enumerations (Severity,
+IncidentState, Role)</li>
+<li><strong>Business Rules</strong>: State machine, CRITICAL
+restrictions, permissions</li>
+<li><strong>Abstractions (Interfaces)</strong>: IIncidentRepository,
+IEventBus, etc</li>
+<li>This layer is <strong>testable in isolation</strong> without
+mocks</li>
+</ul>
+<h4 id="infrastructure-layer">Infrastructure Layer</h4>
+<ul>
+<li><strong>Repositories</strong>: Concrete implementations of domain
+interfaces</li>
+<li><strong>Database</strong>: PostgreSQL with SQLAlchemy ORM and
+Alembic migrations</li>
+<li><strong>Event Bus</strong>: In-memory publish/subscribe for events
+and notifications</li>
+<li>Depends on domain abstractions (dependency inversion principle)</li>
+</ul>
+<h3 id="key-architectural-principles">Key Architectural Principles</h3>
 <ol type="1">
-<li>Crea un branch con el nombre del issue:
-<code>git checkout -b issue-#123</code></li>
-<li>Haz commits descriptivos siguiendo Angular style:
-<code>feat:</code>, <code>fix:</code>, <code>docs:</code>, etc.</li>
-<li>Sube cambios y crea una PR</li>
-<li>Asegúrate que GitHub Actions pase</li>
-<li>Solicita review de compañeros</li>
-<li>Una vez aprobada, mergea a <code>dev</code> primero, luego a
-<code>main</code></li>
+<li><strong>Dependency Inversion</strong>: High-level modules don’t
+depend on low-level modules; both depend on abstractions</li>
+<li><strong>Single Responsibility</strong>: Each layer has one reason to
+change</li>
+<li><strong>Testability</strong>: Domain layer is testable without test
+doubles</li>
+<li><strong>Flexibility</strong>: Easy to swap implementations (e.g.,
+different database, event bus)</li>
 </ol>
-<h2 id="próximas-fases">Próximas Fases</h2>
-<ul>
-<li><strong>PSet #4 (Actual)</strong>: Discovery, requisitos, setup
-DevOps, UML inicial</li>
-<li><strong>Proyecto Final</strong>: Implementación completa del
-MVP</li>
-</ul>
-<h2 id="licencia">Licencia</h2>
-<p>Proyecto académico - USFQ Systems Design</p> 
+<h2 id="diagram-generation">Diagram Generation</h2>
+<p>All diagrams are generated from PlantUML source files (.puml) and
+compiled to PNG using:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> shell nixpkgs#plantuml <span class="at">--command</span> plantuml <span class="at">-o</span> docs-src/resources/images docs-src/uml/<span class="pp">*</span>.puml</span></code></pre></div>
+<p>Or via the documented compilation method:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop path:. <span class="at">--command</span> tern-core</span></code></pre></div>
+<h2 id="next-steps">Next Steps</h2>
+<p>These diagrams should guide: - Backend implementation of the domain
+layer and repositories - Frontend UI design and workflow implementation
+- API endpoint design and validation - Test case design and test
+fixtures - Team discussions and code reviews</p> 
     </body>
 </html>
