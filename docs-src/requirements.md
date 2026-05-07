@@ -26,8 +26,6 @@ title: Requirements - IncidentFlow System
 -   [ ] Token/session persiste durante la sesión
 -   [ ] Logout elimina autenticación
 
----
-
 ### RF-02: Crear Incidente
 
 **Como** Operator,
@@ -50,8 +48,6 @@ title: Requirements - IncidentFlow System
 -   [ ] Creador se registra correctamente
 -   [ ] Respuesta contiene ID del incidente creado
 -   [ ] Evento INCIDENT_CREATED se publica
-
----
 
 ### RF-03: Listar Incidentes con Filtros
 
@@ -76,8 +72,6 @@ title: Requirements - IncidentFlow System
 -   [ ] Datos mostrados son correctos
 -   [ ] Usuarios sin permisos no ven incidentes sensibles
 
----
-
 ### RF-04: Ver Detalle de Incidente
 
 **Como** usuario,
@@ -97,8 +91,6 @@ title: Requirements - IncidentFlow System
 -   [ ] Timeline muestra todas las acciones en orden cronológico
 -   [ ] Información está actualizada
 -   [ ] Usuarios sin permisos no pueden ver datos sensibles
-
----
 
 ### RF-05: Cambiar Estado del Incidente
 
@@ -125,8 +117,6 @@ title: Requirements - IncidentFlow System
 -   [ ] Evento se publica correctamente
 -   [ ] AuditLog registra usuario, timestamp, cambio
 
----
-
 ### RF-06: Asignar Responsable
 
 **Como** Incident Commander,
@@ -148,8 +138,6 @@ title: Requirements - IncidentFlow System
 -   [ ] Responsable recibe notificación
 -   [ ] AuditLog registra la asignación
 -   [ ] Evento se publica
-
----
 
 ### RF-07: Cambiar Severidad
 
@@ -173,8 +161,6 @@ title: Requirements - IncidentFlow System
 -   [ ] AuditLog registra valores antiguos y nuevos
 -   [ ] Evento se publica
 
----
-
 ### RF-08: Agregar Comentarios
 
 **Como** usuario autorizado,
@@ -197,8 +183,6 @@ title: Requirements - IncidentFlow System
 -   [ ] Evento se publica
 -   [ ] AuditLog registra el comentario
 
----
-
 ### RF-09: Reglas CRITICAL
 
 **Como** sistema,
@@ -220,8 +204,6 @@ title: Requirements - IncidentFlow System
 -   [ ] AuditLog muestra todos los cambios
 -   [ ] Sistema valida reglas correctamente
 
----
-
 ### RF-10: Timeline y Auditoría
 
 **Como** Manager/Admin,
@@ -242,8 +224,6 @@ title: Requirements - IncidentFlow System
 -   [ ] Datos de auditoría no pueden ser modificados
 -   [ ] Búsqueda en audit log funciona
 -   [ ] Managers ven solo auditoría, Admins ven todo
-
----
 
 ### RF-11: Notificaciones por Eventos
 
@@ -271,8 +251,6 @@ title: Requirements - IncidentFlow System
 -   [ ] Puede marcar como leída
 -   [ ] Sin integración Slack/email en MVP
 
----
-
 ### RF-12: Dashboards por Rol
 
 **Como** usuario con rol específico,
@@ -292,8 +270,6 @@ title: Requirements - IncidentFlow System
 -   [ ] Datos son correctos y actualizados
 -   [ ] No hay información que el rol no debería ver
 -   [ ] Dashboard carga rápido
-
----
 
 ## Requerimientos No Funcionales
 
@@ -354,8 +330,6 @@ title: Requirements - IncidentFlow System
 -   Streamlit versión stable (compatible con Python 3.11+)
 -   FastAPI v0.100+
 -   PostgreSQL 13+
-
----
 
 ## Reglas de Negocio
 
@@ -437,8 +411,6 @@ Eventos que generan notificación:
 
 En MVP: almacenadas en DB, sin Slack/Email/SMS.
 
----
-
 ## Matriz de Trazabilidad
 
 | Requisito | Issue | Estado |
@@ -457,8 +429,6 @@ En MVP: almacenadas en DB, sin Slack/Email/SMS.
 | RF-12: Dashboards | Frontend #16 | En Backlog |
 | RNF-01-08 | Todos | En Backlog |
 
----
-
 ## Glosario
 
 -   **Incidente**: Evento operativo crítico que requiere respuesta
@@ -469,8 +439,6 @@ En MVP: almacenadas en DB, sin Slack/Email/SMS.
 -   **Audit Log**: Registro inmutable de quién hizo qué y cuándo
 -   **Notificación**: Alerta enviada a usuarios sobre eventos relevantes
 -   **Role**: Rol del usuario (Operator, Commander, Responder, Manager, Admin)
-
----
 
 ## Notas
 

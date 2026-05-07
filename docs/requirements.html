@@ -595,7 +595,6 @@ sesión</label></li>
 <li><label><input type="checkbox" />Logout elimina
 autenticación</label></li>
 </ul>
-<hr />
 <h3 id="rf-02-crear-incidente">RF-02: Crear Incidente</h3>
 <p><strong>Como</strong> Operator, <strong>Quiero</strong> crear un
 nuevo incidente, <strong>Para</strong> reportar un problema
@@ -622,7 +621,6 @@ creado</label></li>
 <li><label><input type="checkbox" />Evento INCIDENT_CREATED se
 publica</label></li>
 </ul>
-<hr />
 <h3 id="rf-03-listar-incidentes-con-filtros">RF-03: Listar Incidentes
 con Filtros</h3>
 <p><strong>Como</strong> usuario, <strong>Quiero</strong> ver una lista
@@ -652,7 +650,6 @@ correctos</label></li>
 <li><label><input type="checkbox" />Usuarios sin permisos no ven
 incidentes sensibles</label></li>
 </ul>
-<hr />
 <h3 id="rf-04-ver-detalle-de-incidente">RF-04: Ver Detalle de
 Incidente</h3>
 <p><strong>Como</strong> usuario, <strong>Quiero</strong> ver el detalle
@@ -679,7 +676,6 @@ actualizada</label></li>
 <li><label><input type="checkbox" />Usuarios sin permisos no pueden ver
 datos sensibles</label></li>
 </ul>
-<hr />
 <h3 id="rf-05-cambiar-estado-del-incidente">RF-05: Cambiar Estado del
 Incidente</h3>
 <p><strong>Como</strong> Incident Commander, <strong>Quiero</strong>
@@ -711,7 +707,6 @@ correctamente</label></li>
 <li><label><input type="checkbox" />AuditLog registra usuario,
 timestamp, cambio</label></li>
 </ul>
-<hr />
 <h3 id="rf-06-asignar-responsable">RF-06: Asignar Responsable</h3>
 <p><strong>Como</strong> Incident Commander, <strong>Quiero</strong>
 asignar un técnico responsable, <strong>Para</strong> que sepa quién
@@ -736,7 +731,6 @@ notificación</label></li>
 asignación</label></li>
 <li><label><input type="checkbox" />Evento se publica</label></li>
 </ul>
-<hr />
 <h3 id="rf-07-cambiar-severidad">RF-07: Cambiar Severidad</h3>
 <p><strong>Como</strong> Incident Commander, <strong>Quiero</strong>
 ajustar la severidad de un incidente, <strong>Para</strong> reflejar el
@@ -761,7 +755,6 @@ notificaciones inmediatas</label></li>
 nuevos</label></li>
 <li><label><input type="checkbox" />Evento se publica</label></li>
 </ul>
-<hr />
 <h3 id="rf-08-agregar-comentarios">RF-08: Agregar Comentarios</h3>
 <p><strong>Como</strong> usuario autorizado, <strong>Quiero</strong>
 agregar comentarios a un incidente, <strong>Para</strong> colaborar y
@@ -786,7 +779,6 @@ vacíos</label></li>
 <li><label><input type="checkbox" />AuditLog registra el
 comentario</label></li>
 </ul>
-<hr />
 <h3 id="rf-09-reglas-critical">RF-09: Reglas CRITICAL</h3>
 <p><strong>Como</strong> sistema, <strong>Quiero</strong> enforcer
 reglas especiales para CRITICAL, <strong>Para</strong> asegurar
@@ -812,7 +804,6 @@ cambios</label></li>
 <li><label><input type="checkbox" />Sistema valida reglas
 correctamente</label></li>
 </ul>
-<hr />
 <h3 id="rf-10-timeline-y-auditoría">RF-10: Timeline y Auditoría</h3>
 <p><strong>Como</strong> Manager/Admin, <strong>Quiero</strong> ver el
 timeline completo y audit log, <strong>Para</strong> revisar qué pasó y
@@ -837,7 +828,6 @@ funciona</label></li>
 <li><label><input type="checkbox" />Managers ven solo auditoría, Admins
 ven todo</label></li>
 </ul>
-<hr />
 <h3 id="rf-11-notificaciones-por-eventos">RF-11: Notificaciones por
 Eventos</h3>
 <p><strong>Como</strong> usuario, <strong>Quiero</strong> recibir
@@ -869,7 +859,6 @@ dashboard</label></li>
 <li><label><input type="checkbox" />Sin integración Slack/email en
 MVP</label></li>
 </ul>
-<hr />
 <h3 id="rf-12-dashboards-por-rol">RF-12: Dashboards por Rol</h3>
 <p><strong>Como</strong> usuario con rol específico,
 <strong>Quiero</strong> ver un dashboard adaptado a mi rol,
@@ -894,7 +883,6 @@ actualizados</label></li>
 debería ver</label></li>
 <li><label><input type="checkbox" />Dashboard carga rápido</label></li>
 </ul>
-<hr />
 <h2 id="requerimientos-no-funcionales">Requerimientos No
 Funcionales</h2>
 <h3 id="rnf-01-seguridad">RNF-01: Seguridad</h3>
@@ -958,7 +946,6 @@ Edge)</li>
 <li>FastAPI v0.100+</li>
 <li>PostgreSQL 13+</li>
 </ul>
-<hr />
 <h2 id="reglas-de-negocio">Reglas de Negocio</h2>
 <h3 id="rn-01-máquina-de-estados">RN-01: Máquina de Estados</h3>
 <p>Estados válidos:</p>
@@ -1104,7 +1091,6 @@ centralizado</li>
 <li>COMMENT_ADDED: participantes activos (opcional)</li>
 </ul>
 <p>En MVP: almacenadas en DB, sin Slack/Email/SMS.</p>
-<hr />
 <h2 id="matriz-de-trazabilidad">Matriz de Trazabilidad</h2>
 <table>
 <colgroup>
@@ -1187,7 +1173,6 @@ centralizado</li>
 </tr>
 </tbody>
 </table>
-<hr />
 <h2 id="glosario">Glosario</h2>
 <ul>
 <li><strong>Incidente</strong>: Evento operativo crítico que requiere
@@ -1207,7 +1192,6 @@ eventos relevantes</li>
 <li><strong>Role</strong>: Rol del usuario (Operator, Commander,
 Responder, Manager, Admin)</li>
 </ul>
-<hr />
 <h2 id="notas">Notas</h2>
 <ul>
 <li>En MVP no hay integración real con PagerDuty, Slack, email</li>
