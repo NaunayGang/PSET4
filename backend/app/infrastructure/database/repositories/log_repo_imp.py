@@ -1,11 +1,10 @@
 from typing import List, Optional
 
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
-
 from app.application.ports.repositories.log_repository import LogRepository
 from app.domain.entities import log
 from app.infrastructure.models.log import Log as DBLog
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
 
 
 class SQLAlchemyLogRepository(LogRepository):

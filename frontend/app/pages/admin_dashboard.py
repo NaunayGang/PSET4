@@ -1,20 +1,16 @@
 from __future__ import annotations
 
 import streamlit as st
-
 from data import (
-    STATES,
     USERS,
     get_audit_logs,
     get_counts_by_severity,
     get_counts_by_state,
     get_critical_recent,
-    get_incidents_by_day,
     get_incidents,
     get_unassigned,
     transition_incident,
 )
-
 
 st.set_page_config(page_title="Admin Dashboard", layout="wide")
 
@@ -108,7 +104,7 @@ if is_admin:
                 with st.form("reassign_form"):
                     new_assignee = st.selectbox("Assign to", USERS)
                     submitted = st.form_submit_button("Assign")
-                    
+
                     if submitted:
                         success, msg = transition_incident(
                             selected_incident,

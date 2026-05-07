@@ -29,6 +29,15 @@
               })
               resources.outputs.devShells.${system}.docs-templates
             ];
+            packages = [
+              (pkgs.python311.withPackages (ps: [
+                ps.pytest
+                ps.pydantic
+                ps.sqlalchemy
+              ]))
+              pkgs.ruff
+            ];
+
           };
           resources = pkgs.mkShell {
             packages = [ pkgs.miniserve ];

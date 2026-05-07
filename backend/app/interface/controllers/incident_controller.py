@@ -1,6 +1,3 @@
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, field_validator
-
 from app.application.events import InMemoryEventBus
 from app.application.ports.repositories import (
     CommentRepository,
@@ -28,6 +25,8 @@ from app.interface.auth.jwt_auth import get_current_user
 from app.interface.auth.role_decorator import role_required
 from app.interface.dtos.incident_dto import IncidentDTO
 from app.interface.presenter import IncidentPresenter
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel, field_validator
 
 router = APIRouter()
 

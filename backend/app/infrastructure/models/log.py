@@ -1,11 +1,10 @@
 from datetime import datetime
 
+from app.domain.enums.log_level import LogLevel
+from app.infrastructure.database.base import Base
 from sqlalchemy import DateTime, Integer, String, func
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column
-
-from app.domain.enums.log_level import LogLevel
-from app.infrastructure.database.base import Base
 
 
 class Log(Base):

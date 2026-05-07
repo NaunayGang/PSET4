@@ -1,13 +1,12 @@
 from datetime import datetime
 from typing import List, Optional
 
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
-
 from app.application.ports.repositories.comment_repository import CommentRepository
 from app.application.ports.repositories.log_repository import LogRepository
 from app.domain.entities import comment, log
 from app.infrastructure.models.comment import Comment as DBComment
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
 
 
 class SQLAlchemyCommentRepository(CommentRepository):

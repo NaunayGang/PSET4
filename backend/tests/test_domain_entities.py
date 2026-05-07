@@ -1,7 +1,6 @@
 from datetime import datetime
 
 import pytest
-
 from app.domain.entities import Comment, Incident, Log, Notification
 from app.domain.enums import Role, Severity, State
 

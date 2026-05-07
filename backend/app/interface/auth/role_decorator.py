@@ -1,9 +1,8 @@
 from functools import wraps
 
-from fastapi import Depends, HTTPException
-
 from app.domain.entities import User
 from app.interface.auth.jwt_auth import get_current_user
+from fastapi import Depends, HTTPException
 
 
 def role_required(*required_roles: str):

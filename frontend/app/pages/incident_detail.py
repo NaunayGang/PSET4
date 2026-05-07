@@ -3,7 +3,6 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 import streamlit as st
-
 from data import (
     SEVERITIES,
     USERS,
@@ -13,7 +12,6 @@ from data import (
     transition_incident,
     validate_required,
 )
-
 
 st.set_page_config(page_title="Incident Detail", layout="wide")
 
@@ -150,7 +148,7 @@ if can_edit:
                     severity_value if severity_value and severity_value != selected_incident["severity"] else None,
                     assignee_value if assignee_value else None,
                 )
-            
+
             if success:
                 show_toast(message, "success")
                 st.success(message)

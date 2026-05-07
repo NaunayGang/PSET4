@@ -1,16 +1,14 @@
 from __future__ import annotations
 
 import streamlit as st
-
 from data import (
     get_counts_by_severity,
     get_counts_by_state,
     get_critical_recent,
-    get_incidents_by_day,
     get_incidents,
+    get_incidents_by_day,
     get_unassigned,
 )
-
 
 st.set_page_config(page_title="Manager Dashboard", layout="wide")
 

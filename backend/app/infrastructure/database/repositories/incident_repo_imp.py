@@ -1,13 +1,12 @@
 from datetime import datetime
 from typing import List, Optional
 
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
-
 from app.application.ports.repositories.incident_repository import IncidentRepository
 from app.application.ports.repositories.log_repository import LogRepository
 from app.domain.entities import incident, log
 from app.infrastructure.models.incident import Incident as DBIncident
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
 
 
 class SQLAlchemyIncidentRepository(IncidentRepository):

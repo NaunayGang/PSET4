@@ -2,8 +2,6 @@ from datetime import datetime
 from unittest.mock import MagicMock, patch
 
 import pytest
-from sqlalchemy.exc import SQLAlchemyError
-
 from app.domain.entities.comment import Comment
 from app.domain.entities.incident import Incident, Severity, State
 from app.domain.entities.log import Log, LogLevel
@@ -12,6 +10,7 @@ from app.infrastructure.database.repositories import (
     SQLAlchemyIncidentRepository,
     SQLAlchemyLogRepository,
 )
+from sqlalchemy.exc import SQLAlchemyError
 
 # ---------- Fixtures ----------
 
@@ -90,7 +89,7 @@ class TestSQLAlchemyCommentRepository:
         mock_db_comment.incident_id = domain_comment.incident_id
         mock_db_comment.timestamp = domain_comment.timestamp
 
-        with patch("backend.app.infrastructure.database.repositories.comment_repo_imp.DBComment",
+        with patch("app.infrastructure.database.repositories.comment_repo_imp.DBComment",
                return_value=mock_db_comment):
             result = comment_repo.create_comment(domain_comment)
 
@@ -105,7 +104,7 @@ class TestSQLAlchemyCommentRepository:
         domain_comment = create_domain_comment()
         mock_db_session.commit.side_effect = SQLAlchemyError("DB error")
 
-        with patch("backend.app.infrastructure.database.repositories.comment_repo_imp.DBComment",
+        with patch("app.infrastructure.database.repositories.comment_repo_imp.DBComment",
                return_value=MagicMock()):
             with pytest.raises(RuntimeError, match="Database error: DB error"):
                 comment_repo.create_comment(domain_comment)
@@ -214,7 +213,7 @@ class TestSQLAlchemyIncidentRepository:
         domain_incident = create_domain_incident(id=None)
         mock_db_incident = MagicMock()
         mock_db_incident.id = 10
-        with patch("backend.app.infrastructure.database.repositories.incident_repo_imp.DBIncident",
+        with patch("app.infrastructure.database.repositories.incident_repo_imp.DBIncident",
                return_value=mock_db_incident):
             result = incident_repo.create_incident(domain_incident)
 
@@ -227,7 +226,7 @@ class TestSQLAlchemyIncidentRepository:
     def test_create_incident_db_error(self, incident_repo, mock_db_session, mock_log_repository):
         domain_incident = create_domain_incident()
         mock_db_session.commit.side_effect = SQLAlchemyError("creation error")
-        with patch("backend.app.infrastructure.database.repositories.incident_repo_imp.DBIncident", return_value=MagicMock()):
+        with patch("app.infrastructure.database.repositories.incident_repo_imp.DBIncident", return_value=MagicMock()):
             with pytest.raises(RuntimeError, match="Database error: creation error"):
                 incident_repo.create_incident(domain_incident)
         mock_db_session.rollback.assert_called_once()
@@ -320,7 +319,7 @@ class TestSQLAlchemyLogRepository:
         domain_log = create_domain_log(id=None)
         mock_db_log = MagicMock()
         mock_db_log.id = 5
-        with patch("backend.app.infrastructure.database.repositories.log_repo_imp.DBLog",
+        with patch("app.infrastructure.database.repositories.log_repo_imp.DBLog",
                return_value=mock_db_log):
             result = log_repo.create_log(domain_log)
 
@@ -332,7 +331,7 @@ class TestSQLAlchemyLogRepository:
     def test_create_log_db_error(self, log_repo, mock_db_session):
         domain_log = create_domain_log()
         mock_db_session.commit.side_effect = SQLAlchemyError("log error")
-        with patch("backend.app.infrastructure.database.repositories.log_repo_imp.DBLog", return_value=MagicMock()):
+        with patch("app.infrastructure.database.repositories.log_repo_imp.DBLog", return_value=MagicMock()):
             with pytest.raises(RuntimeError, match="Database error: log error"):
                 log_repo.create_log(domain_log)
         mock_db_session.rollback.assert_called_once()

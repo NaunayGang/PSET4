@@ -1,13 +1,12 @@
 from typing import List
 
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
-
 from app.application.ports.repositories.notification_repository import (
     NotificationRepository,
 )
 from app.domain.entities import Notification
 from app.infrastructure.models.notification import Notification as DBNotification
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
 
 
 class SQLAlchemyNotificationRepository(NotificationRepository):

@@ -1,11 +1,10 @@
 from typing import List, Optional
 
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
-
 from app.application.ports.repositories.user_repository import UserRepository
 from app.domain.entities import User
 from app.infrastructure.models.user import User as DBUser
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
 
 
 class SQLAlchemyUserRepository(UserRepository):

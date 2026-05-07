@@ -2,7 +2,6 @@ from datetime import datetime
 from unittest.mock import MagicMock
 
 import pytest
-
 from app.application.events import InMemoryEventBus
 from app.application.services.notification_service import (
     InMemoryNotificationDispatcher,

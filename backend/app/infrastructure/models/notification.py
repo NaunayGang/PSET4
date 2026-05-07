@@ -1,9 +1,8 @@
 from datetime import datetime
 
+from app.infrastructure.database.base import Base
 from sqlalchemy import DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column
-
-from app.infrastructure.database.base import Base
 
 
 class Notification(Base):

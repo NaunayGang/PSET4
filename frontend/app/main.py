@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
 import math
+from datetime import datetime, timezone
 
 import streamlit as st
-
 from data import (
     SEVERITIES,
     STATES,
@@ -13,7 +12,6 @@ from data import (
     get_incidents,
     show_toast,
 )
-
 
 st.set_page_config(page_title="IncidentFlow", layout="wide")
 
@@ -48,9 +46,9 @@ if current_role == "Admin":
 try:
     if "incidents" not in st.session_state:
         st.session_state["incidents"] = get_incidents()
-    
+
     incidents = st.session_state["incidents"]
-    
+
     if not incidents:
         st.warning("No incidents found. Create one to get started.")
         st.stop()
@@ -67,13 +65,13 @@ with st.sidebar:
     query = st.text_input("Search", placeholder="Title or description")
     selected_severities = st.multiselect("Severity", SEVERITIES, default=SEVERITIES)
     selected_states = st.multiselect("State", STATES, default=STATES)
-    
+
     try:
         assignee_options = get_assignee_options(incidents)
-    except Exception as e:
+    except Exception:
         st.warning("Failed to load assignees")
         assignee_options = ["All", "Unassigned"]
-    
+
     selected_assignee = st.selectbox("Assignee", assignee_options)
     page_size = st.selectbox("Page size", [5, 10, 20], index=1)
 
