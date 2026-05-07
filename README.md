@@ -131,7 +131,7 @@ Si no tienes Nix, necesitas:
 -   Node.js 18+ (opcional, para frontend tools)
 
 ### Con Docker Compose (Recomendado)
-
+A la primera que les tocaba hacer cuáles son sus usuarios principales que debía tener el mvp
 ```bash
 # Clonar repositorio
 git clone https://github.com/NaunayGang/PSET4.git

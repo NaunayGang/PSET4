@@ -32,7 +32,7 @@ STATE_COLORS = {
 }
 
 
-st.title("IncidentFlow")
+st.title("IncidentFlowV2")
 
 st.page_link("pages/create_incident.py", label="Create incident")
 
