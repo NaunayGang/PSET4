@@ -27,6 +27,71 @@
               margin: 0 0.8em 0.2em -1.6em;
               vertical-align: middle;
             }
+            /* CSS for syntax highlighting */
+            html { -webkit-text-size-adjust: 100%; }
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            .sourceCode { overflow: visible; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { color: #008000; } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { color: #008000; font-weight: bold; } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
         </style>
                 <link rel="stylesheet" href="/pandoc-templates/docs.css" />
          
@@ -500,46 +565,44 @@ id="toc-descripciones-de-estados">Descripciones de Estados</a></li>
 <li><a href="#transiciones-válidas"
 id="toc-transiciones-válidas">Transiciones Válidas</a></li>
 </ul></li>
-<li><a href="#diagrama-de-casos-de-uso"
-id="toc-diagrama-de-casos-de-uso">Diagrama de Casos de Uso</a>
-<ul>
-<li><a href="#actores" id="toc-actores">Actores</a></li>
-<li><a href="#casos-de-uso-principales"
-id="toc-casos-de-uso-principales">Casos de Uso Principales</a></li>
-</ul></li>
-<li><a href="#diagrama-de-secuencia"
-id="toc-diagrama-de-secuencia">Diagrama de Secuencia</a>
-<ul>
-<li><a href="#flujo-principal" id="toc-flujo-principal">Flujo
-Principal</a></li>
-</ul></li>
 <li><a href="#diagrama-de-clases" id="toc-diagrama-de-clases">Diagrama
 de Clases</a>
 <ul>
 <li><a href="#entidades-principales"
 id="toc-entidades-principales">Entidades Principales</a></li>
-<li><a href="#relaciones" id="toc-relaciones">Relaciones</a></li>
+<li><a href="#enumeraciones"
+id="toc-enumeraciones">Enumeraciones</a></li>
+<li><a href="#interfaces-de-repository-inversión-de-dependencia"
+id="toc-interfaces-de-repository-inversión-de-dependencia">Interfaces de
+Repository (Inversión de Dependencia)</a></li>
 </ul></li>
-<li><a href="#reglas-de-negocio" id="toc-reglas-de-negocio">Reglas de
-Negocio</a>
+<li><a href="#diagrama-de-secuencia-flujo-de-incidente-critical"
+id="toc-diagrama-de-secuencia-flujo-de-incidente-critical">Diagrama de
+Secuencia: Flujo de Incidente CRITICAL</a>
 <ul>
-<li><a href="#reglas-de-transición-de-estado"
-id="toc-reglas-de-transición-de-estado">Reglas de Transición de
-Estado</a></li>
-<li><a href="#reglas-de-notificación"
-id="toc-reglas-de-notificación">Reglas de Notificación</a></li>
-<li><a href="#reglas-de-auditoría" id="toc-reglas-de-auditoría">Reglas
-de Auditoría</a></li>
-<li><a href="#reglas-de-permisos" id="toc-reglas-de-permisos">Reglas de
-Permisos</a></li>
+<li><a href="#pasos-del-flujo" id="toc-pasos-del-flujo">Pasos del
+Flujo</a></li>
 </ul></li>
-<li><a href="#notas-de-implementación"
-id="toc-notas-de-implementación">Notas de Implementación</a>
+<li><a href="#diagrama-de-casos-de-uso"
+id="toc-diagrama-de-casos-de-uso">Diagrama de Casos de Uso</a>
 <ul>
-<li><a href="#tecnologías" id="toc-tecnologías">Tecnologías</a></li>
-<li><a href="#consideraciones-de-diseño"
-id="toc-consideraciones-de-diseño">Consideraciones de Diseño</a></li>
+<li><a href="#capacidades-por-rol"
+id="toc-capacidades-por-rol">Capacidades por Rol</a></li>
 </ul></li>
+<li><a href="#diagrama-de-arquitectura-hexagonal"
+id="toc-diagrama-de-arquitectura-hexagonal">Diagrama de Arquitectura
+Hexagonal</a>
+<ul>
+<li><a href="#capas-explicadas" id="toc-capas-explicadas">Capas
+Explicadas</a></li>
+<li><a href="#principios-arquitectónicos-clave"
+id="toc-principios-arquitectónicos-clave">Principios Arquitectónicos
+Clave</a></li>
+</ul></li>
+<li><a href="#generación-de-diagramas"
+id="toc-generación-de-diagramas">Generación de Diagramas</a></li>
+<li><a href="#próximos-pasos" id="toc-próximos-pasos">Próximos
+Pasos</a></li>
 </ul>
         </nav>
          <h2 id="visión-general">Visión General</h2>
@@ -602,296 +665,328 @@ no es relevante</li>
 </ul>
 <p>Desde <strong>RESOLVED</strong>:</p>
 <ul>
-<li>→ CLOSED (después de revisión formal)</li>
-<li>→ ESCALATED (si hay problemas)</li>
+<li>→ CLOSED (solo Commander/Admin puede cerrar; CRITICAL requiere
+resumen)</li>
+<li>→ IN_PROGRESS (si el problema reaparece)</li>
 </ul>
 <p>Desde <strong>ESCALATED</strong>:</p>
 <ul>
-<li>→ ASSIGNED (reasignado a nivel superior)</li>
-<li>→ CANCELLED (si se determina que no es necesario)</li>
+<li>→ ASSIGNED (reasignar y continuar)</li>
+<li>→ IN_PROGRESS (continuar desde escalamiento)</li>
 </ul>
-<p>Desde cualquier estado:</p>
+<p>Desde <strong>CANCELLED</strong> o <strong>CLOSED</strong>:</p>
 <ul>
-<li>→ CANCELLED (en cualquier momento)</li>
-<li>→ ESCALATED (en cualquier momento)</li>
+<li>→ [Fin] (Estados terminales)</li>
 </ul>
-<h2 id="diagrama-de-casos-de-uso">Diagrama de Casos de Uso</h2>
-<p>El diagrama de casos de uso muestra las interacciones entre los
-actores y el sistema.</p>
-<figure>
-<img src="../resources/images/IncidentFlowUseCases.svg"
-alt="Diagrama de Casos de Uso" />
-<figcaption aria-hidden="true">Diagrama de Casos de Uso</figcaption>
-</figure>
-<h3 id="actores">Actores</h3>
-<ul>
-<li><strong>Operador</strong>: Reporta nuevos incidentes</li>
-<li><strong>Incident Commander</strong>: Coordina la respuesta, asigna
-recursos, escala si es necesario</li>
-<li><strong>Technical Responder</strong>: Investiga y resuelve el
-incidente</li>
-<li><strong>Incident Manager</strong>: Supervisa incidentes, cambia
-severidad</li>
-<li><strong>Administrador</strong>: Control total del sistema</li>
-</ul>
-<h3 id="casos-de-uso-principales">Casos de Uso Principales</h3>
-<table>
-<colgroup>
-<col style="width: 39%" />
-<col style="width: 21%" />
-<col style="width: 39%" />
-</colgroup>
-<thead>
-<tr>
-<th>Caso de Uso</th>
-<th>Actor</th>
-<th>Descripción</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Crear Incidente</td>
-<td>Operador, Administrador</td>
-<td>Reportar un nuevo incidente</td>
-</tr>
-<tr>
-<td>Triar Incidente</td>
-<td>Commander</td>
-<td>Evaluar y asignar severidad</td>
-</tr>
-<tr>
-<td>Asignar Incidente</td>
-<td>Commander</td>
-<td>Asignar a un respondedor</td>
-</tr>
-<tr>
-<td>Actualizar Estado</td>
-<td>Commander</td>
-<td>Cambiar estado del incidente</td>
-</tr>
-<tr>
-<td>Agregar Comentario</td>
-<td>Operador, Commander, Responder</td>
-<td>Agregar nota al timeline</td>
-</tr>
-<tr>
-<td>Cambiar Severidad</td>
-<td>Manager, Administrador</td>
-<td>Modificar nivel de severidad</td>
-</tr>
-<tr>
-<td>Escalar Incidente</td>
-<td>Commander</td>
-<td>Escalar a nivel superior</td>
-</tr>
-<tr>
-<td>Cerrar Incidente</td>
-<td>Commander, Administrador</td>
-<td>Cerrar formalmente</td>
-</tr>
-</tbody>
-</table>
-<h2 id="diagrama-de-secuencia">Diagrama de Secuencia</h2>
-<p>El diagrama de secuencia muestra el flujo de interacciones para crear
-y procesar un incidente.</p>
-<figure>
-<img src="../resources/images/IncidentFlowSequence.svg"
-alt="Diagrama de Secuencia" />
-<figcaption aria-hidden="true">Diagrama de Secuencia</figcaption>
-</figure>
-<h3 id="flujo-principal">Flujo Principal</h3>
-<ol type="1">
-<li>Operador crea incidente (estado OPEN)</li>
-<li>Commander revisa y tria (asigna severidad, estado TRIAGED)</li>
-<li>Commander asigna a Technical Responder (estado ASSIGNED)</li>
-<li>Responder inicia trabajo (estado IN_PROGRESS)</li>
-<li>Responder implementa solución (estado RESOLVED)</li>
-<li>Commander revisa y cierra (estado CLOSED)</li>
-</ol>
 <h2 id="diagrama-de-clases">Diagrama de Clases</h2>
-<p>El diagrama de clases muestra el modelo de dominio y las relaciones
-entre entidades.</p>
+<p>El diagrama de clases muestra las entidades del dominio, sus
+atributos, relaciones e interfaces clave para el patrón repository.</p>
 <figure>
-<img src="../resources/images/IncidentFlowClass.svg"
+<img src="../resources/images/IncidentFlowClassDiagram.svg"
 alt="Diagrama de Clases" />
 <figcaption aria-hidden="true">Diagrama de Clases</figcaption>
 </figure>
 <h3 id="entidades-principales">Entidades Principales</h3>
+<p><strong>Usuario</strong></p>
 <ul>
-<li><strong>Incidente</strong>: Representa un incidente reportadoc
-<ul>
-<li>Atributos: id, título, descripción, severidad, estado, asignado_a,
-creado_por</li>
-<li>Métodos: triar(), asignar(), iniciar(), resolver(), cerrar(),
-escalar()</li>
-</ul></li>
-<li><strong>Usuario</strong>: Representa un usuario del sistema
-<ul>
-<li>Atributos: id, nombre, email, rol</li>
-<li>Roles: Admin, Operator, Incident Commander, Technical Responder,
-Incident Manager</li>
-</ul></li>
-<li><strong>Comentario</strong>: Nota en la línea de tiempo del
-incidente
-<ul>
-<li>Atributos: id, incidente_id, usuario_id, contenido, timestamp</li>
-</ul></li>
-<li><strong>Notificación</strong>: Alerta enviada a usuarios
-<ul>
-<li>Atributos: id, usuario_id, tipo, mensaje, leída</li>
-<li>Tipos: assigned, escalated, resolved</li>
-</ul></li>
-<li><strong>Log</strong>: Registro de auditoría
-<ul>
-<li>Atributos: id, incidente_id, usuario_id, acción, timestamp</li>
-<li>Acciones: created, triaged, assigned, state_changed,
-severity_changed, comment_added</li>
-</ul></li>
+<li>id: UUID</li>
+<li>email: str</li>
+<li>nombre: str</li>
+<li>rol: Rol (Operator, Commander, Responder, Manager, Admin)</li>
+<li>activo: bool</li>
+<li>creado_en: DateTime</li>
 </ul>
-<h3 id="relaciones">Relaciones</h3>
+<p><strong>Incidente</strong> (Raíz de Agregado)</p>
 <ul>
-<li>Incidente 1 → * Comentario</li>
-<li>Incidente 1 → * Log</li>
-<li>Incidente 1 → * Notificación</li>
-<li>Usuario 1 → * Comentario</li>
-<li>Usuario 1 → * Log</li>
-<li>Usuario 1 → * Notificación</li>
-<li>Incidente * → 1 Usuario (asignado_a)</li>
-<li>Incidente * → 1 Usuario (creado_por)</li>
+<li>id: UUID</li>
+<li>título: str</li>
+<li>descripción: str</li>
+<li>severidad: Severidad (LOW, MEDIUM, HIGH, CRITICAL)</li>
+<li>estado: EstadoIncidente</li>
+<li>creador_id: UUID (referencia a Usuario)</li>
+<li>asignador_id: UUID (referencia a Usuario, nullable)</li>
+<li>creado_en: DateTime</li>
+<li>actualizado_en: DateTime</li>
+<li>resuelto_en: DateTime (nullable)</li>
+<li>cerrado_en: DateTime (nullable)</li>
+<li>resumen_resolución: str (nullable)</li>
 </ul>
-<h2 id="reglas-de-negocio">Reglas de Negocio</h2>
-<h3 id="reglas-de-transición-de-estado">Reglas de Transición de
-Estado</h3>
+<p>Métodos clave:</p>
+<ul>
+<li><code>cambiar_estado(nuevo_estado, usuario)</code>: Cambia el estado
+del incidente con validación</li>
+<li><code>asignar(usuario, commander)</code>: Asigna el incidente a un
+usuario</li>
+<li><code>agregar_comentario(texto, usuario)</code>: Agrega un
+comentario al timeline</li>
+<li><code>cambiar_severidad(nueva_severidad, usuario)</code>: Cambia la
+severidad con auditoría</li>
+<li><code>puede_cerrar()</code>: Valida si el incidente puede cerrarse
+(CRITICAL requiere resumen)</li>
+<li><code>es_critical()</code>: Retorna true si la severidad es
+CRITICAL</li>
+</ul>
+<p><strong>Comentario</strong></p>
+<ul>
+<li>id: UUID</li>
+<li>incidente_id: UUID (referencia a Incidente)</li>
+<li>autor_id: UUID (referencia a Usuario)</li>
+<li>texto: str</li>
+<li>creado_en: DateTime</li>
+</ul>
+<p><strong>LogAuditoría</strong> (para cumplimiento y depuración)</p>
+<ul>
+<li>id: UUID</li>
+<li>incidente_id: UUID (referencia a Incidente)</li>
+<li>usuario_id: UUID (referencia a Usuario)</li>
+<li>acción: str (qué cambió: estado, severidad, asignación, etc)</li>
+<li>valor_anterior: str (nullable)</li>
+<li>valor_nuevo: str (nullable)</li>
+<li>timestamp: DateTime</li>
+<li>detalles: JSON (contexto adicional)</li>
+</ul>
+<p><strong>Notificación</strong></p>
+<ul>
+<li>id: UUID</li>
+<li>usuario_id: UUID (referencia a Usuario)</li>
+<li>incidente_id: UUID (referencia a Incidente)</li>
+<li>tipo_evento: str (INCIDENTE_CREADO, SEVERIDAD_CAMBIADA, etc)</li>
+<li>mensaje: str</li>
+<li>leída: bool</li>
+<li>created_at: DateTime</li>
+</ul>
+<h3 id="enumeraciones">Enumeraciones</h3>
+<p><strong>Severidad</strong></p>
+<ul>
+<li>LOW</li>
+<li>MEDIUM</li>
+<li>HIGH</li>
+<li>CRITICAL</li>
+</ul>
+<p><strong>EstadoIncidente</strong></p>
+<ul>
+<li>OPEN</li>
+<li>TRIAGED</li>
+<li>ASSIGNED</li>
+<li>IN_PROGRESS</li>
+<li>RESOLVED</li>
+<li>CLOSED</li>
+<li>ESCALATED</li>
+<li>CANCELLED</li>
+</ul>
+<p><strong>Rol</strong></p>
+<ul>
+<li>OPERATOR</li>
+<li>COMMANDER</li>
+<li>RESPONDER</li>
+<li>MANAGER</li>
+<li>ADMIN</li>
+</ul>
+<h3 id="interfaces-de-repository-inversión-de-dependencia">Interfaces de
+Repository (Inversión de Dependencia)</h3>
+<p>Todas las implementaciones de la capa de infraestructura dependen de
+estas interfaces del dominio:</p>
+<ul>
+<li><strong>IIncidentRepository</strong>: Operaciones CRUD en
+incidentes, filtrado por estado/severidad/asignado</li>
+<li><strong>ICommentRepository</strong>: Crear y recuperar comentarios
+de incidentes</li>
+<li><strong>IAuditLogRepository</strong>: Crear y recuperar logs de
+auditoría</li>
+<li><strong>IUserRepository</strong>: Recuperar información de usuario
+por ID o email</li>
+<li><strong>IEventBus</strong>: Publicar eventos, suscribir a
+manejadores de eventos</li>
+</ul>
+<h2 id="diagrama-de-secuencia-flujo-de-incidente-critical">Diagrama de
+Secuencia: Flujo de Incidente CRITICAL</h2>
+<p>Este diagrama de secuencia ilustra el ciclo de vida completo de un
+incidente de severidad CRITICAL desde su creación hasta la resolución y
+cierre.</p>
+<figure>
+<img src="../resources/images/IncidentFlowSequenceCritical.svg"
+alt="Diagrama de Secuencia" />
+<figcaption aria-hidden="true">Diagrama de Secuencia</figcaption>
+</figure>
+<h3 id="pasos-del-flujo">Pasos del Flujo</h3>
 <ol type="1">
-<li>Un incidente debe ser triado antes de ser asignado</li>
-<li>Un incidente debe tener asignado un respondedor antes de pasar a
-IN_PROGRESS</li>
-<li>Un incidente CRITICAL no puede cerrarse sin un resumen de
-resolución</li>
-<li>Una vez CLOSED, un incidente no puede volver a IN_PROGRESS</li>
+<li><strong>Operador crea incidente CRITICAL</strong> vía UI de
+Streamlit</li>
+<li><strong>Frontend envía solicitud POST /incidentes</strong> a la
+API</li>
+<li><strong>Capa API valida</strong> y rutea a la capa de
+Aplicación</li>
+<li><strong>Capa de Aplicación:</strong></li>
 </ol>
-<h3 id="reglas-de-notificación">Reglas de Notificación</h3>
-<ol type="1">
-<li>Incident Commander recibe notificaciones de todos los incidentes
-CRITICAL</li>
-<li>Incident Manager recibe notificaciones de todos los incidentes
-CRITICAL</li>
-<li>El respondedor asignado recibe notificaciones cuando se le asigna un
+<ul>
+<li>Valida datos del incidente</li>
+<li>Guarda en base de datos</li>
+<li>Publica evento INCIDENTE_CREADO</li>
+<li>Como severidad=CRITICAL, publica eventos de notificación</li>
+</ul>
+<ol start="5" type="1">
+<li><strong>Event Bus notifica</strong> a Commander y Manager
+inmediatamente (notificaciones en memoria)</li>
+<li><strong>Commander recibe notificación</strong> y ve los detalles del
 incidente</li>
-<li>Todos los involucrados reciben notificaciones cuando el estado
-cambia a RESOLVED</li>
+<li><strong>Commander asigna</strong> incidente a un Technical Responder
+y cambia estado a ASSIGNED</li>
+<li><strong>Sistema аудит</strong> la asignación y publica evento
+INCIDENTE_ASIGNADO</li>
+<li><strong>Responder es notificado</strong> de la asignación</li>
+<li><strong>Responder inicia trabajo</strong>, transiciona a
+IN_PROGRESS</li>
+<li><strong>Responder agrega comentario</strong> con detalles de
+investigación</li>
+<li><strong>Responder resuelve</strong> el incidente y transiciona a
+RESOLVED</li>
+<li><strong>Sistema notifica</strong> al Manager de la resolución</li>
+<li><strong>Commander cierra</strong> el incidente (solo Commander/Admin
+puede hacer esto para CRITICAL)</li>
+<li><strong>Sistema valida</strong> que el incidente CRITICAL tiene un
+resumen antes de permitir el cierre</li>
+<li><strong>Sistema аудит</strong> el cierre y publica evento
+INCIDENTE_CERRADO</li>
+<li><strong>Estado final</strong>: Incidente está CERRADO con timeline
+completo y auditoría</li>
 </ol>
-<h3 id="reglas-de-auditoría">Reglas de Auditoría</h3>
-<ol type="1">
-<li>Cada cambio de estado genera un log de auditoría</li>
-<li>Cada cambio de severidad genera un log de auditoría</li>
-<li>Cada asignación genera un log de auditoría</li>
-<li>Los logs no pueden ser borrados ni editados</li>
-</ol>
-<h3 id="reglas-de-permisos">Reglas de Permisos</h3>
-<table>
-<thead>
-<tr>
-<th>Acción</th>
-<th>Admin</th>
-<th>Operator</th>
-<th>Commander</th>
-<th>Responder</th>
-<th>Manager</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Crear Incidente</td>
-<td>✓</td>
-<td>✓</td>
-<td>✗</td>
-<td>✗</td>
-<td>✗</td>
-</tr>
-<tr>
-<td>Ver Incidentes</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-</tr>
-<tr>
-<td>Triar</td>
-<td>✓</td>
-<td>✗</td>
-<td>✓</td>
-<td>✗</td>
-<td>✗</td>
-</tr>
-<tr>
-<td>Asignar</td>
-<td>✓</td>
-<td>✗</td>
-<td>✓</td>
-<td>✗</td>
-<td>✗</td>
-</tr>
-<tr>
-<td>Cambiar Estado</td>
-<td>✓</td>
-<td>✗</td>
-<td>✓</td>
-<td>✗</td>
-<td>✗</td>
-</tr>
-<tr>
-<td>Agregar Comentario</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✗</td>
-</tr>
-<tr>
-<td>Cambiar Severidad</td>
-<td>✓</td>
-<td>✗</td>
-<td>✗</td>
-<td>✗</td>
-<td>✓</td>
-</tr>
-<tr>
-<td>Ver Dashboard</td>
-<td>✓</td>
-<td>✗</td>
-<td>✗</td>
-<td>✗</td>
-<td>✓</td>
-</tr>
-<tr>
-<td>Ver Auditoría</td>
-<td>✓</td>
-<td>✗</td>
-<td>✗</td>
-<td>✗</td>
-<td>✗</td>
-</tr>
-</tbody>
-</table>
-<h2 id="notas-de-implementación">Notas de Implementación</h2>
-<h3 id="tecnologías">Tecnologías</h3>
+<h2 id="diagrama-de-casos-de-uso">Diagrama de Casos de Uso</h2>
+<p>El diagrama de casos de uso muestra qué acciones puede realizar cada
+rol en el sistema IncidentFlow.</p>
+<figure>
+<img src="../resources/images/IncidentFlowUseCaseDiagram.svg"
+alt="Diagrama de Casos de Uso" />
+<figcaption aria-hidden="true">Diagrama de Casos de Uso</figcaption>
+</figure>
+<h3 id="capacidades-por-rol">Capacidades por Rol</h3>
+<p><strong>Operador</strong></p>
 <ul>
-<li><strong>Backend</strong>: FastAPI (Python 3.11+)</li>
-<li><strong>Frontend</strong>: Streamlit</li>
-<li><strong>Base de Datos</strong>: PostgreSQL</li>
-<li><strong>ORM</strong>: SQLAlchemy</li>
-<li><strong>Arquitectura</strong>: Hexagonal</li>
+<li>Crear Incidente</li>
+<li>Agregar Comentario</li>
+<li>Ver Incidente</li>
+<li>Ver Dashboard (lista básica)</li>
 </ul>
-<h3 id="consideraciones-de-diseño">Consideraciones de Diseño</h3>
+<p><strong>Incident Commander</strong> (Más Acciones)</p>
+<ul>
+<li>Crear Incidente</li>
+<li>Triar Incidente</li>
+<li>Asignar Incidente</li>
+<li>Agregar Comentario</li>
+<li>Cambiar Estado (con restricciones)</li>
+<li>Cambiar Severidad</li>
+<li>Ver Incidente</li>
+<li>Ver Dashboard (con enfoque en asignaciones y timeline)</li>
+<li>Escalar Incidente</li>
+<li>Cerrar Incidente (restringido: CRITICAL necesita resumen)</li>
+</ul>
+<p><strong>Technical Responder</strong></p>
+<ul>
+<li>Agregar Comentario</li>
+<li>Cambiar Estado (limitado: puede mover a IN_PROGRESS, RESOLVED)</li>
+<li>Ver Incidente</li>
+<li>Ver Dashboard (sus incidentes asignados)</li>
+</ul>
+<p><strong>Manager</strong> (Solo Lectura + Auditoría)</p>
+<ul>
+<li>Ver Incidente (solo lectura)</li>
+<li>Ver Dashboard (métricas, distribución de incidentes, count sin
+asignar)</li>
+<li>Ver Log de Auditoría (visibilidad completa para cumplimiento)</li>
+</ul>
+<p><strong>Admin</strong> (Acceso Completo)</p>
+<ul>
+<li>Todas las acciones de todos los roles</li>
+<li>Crear/Gestionar Usuarios</li>
+<li>Reasignar Incidentes</li>
+<li>Acceso Completo al Log de Auditoría</li>
+</ul>
+<h2 id="diagrama-de-arquitectura-hexagonal">Diagrama de Arquitectura
+Hexagonal</h2>
+<p>Este diagrama muestra cómo el sistema está organizado en una
+arquitectura hexagonal (clean) con clara separación de
+responsabilidades.</p>
+<figure>
+<img src="../resources/images/IncidentFlowArchitecture.svg"
+alt="Arquitectura Hexagonal" />
+<figcaption aria-hidden="true">Arquitectura Hexagonal</figcaption>
+</figure>
+<h3 id="capas-explicadas">Capas Explicadas</h3>
+<h4 id="capa-de-frontend">Capa de Frontend</h4>
+<ul>
+<li><strong>UI Streamlit</strong>: Interfaz multi-página para diferentes
+roles de usuario</li>
+<li>Maneja lógica de presentación e interacción del usuario</li>
+<li>Llama a endpoints de la API del Backend</li>
+</ul>
+<h4 id="capa-api">Capa API</h4>
+<ul>
+<li><strong>Endpoints REST FastAPI</strong>: Toda comunicación
+externa</li>
+<li>Validación de solicitudes y serialización de respuestas</li>
+<li>Decoradores de permisos para autorización</li>
+</ul>
+<h4 id="capa-de-aplicación">Capa de Aplicación</h4>
+<ul>
+<li><strong>Casos de Uso</strong>: Operaciones de negocio
+(CrearIncidente, TriarIncidente, etc)</li>
+<li>Orquesta entidades del dominio y servicios de infraestructura</li>
+<li>No hay llamadas directas a base de datos; depende de interfaces de
+repository</li>
+<li>DTOs validan entrada y dan forma a la salida</li>
+</ul>
+<h4 id="capa-de-dominio-core---sin-dependencias-externas">Capa de
+Dominio (Core - Sin Dependencias Externas)</h4>
+<ul>
+<li><strong>Entidades</strong>: Objetos de negocio con identidad
+(Incidente, Usuario, Comentario)</li>
+<li><strong>Objetos de Valor</strong>: Enumeraciones (Severidad,
+EstadoIncidente, Rol)</li>
+<li><strong>Reglas de Negocio</strong>: Máquina de estados,
+restricciones CRITICAL, permisos</li>
+<li><strong>Abstracciones (Interfaces)</strong>: IIncidentRepository,
+IEventBus, etc</li>
+<li><strong>Esta capa es testeable en aislamiento</strong> sin
+mocks</li>
+</ul>
+<h4 id="capa-de-infraestructura">Capa de Infraestructura</h4>
+<ul>
+<li><strong>Repositories</strong>: Implementaciones concretas de
+interfaces del dominio</li>
+<li><strong>Base de Datos</strong>: PostgreSQL con ORM SQLAlchemy y
+migraciones Alembic</li>
+<li><strong>Event Bus</strong>: Publicar/suscribir en memoria para
+eventos y notificaciones</li>
+<li>Depende de abstracciones del dominio (principio de inversión de
+dependencia)</li>
+</ul>
+<h3 id="principios-arquitectónicos-clave">Principios Arquitectónicos
+Clave</h3>
 <ol type="1">
-<li>La separación entre capas permite cambio de implementación sin
-afectar otras capas</li>
-<li>Los casos de uso encapsulan la lógica de negocio</li>
-<li>Los puertos definen interfaces que pueden ser implementadas de
-diferentes maneras</li>
-<li>Los eventos permiten notificaciones asíncronas y trazabilidad</li>
-</ol> 
+<li><strong>Inversión de Dependencia</strong>: Módulos de alto nivel no
+dependen de módulos de bajo nivel; ambos dependen de abstracciones</li>
+<li><strong>Responsabilidad Única</strong>: Cada capa tiene una razón
+para cambiar</li>
+<li><strong>Testabilidad</strong>: Capa de dominio es testeable sin test
+doubles</li>
+<li><strong>Flexibilidad</strong>: Fácil cambiar implementaciones (ej:
+diferente base de datos, event bus)</li>
+</ol>
+<h2 id="generación-de-diagramas">Generación de Diagramas</h2>
+<p>Todos los diagramas se generan desde archivos fuente PlantUML (.puml)
+y se compilan a PNG usando:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> shell nixpkgs#plantuml <span class="at">--command</span> plantuml <span class="at">-o</span> docs-src/resources/images docs-src/uml/<span class="pp">*</span>.puml</span></code></pre></div>
+<p>O vía el método de compilación documentado:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop path:. <span class="at">--command</span> tern-core</span></code></pre></div>
+<h2 id="próximos-pasos">Próximos Pasos</h2>
+<p>Estos diagramas deben guiar:</p>
+<ul>
+<li>Implementación de la capa de dominio y repositories del backend</li>
+<li>Diseño de UI y flujo de trabajo del frontend</li>
+<li>Diseño y validación de endpoints de API</li>
+<li>Diseño de casos de prueba y fixtures de testing</li>
+<li>Discusiones de equipo y code reviews</li>
+</ul> 
     </body>
 </html>

@@ -37,7 +37,7 @@ Desde **TRIAGED**:
 -   → CANCELLED (si se determina que no es urgente)
 -   → ESCALATED (si se necesita escalamiento)
 
- Desde **ASSIGNED**:
+Desde **ASSIGNED**:
 
 -   → IN_PROGRESS (cuando inicia el trabajo)
 -   → CANCELLED (si no se necesita)
@@ -50,149 +50,273 @@ Desde **IN_PROGRESS**:
 
 Desde **RESOLVED**:
 
--   → CLOSED (después de revisión formal)
--   → ESCALATED (si hay problemas)
+-   → CLOSED (solo Commander/Admin puede cerrar; CRITICAL requiere resumen)
+-   → IN_PROGRESS (si el problema reaparece)
 
 Desde **ESCALATED**:
 
--   → ASSIGNED (reasignado a nivel superior)
--   → CANCELLED (si se determina que no es necesario)
+-   → ASSIGNED (reasignar y continuar)
+-   → IN_PROGRESS (continuar desde escalamiento)
 
-Desde cualquier estado:
+Desde **CANCELLED** o **CLOSED**:
 
--   → CANCELLED (en cualquier momento)
--   → ESCALATED (en cualquier momento)
-
-## Diagrama de Casos de Uso
-
-El diagrama de casos de uso muestra las interacciones entre los actores y el sistema.
-
-![Diagrama de Casos de Uso](../resources/images/IncidentFlowUseCases.svg)
-
-### Actores
-
--   **Operador**: Reporta nuevos incidentes
--   **Incident Commander**: Coordina la respuesta, asigna recursos, escala si es necesario
--   **Technical Responder**: Investiga y resuelve el incidente
--   **Incident Manager**: Supervisa incidentes, cambia severidad
--   **Administrador**: Control total del sistema
-
-### Casos de Uso Principales
-
-| Caso de Uso | Actor | Descripción |
-|-------------|-------|-------------|
-| Crear Incidente | Operador, Administrador | Reportar un nuevo incidente |
-| Triar Incidente | Commander | Evaluar y asignar severidad |
-| Asignar Incidente | Commander | Asignar a un respondedor |
-| Actualizar Estado | Commander | Cambiar estado del incidente |
-| Agregar Comentario | Operador, Commander, Responder | Agregar nota al timeline |
-| Cambiar Severidad | Manager, Administrador | Modificar nivel de severidad |
-| Escalar Incidente | Commander | Escalar a nivel superior |
-| Cerrar Incidente | Commander, Administrador | Cerrar formalmente |
-
-## Diagrama de Secuencia
-
-El diagrama de secuencia muestra el flujo de interacciones para crear y procesar un incidente.
-
-![Diagrama de Secuencia](../resources/images/IncidentFlowSequence.svg)
-
-### Flujo Principal
-
-1.  Operador crea incidente (estado OPEN)
-2.  Commander revisa y tria (asigna severidad, estado TRIAGED)
-3.  Commander asigna a Technical Responder (estado ASSIGNED)
-4.  Responder inicia trabajo (estado IN_PROGRESS)
-5.  Responder implementa solución (estado RESOLVED)
-6.  Commander revisa y cierra (estado CLOSED)
+-   → [Fin] (Estados terminales)
 
 ## Diagrama de Clases
 
-El diagrama de clases muestra el modelo de dominio y las relaciones entre entidades.
+El diagrama de clases muestra las entidades del dominio, sus atributos, relaciones e interfaces clave para el patrón repository.
 
-![Diagrama de Clases](../resources/images/IncidentFlowClass.svg)
+![Diagrama de Clases](../resources/images/IncidentFlowClassDiagram.svg)
 
 ### Entidades Principales
 
--   **Incidente**: Representa un incidente reportadoc
-    -   Atributos: id, título, descripción, severidad, estado, asignado_a, creado_por
-    -   Métodos: triar(), asignar(), iniciar(), resolver(), cerrar(), escalar()
+**Usuario**
 
--   **Usuario**: Representa un usuario del sistema
-    -   Atributos: id, nombre, email, rol
-    -   Roles: Admin, Operator, Incident Commander, Technical Responder, Incident Manager
+-   id: UUID
+-   email: str
+-   nombre: str
+-   rol: Rol (Operator, Commander, Responder, Manager, Admin)
+-   activo: bool
+-   creado_en: DateTime
 
--   **Comentario**: Nota en la línea de tiempo del incidente
-    -   Atributos: id, incidente_id, usuario_id, contenido, timestamp
+**Incidente** (Raíz de Agregado)
 
--   **Notificación**: Alerta enviada a usuarios
-    -   Atributos: id, usuario_id, tipo, mensaje, leída
-    -   Tipos: assigned, escalated, resolved
+-   id: UUID
+-   título: str
+-   descripción: str
+-   severidad: Severidad (LOW, MEDIUM, HIGH, CRITICAL)
+-   estado: EstadoIncidente
+-   creador_id: UUID (referencia a Usuario)
+-   asignador_id: UUID (referencia a Usuario, nullable)
+-   creado_en: DateTime
+-   actualizado_en: DateTime
+-   resuelto_en: DateTime (nullable)
+-   cerrado_en: DateTime (nullable)
+-   resumen_resolución: str (nullable)
 
--   **Log**: Registro de auditoría
-    -   Atributos: id, incidente_id, usuario_id, acción, timestamp
-    -   Acciones: created, triaged, assigned, state_changed, severity_changed, comment_added
+Métodos clave:
 
-### Relaciones
+-   `cambiar_estado(nuevo_estado, usuario)`: Cambia el estado del incidente con validación
+-   `asignar(usuario, commander)`: Asigna el incidente a un usuario
+-   `agregar_comentario(texto, usuario)`: Agrega un comentario al timeline
+-   `cambiar_severidad(nueva_severidad, usuario)`: Cambia la severidad con auditoría
+-   `puede_cerrar()`: Valida si el incidente puede cerrarse (CRITICAL requiere resumen)
+-   `es_critical()`: Retorna true si la severidad es CRITICAL
 
--   Incidente 1 → * Comentario
--   Incidente 1 → * Log
--   Incidente 1 → * Notificación
--   Usuario 1 → * Comentario
--   Usuario 1 → * Log
--   Usuario 1 → * Notificación
--   Incidente * → 1 Usuario (asignado_a)
--   Incidente * → 1 Usuario (creado_por)
+**Comentario**
 
-## Reglas de Negocio
+-   id: UUID
+-   incidente_id: UUID (referencia a Incidente)
+-   autor_id: UUID (referencia a Usuario)
+-   texto: str
+-   creado_en: DateTime
 
-### Reglas de Transición de Estado
+**LogAuditoría** (para cumplimiento y depuración)
 
-1.  Un incidente debe ser triado antes de ser asignado
-2.  Un incidente debe tener asignado un respondedor antes de pasar a IN_PROGRESS
-3.  Un incidente CRITICAL no puede cerrarse sin un resumen de resolución
-4.  Una vez CLOSED, un incidente no puede volver a IN_PROGRESS
+-   id: UUID
+-   incidente_id: UUID (referencia a Incidente)
+-   usuario_id: UUID (referencia a Usuario)
+-   acción: str (qué cambió: estado, severidad, asignación, etc)
+-   valor_anterior: str (nullable)
+-   valor_nuevo: str (nullable)
+-   timestamp: DateTime
+-   detalles: JSON (contexto adicional)
 
-### Reglas de Notificación
+**Notificación**
 
-1.  Incident Commander recibe notificaciones de todos los incidentes CRITICAL
-2.  Incident Manager recibe notificaciones de todos los incidentes CRITICAL
-3.  El respondedor asignado recibe notificaciones cuando se le asigna un incidente
-4.  Todos los involucrados reciben notificaciones cuando el estado cambia a RESOLVED
+-   id: UUID
+-   usuario_id: UUID (referencia a Usuario)
+-   incidente_id: UUID (referencia a Incidente)
+-   tipo_evento: str (INCIDENTE_CREADO, SEVERIDAD_CAMBIADA, etc)
+-   mensaje: str
+-   leída: bool
+-   created_at: DateTime
 
-### Reglas de Auditoría
+### Enumeraciones
 
-1.  Cada cambio de estado genera un log de auditoría
-2.  Cada cambio de severidad genera un log de auditoría
-3.  Cada asignación genera un log de auditoría
-4.  Los logs no pueden ser borrados ni editados
+**Severidad**
 
-### Reglas de Permisos
+-   LOW
+-   MEDIUM
+-   HIGH
+-   CRITICAL
 
-| Acción | Admin | Operator | Commander | Responder | Manager |
-|--------|-------|-----------|-----------|-----------|---------|
-| Crear Incidente | ✓ | ✓ | ✗ | ✗ | ✗ |
-| Ver Incidentes | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Triar | ✓ | ✗ | ✓ | ✗ | ✗ |
-| Asignar | ✓ | ✗ | ✓ | ✗ | ✗ |
-| Cambiar Estado | ✓ | ✗ | ✓ | ✗ | ✗ |
-| Agregar Comentario | ✓ | ✓ | ✓ | ✓ | ✗ |
-| Cambiar Severidad | ✓ | ✗ | ✗ | ✗ | ✓ |
-| Ver Dashboard | ✓ | ✗ | ✗ | ✗ | ✓ |
-| Ver Auditoría | ✓ | ✗ | ✗ | ✗ | ✗ |
+**EstadoIncidente**
 
-## Notas de Implementación
+-   OPEN
+-   TRIAGED
+-   ASSIGNED
+-   IN_PROGRESS
+-   RESOLVED
+-   CLOSED
+-   ESCALATED
+-   CANCELLED
 
-### Tecnologías
+**Rol**
 
--   **Backend**: FastAPI (Python 3.11+)
--   **Frontend**: Streamlit
--   **Base de Datos**: PostgreSQL
--   **ORM**: SQLAlchemy
--   **Arquitectura**: Hexagonal
+-   OPERATOR
+-   COMMANDER
+-   RESPONDER
+-   MANAGER
+-   ADMIN
 
-### Consideraciones de Diseño
+### Interfaces de Repository (Inversión de Dependencia)
 
-1.  La separación entre capas permite cambio de implementación sin afectar otras capas
-2.  Los casos de uso encapsulan la lógica de negocio
-3.  Los puertos definen interfaces que pueden ser implementadas de diferentes maneras
-4.  Los eventos permiten notificaciones asíncronas y trazabilidad
+Todas las implementaciones de la capa de infraestructura dependen de estas interfaces del dominio:
+
+-   **IIncidentRepository**: Operaciones CRUD en incidentes, filtrado por estado/severidad/asignado
+-   **ICommentRepository**: Crear y recuperar comentarios de incidentes
+-   **IAuditLogRepository**: Crear y recuperar logs de auditoría
+-   **IUserRepository**: Recuperar información de usuario por ID o email
+-   **IEventBus**: Publicar eventos, suscribir a manejadores de eventos
+
+## Diagrama de Secuencia: Flujo de Incidente CRITICAL
+
+Este diagrama de secuencia ilustra el ciclo de vida completo de un incidente de severidad CRITICAL desde su creación hasta la resolución y cierre.
+
+![Diagrama de Secuencia](../resources/images/IncidentFlowSequenceCritical.svg)
+
+### Pasos del Flujo
+
+1.  **Operador crea incidente CRITICAL** vía UI de Streamlit
+2.  **Frontend envía solicitud POST /incidentes** a la API
+3.  **Capa API valida** y rutea a la capa de Aplicación
+4.  **Capa de Aplicación:**
+   -   Valida datos del incidente
+   -   Guarda en base de datos
+   -   Publica evento INCIDENTE_CREADO
+   -   Como severidad=CRITICAL, publica eventos de notificación
+5.  **Event Bus notifica** a Commander y Manager inmediatamente (notificaciones en memoria)
+6.  **Commander recibe notificación** y ve los detalles del incidente
+7.  **Commander asigna** incidente a un Technical Responder y cambia estado a ASSIGNED
+8.  **Sistema аудит** la asignación y publica evento INCIDENTE_ASIGNADO
+9.  **Responder es notificado** de la asignación
+10. **Responder inicia trabajo**, transiciona a IN_PROGRESS
+11. **Responder agrega comentario** con detalles de investigación
+12. **Responder resuelve** el incidente y transiciona a RESOLVED
+13. **Sistema notifica** al Manager de la resolución
+14. **Commander cierra** el incidente (solo Commander/Admin puede hacer esto para CRITICAL)
+15. **Sistema valida** que el incidente CRITICAL tiene un resumen antes de permitir el cierre
+16. **Sistema аудит** el cierre y publica evento INCIDENTE_CERRADO
+17. **Estado final**: Incidente está CERRADO con timeline completo y auditoría
+
+## Diagrama de Casos de Uso
+
+El diagrama de casos de uso muestra qué acciones puede realizar cada rol en el sistema IncidentFlow.
+
+![Diagrama de Casos de Uso](../resources/images/IncidentFlowUseCaseDiagram.svg)
+
+### Capacidades por Rol
+
+**Operador**
+
+-   Crear Incidente
+-   Agregar Comentario
+-   Ver Incidente
+-   Ver Dashboard (lista básica)
+
+**Incident Commander** (Más Acciones)
+
+-   Crear Incidente
+-   Triar Incidente
+-   Asignar Incidente
+-   Agregar Comentario
+-   Cambiar Estado (con restricciones)
+-   Cambiar Severidad
+-   Ver Incidente
+-   Ver Dashboard (con enfoque en asignaciones y timeline)
+-   Escalar Incidente
+-   Cerrar Incidente (restringido: CRITICAL necesita resumen)
+
+**Technical Responder**
+
+-   Agregar Comentario
+-   Cambiar Estado (limitado: puede mover a IN_PROGRESS, RESOLVED)
+-   Ver Incidente
+-   Ver Dashboard (sus incidentes asignados)
+
+**Manager** (Solo Lectura + Auditoría)
+
+-   Ver Incidente (solo lectura)
+-   Ver Dashboard (métricas, distribución de incidentes, count sin asignar)
+-   Ver Log de Auditoría (visibilidad completa para cumplimiento)
+
+**Admin** (Acceso Completo)
+
+-   Todas las acciones de todos los roles
+-   Crear/Gestionar Usuarios
+-   Reasignar Incidentes
+-   Acceso Completo al Log de Auditoría
+
+## Diagrama de Arquitectura Hexagonal
+
+Este diagrama muestra cómo el sistema está organizado en una arquitectura hexagonal (clean) con clara separación de responsabilidades.
+
+![Arquitectura Hexagonal](../resources/images/IncidentFlowArchitecture.svg)
+
+### Capas Explicadas
+
+#### Capa de Frontend
+
+-   **UI Streamlit**: Interfaz multi-página para diferentes roles de usuario
+-   Maneja lógica de presentación e interacción del usuario
+-   Llama a endpoints de la API del Backend
+
+#### Capa API
+
+-   **Endpoints REST FastAPI**: Toda comunicación externa
+-   Validación de solicitudes y serialización de respuestas
+-   Decoradores de permisos para autorización
+
+#### Capa de Aplicación
+
+-   **Casos de Uso**: Operaciones de negocio (CrearIncidente, TriarIncidente, etc)
+-   Orquesta entidades del dominio y servicios de infraestructura
+-   No hay llamadas directas a base de datos; depende de interfaces de repository
+-   DTOs validan entrada y dan forma a la salida
+
+#### Capa de Dominio (Core - Sin Dependencias Externas)
+
+-   **Entidades**: Objetos de negocio con identidad (Incidente, Usuario, Comentario)
+-   **Objetos de Valor**: Enumeraciones (Severidad, EstadoIncidente, Rol)
+-   **Reglas de Negocio**: Máquina de estados, restricciones CRITICAL, permisos
+-   **Abstracciones (Interfaces)**: IIncidentRepository, IEventBus, etc
+-   **Esta capa es testeable en aislamiento** sin mocks
+
+#### Capa de Infraestructura
+
+-   **Repositories**: Implementaciones concretas de interfaces del dominio
+-   **Base de Datos**: PostgreSQL con ORM SQLAlchemy y migraciones Alembic
+-   **Event Bus**: Publicar/suscribir en memoria para eventos y notificaciones
+-   Depende de abstracciones del dominio (principio de inversión de dependencia)
+
+### Principios Arquitectónicos Clave
+
+1.  **Inversión de Dependencia**: Módulos de alto nivel no dependen de módulos de bajo nivel; ambos dependen de abstracciones
+2.  **Responsabilidad Única**: Cada capa tiene una razón para cambiar
+3.  **Testabilidad**: Capa de dominio es testeable sin test doubles
+4.  **Flexibilidad**: Fácil cambiar implementaciones (ej: diferente base de datos, event bus)
+
+## Generación de Diagramas
+
+Todos los diagramas se generan desde archivos fuente PlantUML (.puml) y se compilan a PNG usando:
+
+```bash
+nix shell nixpkgs#plantuml --command plantuml -o docs-src/resources/images docs-src/uml/*.puml
+```
+
+O vía el método de compilación documentado:
+
+```bash
+nix develop path:. --command tern-core
+```
+
+## Próximos Pasos
+
+Estos diagramas deben guiar:
+
+-   Implementación de la capa de dominio y repositories del backend
+-   Diseño de UI y flujo de trabajo del frontend
+-   Diseño y validación de endpoints de API
+-   Diseño de casos de prueba y fixtures de testing
+-   Discusiones de equipo y code reviews
