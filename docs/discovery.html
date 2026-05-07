@@ -1,0 +1,928 @@
+<!doctype html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    lang=""
+    xml:lang=""
+    >
+    <head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="pandoc" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=yes"
+        />
+                   <title>discovery</title>
+        <style>
+            code{white-space: pre-wrap;}
+            span.smallcaps{font-variant: small-caps;}
+            div.columns{display: flex; gap: min(4vw, 1.5em);}
+            div.column{flex: auto; overflow-x: auto;}
+            div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+            /* The extra [class] is a hack that increases specificity enough to
+               override a similar rule in reveal.js */
+            ul.task-list[class]{list-style: none;}
+            ul.task-list li input[type="checkbox"] {
+              font-size: inherit;
+              width: 0.8em;
+              margin: 0 0.8em 0.2em -1.6em;
+              vertical-align: middle;
+            }
+        </style>
+                <link rel="stylesheet" href="/pandoc-templates/docs.css" />
+         
+        <script
+            data-external="1"
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+        ></script>
+        <script>
+        // Tabset functionality for pandoc-rendered markdown
+        // Emulates R Markdown's {.tabset} behavior
+        document.addEventListener('DOMContentLoaded', function() {
+          // Find all headers with 'tabset' class (pandoc applies class to header, not section)
+          document.querySelectorAll('h1.tabset, h2.tabset, h3.tabset, h4.tabset, h5.tabset, h6.tabset').forEach(function(tabsetHeader) {
+            const tabLevel = parseInt(tabsetHeader.tagName[1]);
+            const childHeaderTag = 'H' + (tabLevel + 1);
+
+            // Find all child sections (tabs) - siblings until next same-level header
+            const tabs = [];
+            const introContent = []; // Content before first tab
+            let currentTab = null;
+
+            let sibling = tabsetHeader.nextElementSibling;
+            while (sibling) {
+              if (sibling.tagName === childHeaderTag) {
+                // New tab starts
+                if (currentTab) tabs.push(currentTab);
+                currentTab = {
+                  title: sibling.textContent,
+                  id: sibling.id || sibling.textContent.toLowerCase().replace(/\s+/g, '-'),
+                  header: sibling,
+                  content: []
+                };
+              } else if (sibling.tagName && sibling.tagName[0] === 'H' && parseInt(sibling.tagName[1]) <= tabLevel) {
+                // Hit a same-level or higher header, stop
+                break;
+              } else if (currentTab) {
+                // Add content to current tab
+                currentTab.content.push(sibling);
+              } else {
+                // Content before first tab (intro text)
+                introContent.push(sibling);
+              }
+              sibling = sibling.nextElementSibling;
+            }
+            if (currentTab) tabs.push(currentTab);
+
+            if (tabs.length === 0) return;
+
+            // Create tab UI
+            const tabContainer = document.createElement('div');
+            tabContainer.className = 'tab-container';
+
+            // Create tab buttons
+            const tabButtons = document.createElement('div');
+            tabButtons.className = 'tab-buttons';
+
+            tabs.forEach(function(tab, index) {
+              const button = document.createElement('button');
+              button.className = 'tab-button' + (index === 0 ? ' active' : '');
+              button.textContent = tab.title;
+              button.setAttribute('data-tab', tab.id);
+              button.addEventListener('click', function() {
+                // Deactivate all tabs in this container
+                tabContainer.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                tabContainer.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                // Activate clicked tab
+                button.classList.add('active');
+                tabContainer.querySelector('.tab-panel[data-tab="' + tab.id + '"]').classList.add('active');
+              });
+              tabButtons.appendChild(button);
+            });
+
+            tabContainer.appendChild(tabButtons);
+
+            // Create tab panels and move content
+            tabs.forEach(function(tab, index) {
+              const panel = document.createElement('div');
+              panel.className = 'tab-panel' + (index === 0 ? ' active' : '');
+              panel.setAttribute('data-tab', tab.id);
+              tab.content.forEach(function(el) {
+                panel.appendChild(el);
+              });
+              tabContainer.appendChild(panel);
+              // Remove the original tab header
+              tab.header.remove();
+            });
+
+            // Insert intro content right after tabset header, then tab container
+            let insertPoint = tabsetHeader;
+            introContent.forEach(function(el) {
+              insertPoint.after(el);
+              insertPoint = el;
+            });
+            insertPoint.after(tabContainer);
+          });
+
+          // Image Maximizer functionality
+          // Wraps images and SVGs in containers with expand functionality
+          const wrapElement = function(element) {
+            // Skip if already wrapped
+            if (element.parentElement && element.parentElement.classList.contains('img-wrapper')) return;
+
+            // Get element dimensions
+            const getWidth = function() {
+              if (element.tagName === 'IMG') {
+                return element.naturalWidth || element.width || element.clientWidth;
+              } else if (element.tagName === 'SVG') {
+                // For inline SVGs, try multiple methods to get width
+                // 1. Check viewBox attribute for intended dimensions
+                const viewBox = element.getAttribute('viewBox');
+                if (viewBox) {
+                  const parts = viewBox.split(/\s+|,/);
+                  if (parts.length >= 4) {
+                    const vbWidth = parseFloat(parts[2]);
+                    if (vbWidth > 0) return vbWidth;
+                  }
+                }
+                // 2. Check explicit width attribute
+                const widthAttr = element.getAttribute('width');
+                if (widthAttr && !widthAttr.includes('%')) {
+                  const w = parseFloat(widthAttr);
+                  if (w > 0) return w;
+                }
+                // 3. Try getBBox (may throw if SVG not rendered)
+                try {
+                  const bbox = element.getBBox ? element.getBBox() : null;
+                  if (bbox && bbox.width > 0) return bbox.width;
+                } catch (e) {
+                  // getBBox can throw if element is not in DOM or not rendered
+                }
+                // 4. Fall back to client dimensions
+                return element.clientWidth || element.getBoundingClientRect().width;
+              }
+              return 0;
+            };
+
+            // Only apply to images/SVGs wider than 200px (skip small icons)
+            const width = getWidth();
+            if (width < 200) return;
+
+            // Handle parent element - <div> inside <p> is invalid HTML and breaks rendering
+            const parent = element.parentNode;
+            if (parent && parent.tagName === 'P') {
+              // Replace <p> with <figure> to allow block-level content
+              const figure = document.createElement('figure');
+              figure.className = 'img-figure';
+              // Move all children from <p> to <figure>
+              while (parent.firstChild) {
+                figure.appendChild(parent.firstChild);
+              }
+              parent.parentNode.replaceChild(figure, parent);
+            }
+
+            // Create wrapper
+            const wrapper = document.createElement('div');
+            wrapper.className = 'img-wrapper';
+
+            // Create expand icon
+            const expandIcon = document.createElement('div');
+            expandIcon.className = 'img-expand-icon';
+            expandIcon.innerHTML = '⤢'; // Expand arrow symbol
+            expandIcon.setAttribute('title', 'Click to expand');
+
+            // Wrap element and add icon
+            element.parentNode.insertBefore(wrapper, element);
+            wrapper.appendChild(element);
+            wrapper.appendChild(expandIcon);
+
+            // Add click handler to maximize
+            const maximize = function() {
+              // Prevent body scroll
+              document.body.style.overflow = 'hidden';
+
+              // Create overlay
+              const overlay = document.createElement('div');
+              overlay.className = 'img-maximized-overlay';
+
+              // Create canvas container (handles pan/zoom transforms)
+              const canvas = document.createElement('div');
+              canvas.className = 'img-maximized-canvas';
+
+              // Create content container
+              const content = document.createElement('div');
+              content.className = 'img-maximized-content';
+
+              // Clone element
+              const maximizedElement = element.cloneNode(true);
+              maximizedElement.className = 'img-maximized';
+              
+              // Determine base dimensions for the image
+              let baseWidth, baseHeight;
+              const isSvg = element.tagName === 'IMG' && element.src && element.src.toLowerCase().endsWith('.svg');
+              
+              if (element.tagName === 'IMG') {
+                const natWidth = element.naturalWidth || element.clientWidth;
+                const natHeight = element.naturalHeight || element.clientHeight;
+                
+                if (natWidth && natHeight) {
+                  const maxW = window.innerWidth * 0.85;
+                  const maxH = window.innerHeight * 0.85;
+                  const aspectRatio = natWidth / natHeight;
+                  
+                  if (isSvg) {
+                    // Scale SVG to fit viewport initially
+                    if (maxW / aspectRatio <= maxH) {
+                      baseWidth = maxW;
+                      baseHeight = maxW / aspectRatio;
+                    } else {
+                      baseHeight = maxH;
+                      baseWidth = maxH * aspectRatio;
+                    }
+                    // Add white background for SVGs
+                    maximizedElement.style.backgroundColor = '#ffffff';
+                    maximizedElement.style.padding = '20px';
+                    maximizedElement.style.borderRadius = '8px';
+                  } else {
+                    // For raster images, start at natural size or fit to viewport
+                    const ratio = Math.min(maxW / natWidth, maxH / natHeight, 1);
+                    baseWidth = natWidth * ratio;
+                    baseHeight = natHeight * ratio;
+                  }
+                  
+                  maximizedElement.style.width = Math.round(baseWidth) + 'px';
+                  maximizedElement.style.height = Math.round(baseHeight) + 'px';
+                }
+              }
+
+              // Create controls container
+              const controls = document.createElement('div');
+              controls.className = 'img-maximized-controls';
+              
+              // Zoom indicator
+              const zoomIndicator = document.createElement('span');
+              zoomIndicator.className = 'img-zoom-indicator';
+              zoomIndicator.textContent = '100%';
+              
+              // Reset button
+              const resetBtn = document.createElement('button');
+              resetBtn.className = 'img-control-btn';
+              resetBtn.innerHTML = '⟲';
+              resetBtn.setAttribute('title', 'Reset zoom (R)');
+              
+              // Close button
+              const closeBtn = document.createElement('button');
+              closeBtn.className = 'img-close-btn';
+              closeBtn.innerHTML = '×';
+              closeBtn.setAttribute('title', 'Close (ESC)');
+              
+              controls.appendChild(zoomIndicator);
+              controls.appendChild(resetBtn);
+              controls.appendChild(closeBtn);
+
+              // Assemble
+              content.appendChild(maximizedElement);
+              canvas.appendChild(content);
+              overlay.appendChild(canvas);
+              overlay.appendChild(controls);
+              document.body.appendChild(overlay);
+
+              // Pan and zoom state
+              let scale = 1;
+              let panX = 0;
+              let panY = 0;
+              let isDragging = false;
+              let dragStartX = 0;
+              let dragStartY = 0;
+              let panStartX = 0;
+              let panStartY = 0;
+              
+              const updateTransform = function() {
+                content.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + scale + ')';
+                zoomIndicator.textContent = Math.round(scale * 100) + '%';
+              };
+              
+              const resetView = function() {
+                scale = 1;
+                panX = 0;
+                panY = 0;
+                updateTransform();
+              };
+
+              // Zoom with mouse wheel (zoom toward cursor position)
+              canvas.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left - rect.width / 2;
+                const mouseY = e.clientY - rect.top - rect.height / 2;
+                
+                const prevScale = scale;
+                const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+                scale = Math.min(Math.max(scale * zoomFactor, 0.1), 20);
+                
+                // Adjust pan to zoom toward cursor
+                const scaleChange = scale / prevScale;
+                panX = mouseX - (mouseX - panX) * scaleChange;
+                panY = mouseY - (mouseY - panY) * scaleChange;
+                
+                updateTransform();
+              }, { passive: false });
+
+              // Pan with mouse drag
+              canvas.addEventListener('mousedown', function(e) {
+                if (e.button !== 0) return; // Left click only
+                if (e.target === closeBtn || e.target === resetBtn) return;
+                
+                isDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                panStartX = panX;
+                panStartY = panY;
+                canvas.style.cursor = 'grabbing';
+                e.preventDefault();
+              });
+
+              document.addEventListener('mousemove', function moveHandler(e) {
+                if (!isDragging) return;
+                
+                panX = panStartX + (e.clientX - dragStartX);
+                panY = panStartY + (e.clientY - dragStartY);
+                updateTransform();
+              });
+
+              document.addEventListener('mouseup', function upHandler(e) {
+                if (isDragging) {
+                  isDragging = false;
+                  canvas.style.cursor = '';
+                }
+              });
+
+              // Touch support for mobile
+              let lastTouchDist = 0;
+              let lastTouchX = 0;
+              let lastTouchY = 0;
+              
+              canvas.addEventListener('touchstart', function(e) {
+                if (e.touches.length === 1) {
+                  isDragging = true;
+                  dragStartX = e.touches[0].clientX;
+                  dragStartY = e.touches[0].clientY;
+                  panStartX = panX;
+                  panStartY = panY;
+                } else if (e.touches.length === 2) {
+                  isDragging = false;
+                  lastTouchDist = Math.hypot(
+                    e.touches[1].clientX - e.touches[0].clientX,
+                    e.touches[1].clientY - e.touches[0].clientY
+                  );
+                  lastTouchX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                  lastTouchY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                }
+              }, { passive: true });
+
+              canvas.addEventListener('touchmove', function(e) {
+                if (e.touches.length === 1 && isDragging) {
+                  panX = panStartX + (e.touches[0].clientX - dragStartX);
+                  panY = panStartY + (e.touches[0].clientY - dragStartY);
+                  updateTransform();
+                  e.preventDefault();
+                } else if (e.touches.length === 2) {
+                  const dist = Math.hypot(
+                    e.touches[1].clientX - e.touches[0].clientX,
+                    e.touches[1].clientY - e.touches[0].clientY
+                  );
+                  const touchX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                  const touchY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                  
+                  if (lastTouchDist > 0) {
+                    const prevScale = scale;
+                    scale = Math.min(Math.max(scale * (dist / lastTouchDist), 0.1), 20);
+                    
+                    // Zoom toward pinch center
+                    const rect = canvas.getBoundingClientRect();
+                    const centerX = touchX - rect.left - rect.width / 2;
+                    const centerY = touchY - rect.top - rect.height / 2;
+                    const scaleChange = scale / prevScale;
+                    panX = centerX - (centerX - panX) * scaleChange;
+                    panY = centerY - (centerY - panY) * scaleChange;
+                  }
+                  
+                  lastTouchDist = dist;
+                  lastTouchX = touchX;
+                  lastTouchY = touchY;
+                  updateTransform();
+                  e.preventDefault();
+                }
+              }, { passive: false });
+
+              canvas.addEventListener('touchend', function(e) {
+                isDragging = false;
+                lastTouchDist = 0;
+              });
+
+              // Trigger animation
+              setTimeout(function() {
+                overlay.classList.add('active');
+              }, 10);
+
+              // Close handler
+              const close = function() {
+                overlay.classList.remove('active');
+                setTimeout(function() {
+                  overlay.remove();
+                  document.body.style.overflow = '';
+                }, 200);
+              };
+
+              // Event listeners for controls and keyboard
+              closeBtn.addEventListener('click', close);
+              resetBtn.addEventListener('click', resetView);
+              
+              overlay.addEventListener('click', function(e) {
+                if (e.target === overlay || e.target === canvas) close();
+              });
+              
+              document.addEventListener('keydown', function escHandler(e) {
+                if (e.key === 'Escape') {
+                  close();
+                  document.removeEventListener('keydown', escHandler);
+                } else if (e.key === 'r' || e.key === 'R') {
+                  resetView();
+                } else if (e.key === '+' || e.key === '=') {
+                  scale = Math.min(scale * 1.2, 20);
+                  updateTransform();
+                } else if (e.key === '-') {
+                  scale = Math.max(scale * 0.8, 0.1);
+                  updateTransform();
+                }
+              });
+            };
+
+            element.addEventListener('click', maximize);
+            expandIcon.addEventListener('click', maximize);
+          };
+
+          // Process inline SVGs immediately
+          document.querySelectorAll('svg').forEach(wrapElement);
+
+          // Process images - wait for load to get accurate dimensions
+          document.querySelectorAll('img').forEach(function(img) {
+            if (img.complete) {
+              wrapElement(img);
+            } else {
+              img.addEventListener('load', function() {
+                wrapElement(img);
+              });
+            }
+          });
+        });
+        </script>
+    </head>
+    <body>
+                 <header id="title-block-header">
+            <div class="left">
+                <h1 class="title">Discovery Document - IncidentFlow</h1>
+                            </div>
+            <div class="right">
+                             </div>
+        </header>
+                 <nav id="TOC" role="doc-toc">
+             <ul>
+<li><a href="#resumen-ejecutivo" id="toc-resumen-ejecutivo">Resumen
+Ejecutivo</a></li>
+<li><a href="#contexto-del-negocio"
+id="toc-contexto-del-negocio">Contexto del Negocio</a></li>
+<li><a href="#usuarios-y-roles" id="toc-usuarios-y-roles">Usuarios y
+Roles</a></li>
+<li><a href="#requerimientos-funcionales"
+id="toc-requerimientos-funcionales">Requerimientos Funcionales</a>
+<ul>
+<li><a href="#rf-01-creación-de-incidentes"
+id="toc-rf-01-creación-de-incidentes">RF-01: Creación de
+Incidentes</a></li>
+<li><a href="#rf-02-triaje-y-asignación"
+id="toc-rf-02-triaje-y-asignación">RF-02: Triaje y Asignación</a></li>
+<li><a href="#rf-03-timeline-y-comentarios"
+id="toc-rf-03-timeline-y-comentarios">RF-03: Timeline y
+Comentarios</a></li>
+<li><a href="#rf-04-notificaciones-de-eventos"
+id="toc-rf-04-notificaciones-de-eventos">RF-04: Notificaciones de
+Eventos</a></li>
+<li><a href="#rf-05-reglas-de-negocio-para-critical"
+id="toc-rf-05-reglas-de-negocio-para-critical">RF-05: Reglas de Negocio
+para CRITICAL</a></li>
+<li><a href="#rf-06-restricciones-de-transición-de-estado"
+id="toc-rf-06-restricciones-de-transición-de-estado">RF-06:
+Restricciones de Transición de Estado</a></li>
+<li><a href="#rf-07-auditoría" id="toc-rf-07-auditoría">RF-07:
+Auditoría</a></li>
+</ul></li>
+<li><a href="#requerimientos-no-funcionales"
+id="toc-requerimientos-no-funcionales">Requerimientos No
+Funcionales</a></li>
+<li><a href="#reglas-de-negocio" id="toc-reglas-de-negocio">Reglas de
+Negocio</a></li>
+<li><a href="#estados-del-flujo-principal"
+id="toc-estados-del-flujo-principal">Estados del Flujo Principal</a>
+<ul>
+<li><a href="#descripción-de-estados"
+id="toc-descripción-de-estados">Descripción de Estados</a></li>
+<li><a href="#transiciones-válidas-e-inválidas"
+id="toc-transiciones-válidas-e-inválidas">Transiciones Válidas e
+Inválidas</a></li>
+</ul></li>
+<li><a href="#eventos-del-sistema" id="toc-eventos-del-sistema">Eventos
+del Sistema</a></li>
+<li><a href="#notificaciones" id="toc-notificaciones">Notificaciones</a>
+<ul>
+<li><a href="#eventos-que-notifican"
+id="toc-eventos-que-notifican">Eventos que Notifican</a></li>
+</ul></li>
+<li><a href="#alcance-mvp" id="toc-alcance-mvp">Alcance MVP</a></li>
+<li><a href="#riesgos-supuestos-y-preguntas-abiertas"
+id="toc-riesgos-supuestos-y-preguntas-abiertas">Riesgos, Supuestos y
+Preguntas Abiertas</a>
+<ul>
+<li><a href="#riesgos-técnicos" id="toc-riesgos-técnicos">Riesgos
+Técnicos</a></li>
+<li><a href="#supuestos" id="toc-supuestos">Supuestos</a></li>
+<li><a href="#preguntas-abiertas" id="toc-preguntas-abiertas">Preguntas
+Abiertas</a></li>
+</ul></li>
+<li><a href="#definición-de-listo-dod"
+id="toc-definición-de-listo-dod">Definición de Listo (DoD)</a></li>
+</ul>
+        </nav>
+         <h2 id="resumen-ejecutivo">Resumen Ejecutivo</h2>
+<p><strong>IncidentFlow</strong> es una plataforma centralizada para
+gestionar incidentes operativos críticos. Actualmente, los equipos
+coordinan respuestas a través de canales dispersos (chats, emails), lo
+que genera pérdida de contexto, responsables poco claros y poca
+visibilidad para managers.</p>
+<p>La solución propuesta centraliza la gestión de incidentes con:</p>
+<ul>
+<li>Responsables claramente asignados</li>
+<li>Severidad y estados bien definidos</li>
+<li>Timeline confiable de acciones y cambios</li>
+<li>Notificaciones inmediatas para incidentes críticos</li>
+<li>Cierre formal con resumen y auditoría</li>
+</ul>
+<h2 id="contexto-del-negocio">Contexto del Negocio</h2>
+<p>La empresa opera servicios críticos. Cuando surgen problemas (pagos
+fallando, integraciones caídas, errores masivos, alertas de seguridad),
+los equipos se coordinan por chats dispersos, lo que impacta:</p>
+<ul>
+<li><strong>Pérdida de contexto</strong>: no hay histórico
+centralizado</li>
+<li><strong>Responsables poco claros</strong>: muchas personas actuando
+sin coordinación</li>
+<li><strong>Poca visibilidad</strong>: managers no saben el estado
+real</li>
+<li><strong>Sin auditoría formal</strong>: difícil revisar qué pasó y
+aprender</li>
+<li><strong>Escalamientos ad-hoc</strong>: no hay proceso definido</li>
+</ul>
+<h2 id="usuarios-y-roles">Usuarios y Roles</h2>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 53%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>Rol</th>
+<th>Responsabilidad</th>
+<th>Permisos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Operator</strong></td>
+<td>Reporta incidentes y agrega contexto</td>
+<td>Crear incidentes, comentar</td>
+</tr>
+<tr>
+<td><strong>Incident Commander</strong></td>
+<td>Coordina el incidente, asigna responsables, cambia estados</td>
+<td>Asignar, escalar, cambiar estados, comentar</td>
+</tr>
+<tr>
+<td><strong>Technical Responder</strong></td>
+<td>Trabaja en la solución, comenta avances</td>
+<td>Comentar, registrar acciones técnicas</td>
+</tr>
+<tr>
+<td><strong>Manager</strong></td>
+<td>Consulta estado, severidad e impacto</td>
+<td>Lectura de incidentes, dashboards</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Visibilidad total, reasignaciones</td>
+<td>Todo (lectura, escritura, auditoría, usuarios)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="requerimientos-funcionales">Requerimientos Funcionales</h2>
+<h3 id="rf-01-creación-de-incidentes">RF-01: Creación de Incidentes</h3>
+<ul>
+<li>Usuario autenticado puede crear un incidente</li>
+<li>Campos: título, descripción, severidad
+(LOW/MEDIUM/HIGH/CRITICAL)</li>
+<li>Estado inicial: OPEN</li>
+<li>Evento: INCIDENT_CREATED publicado</li>
+</ul>
+<h3 id="rf-02-triaje-y-asignación">RF-02: Triaje y Asignación</h3>
+<ul>
+<li>Incident Commander puede cambiar estado a TRIAGED</li>
+<li>Incident Commander puede asignar a responsable</li>
+<li>Solo Incident Commander/Admin pueden cambiar severidad</li>
+<li>Evento: INCIDENT_ASSIGNED publicado</li>
+</ul>
+<h3 id="rf-03-timeline-y-comentarios">RF-03: Timeline y Comentarios</h3>
+<ul>
+<li>Todos pueden agregar comentarios</li>
+<li>Timeline centralizado: comentarios, cambios de estado, cambios de
+severidad, asignaciones</li>
+<li>Cada entrada registra: usuario, timestamp, qué cambió</li>
+</ul>
+<h3 id="rf-04-notificaciones-de-eventos">RF-04: Notificaciones de
+Eventos</h3>
+<ul>
+<li>CRITICAL: notifica Commander y Manager inmediatamente</li>
+<li>Cambio de severidad: notifica Commander y Manager</li>
+<li>Asignación: notifica al responsable asignado</li>
+<li>Resolución: notifica al creador y Manager</li>
+</ul>
+<h3 id="rf-05-reglas-de-negocio-para-critical">RF-05: Reglas de Negocio
+para CRITICAL</h3>
+<ul>
+<li>CRITICAL no puede cerrarse sin resumen</li>
+<li>CRITICAL notifica inmediatamente</li>
+<li>Requiere responsable asignado</li>
+<li>Timeline debe quedar bien documentado</li>
+</ul>
+<h3 id="rf-06-restricciones-de-transición-de-estado">RF-06:
+Restricciones de Transición de Estado</h3>
+<ul>
+<li>No puede pasar a IN_PROGRESS sin responsable asignado</li>
+<li>Incidente CLOSED no vuelve a IN_PROGRESS</li>
+<li>Solo Commander/Admin pueden resolver o cerrar</li>
+<li>Cambios de severidad deben auditarse</li>
+</ul>
+<h3 id="rf-07-auditoría">RF-07: Auditoría</h3>
+<ul>
+<li>Cada cambio se registra en AuditLog</li>
+<li>Quién lo hizo, cuándo, qué cambió</li>
+<li>Accessible solo para Admin y con restricciones para Manager</li>
+</ul>
+<h2 id="requerimientos-no-funcionales">Requerimientos No
+Funcionales</h2>
+<ul>
+<li><strong>Seguridad</strong>: Autenticación de usuarios, autorización
+por rol, validación de permisos</li>
+<li><strong>Trazabilidad</strong>: Audit trail completo de todas las
+operaciones</li>
+<li><strong>Disponibilidad</strong>: Sistema debe estar disponible
+durante incidentes</li>
+<li><strong>Usabilidad</strong>: Interfaz clara y rápida para responder
+incidentes</li>
+<li><strong>Mantenibilidad</strong>: Código limpio, arquitectura bien
+separada</li>
+<li><strong>Performance</strong>: Respuestas rápidas (&lt;200ms para
+queries comunes)</li>
+</ul>
+<h2 id="reglas-de-negocio">Reglas de Negocio</h2>
+<ol type="1">
+<li>Las severidades son: LOW, MEDIUM, HIGH, CRITICAL</li>
+<li>CRITICAL requiere notificación inmediata a Commander y Manager</li>
+<li>CRITICAL no puede cerrarse sin resumen de resolución</li>
+<li>CRITICAL debe tener responsable asignado</li>
+<li>Un incidente CLOSED no vuelve a estados anteriores
+(IN_PROGRESS)</li>
+<li>No puede pasar a IN_PROGRESS sin responsable asignado</li>
+<li>Cambios de severidad deben auditarse</li>
+<li>Solo Incident Commander o Admin pueden resolver/cerrar
+incidentes</li>
+<li>Todos los cambios se registran en timeline con usuario, timestamp y
+detalles</li>
+<li>Las notificaciones se publican en eventos del sistema</li>
+</ol>
+<h2 id="estados-del-flujo-principal">Estados del Flujo Principal</h2>
+<pre><code>OPEN → TRIAGED → ASSIGNED → IN_PROGRESS → RESOLVED → CLOSED
+  ↘ CANCELLED
+  ↘ ESCALATED</code></pre>
+<h3 id="descripción-de-estados">Descripción de Estados</h3>
+<ul>
+<li><strong>OPEN</strong>: Incidente recién reportado, sin triaje</li>
+<li><strong>TRIAGED</strong>: Se evaluó la severidad e impacto
+inicial</li>
+<li><strong>ASSIGNED</strong>: Se asignó a un responsable técnico</li>
+<li><strong>IN_PROGRESS</strong>: El responsable está trabajando en la
+solución</li>
+<li><strong>RESOLVED</strong>: Se implementó la solución, falta cierre
+formal</li>
+<li><strong>CLOSED</strong>: Incidente cerrado con resumen y auditoría
+completa</li>
+<li><strong>ESCALATED</strong>: Se escaló a nivel superior (puede volver
+a IN_PROGRESS)</li>
+<li><strong>CANCELLED</strong>: Se descartó (no era incidente real o fue
+falsa alarma)</li>
+</ul>
+<h3 id="transiciones-válidas-e-inválidas">Transiciones Válidas e
+Inválidas</h3>
+<table>
+<thead>
+<tr>
+<th>Desde</th>
+<th>Hacia</th>
+<th>Válido</th>
+<th>Restricción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OPEN</td>
+<td>TRIAGED</td>
+<td>✓</td>
+<td>-</td>
+</tr>
+<tr>
+<td>TRIAGED</td>
+<td>ASSIGNED</td>
+<td>✓</td>
+<td>Debe haber responsable</td>
+</tr>
+<tr>
+<td>ASSIGNED</td>
+<td>IN_PROGRESS</td>
+<td>✓</td>
+<td>Debe tener responsable</td>
+</tr>
+<tr>
+<td>IN_PROGRESS</td>
+<td>RESOLVED</td>
+<td>✓</td>
+<td>-</td>
+</tr>
+<tr>
+<td>RESOLVED</td>
+<td>CLOSED</td>
+<td>✓</td>
+<td>CRITICAL debe tener resumen</td>
+</tr>
+<tr>
+<td>CLOSED</td>
+<td>cualquiera</td>
+<td>✗</td>
+<td>Bloqueado</td>
+</tr>
+<tr>
+<td>cualquiera</td>
+<td>ESCALATED</td>
+<td>✓</td>
+<td>Puede escalar en cualquier momento</td>
+</tr>
+<tr>
+<td>cualquiera</td>
+<td>CANCELLED</td>
+<td>✓</td>
+<td>Puede cancelar en cualquier momento</td>
+</tr>
+</tbody>
+</table>
+<h2 id="eventos-del-sistema">Eventos del Sistema</h2>
+<ul>
+<li><strong>INCIDENT_CREATED</strong>: Cuando se crea un incidente</li>
+<li><strong>INCIDENT_TRIAGED</strong>: Cuando se marca como
+triageado</li>
+<li><strong>INCIDENT_ASSIGNED</strong>: Cuando se asigna
+responsable</li>
+<li><strong>SEVERITY_CHANGED</strong>: Cuando cambia la severidad</li>
+<li><strong>INCIDENT_ESCALATED</strong>: Cuando se escalada</li>
+<li><strong>COMMENT_ADDED</strong>: Cuando se agrega comentario</li>
+<li><strong>INCIDENT_RESOLVED</strong>: Cuando se resuelve</li>
+<li><strong>INCIDENT_CLOSED</strong>: Cuando se cierra formalmente</li>
+</ul>
+<p>Cada evento debe indicar:</p>
+<ul>
+<li>Cuándo ocurrió (timestamp)</li>
+<li>Quién lo disparó (usuario)</li>
+<li>Qué datos contiene (detalles relevantes)</li>
+<li>Si genera notificación</li>
+<li>Si se registra en auditoría</li>
+</ul>
+<h2 id="notificaciones">Notificaciones</h2>
+<h3 id="eventos-que-notifican">Eventos que Notifican</h3>
+<table>
+<thead>
+<tr>
+<th>Evento</th>
+<th>A Quién</th>
+<th>Prioridad</th>
+<th>Canal (MVP)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>INCIDENT_CREATED (CRITICAL)</td>
+<td>Commander, Manager</td>
+<td>ALTA</td>
+<td>En-memory</td>
+</tr>
+<tr>
+<td>INCIDENT_ASSIGNED</td>
+<td>Responsable asignado</td>
+<td>MEDIA</td>
+<td>En-memory</td>
+</tr>
+<tr>
+<td>SEVERITY_CHANGED</td>
+<td>Commander, Manager</td>
+<td>ALTA</td>
+<td>En-memory</td>
+</tr>
+<tr>
+<td>INCIDENT_RESOLVED</td>
+<td>Creator, Manager</td>
+<td>MEDIA</td>
+<td>En-memory</td>
+</tr>
+<tr>
+<td>COMMENT_ADDED</td>
+<td>Participantes</td>
+<td>BAJA</td>
+<td>En-memory</td>
+</tr>
+</tbody>
+</table>
+<p>En MVP: notificaciones se almacenan en base de datos y se muestran en
+UI. No hay integración real con Slack/email/PagerDuty (fuera de
+alcance).</p>
+<h2 id="alcance-mvp">Alcance MVP</h2>
+<p>✓ Incluido:</p>
+<ul>
+<li>Creación y gestión de incidentes</li>
+<li>Estados y transiciones con restricciones</li>
+<li>Asignación de responsables</li>
+<li>Timeline centralizado con comentarios</li>
+<li>Auditoría de cambios</li>
+<li>Notificaciones en-memory</li>
+<li>Dashboard por rol (Operator, Commander, Manager, Admin)</li>
+<li>Autenticación y autorización básica</li>
+<li>API REST + Frontend Streamlit</li>
+<li>Docker Compose para desarrollo</li>
+<li>CI/CD en GitHub Actions</li>
+<li>Deployment en Render (dev/prod)</li>
+</ul>
+<p>✗ Fuera de Alcance:</p>
+<ul>
+<li>Monitoreo automático de sistemas</li>
+<li>Integración real con PagerDuty</li>
+<li>Integración real con Slack</li>
+<li>Generación automática de postmortem</li>
+<li>Alertas desde sistemas externos</li>
+<li>Calendario de on-call</li>
+<li>Integraciones complejas de SSO</li>
+</ul>
+<h2 id="riesgos-supuestos-y-preguntas-abiertas">Riesgos, Supuestos y
+Preguntas Abiertas</h2>
+<h3 id="riesgos-técnicos">Riesgos Técnicos</h3>
+<ul>
+<li>Performance bajo alta concurrencia (muchos comentarios simultáneos)
+<ul>
+<li>Mitigación: caching de incident list, normalizar queries</li>
+</ul></li>
+<li>Inconsistencia de datos si notificaciones fallan
+<ul>
+<li>Mitigación: event bus con retry, auditoría completa</li>
+</ul></li>
+</ul>
+<h3 id="supuestos">Supuestos</h3>
+<ul>
+<li>Los usuarios se autenticarán con credenciales simples (no OAuth
+complejo)</li>
+<li>Los incidentes son de corta duración (horas, no días)</li>
+<li>La empresa tiene &lt;500 usuarios</li>
+<li>PostgreSQL es suficiente (no necesita sharding)</li>
+</ul>
+<h3 id="preguntas-abiertas">Preguntas Abiertas</h3>
+<ul>
+<li>¿Hay integración con algún sistema de monitoreo existente?</li>
+<li>¿Cuál es el SLA esperado para respuesta a CRITICAL?</li>
+<li>¿Se necesita granularidad horaria o minutos en timestamps?</li>
+<li>¿Hay límite de tamaño para descripciones/comentarios?</li>
+<li>¿Multi-tenant o single-tenant?</li>
+</ul>
+<h2 id="definición-de-listo-dod">Definición de Listo (DoD)</h2>
+<p>Cada historia de usuario debe cumplir:</p>
+<ul>
+<li>Criterios de aceptación claros</li>
+<li>Pruebas automatizadas (&gt;80% cobertura)</li>
+<li>Documentación de API (si corresponde)</li>
+<li>Auditoría funciona correctamente</li>
+<li>Sin breaking changes en APIs previas</li>
+</ul> 
+    </body>
+</html>

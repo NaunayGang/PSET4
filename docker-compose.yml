@@ -1,6 +1,9 @@
 services:
   db:
     image: postgres:15-alpine
+    profiles:
+      - dev
+      - prod
     environment:
       POSTGRES_USER: incidentflow
       POSTGRES_PASSWORD: incidentflow
@@ -19,6 +22,9 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    profiles:
+      - dev
+      - prod
     ports:
       - "8000:8000"
     environment:
@@ -34,6 +40,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    profiles:
+      - dev
+      - prod
     ports:
       - "8501:8501"
     environment:

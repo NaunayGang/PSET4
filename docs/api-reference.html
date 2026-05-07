@@ -1,0 +1,1020 @@
+<!doctype html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    lang=""
+    xml:lang=""
+    >
+    <head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="pandoc" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=yes"
+        />
+                   <title>api-reference</title>
+        <style>
+            code{white-space: pre-wrap;}
+            span.smallcaps{font-variant: small-caps;}
+            div.columns{display: flex; gap: min(4vw, 1.5em);}
+            div.column{flex: auto; overflow-x: auto;}
+            div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+            /* The extra [class] is a hack that increases specificity enough to
+               override a similar rule in reveal.js */
+            ul.task-list[class]{list-style: none;}
+            ul.task-list li input[type="checkbox"] {
+              font-size: inherit;
+              width: 0.8em;
+              margin: 0 0.8em 0.2em -1.6em;
+              vertical-align: middle;
+            }
+            /* CSS for syntax highlighting */
+            html { -webkit-text-size-adjust: 100%; }
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            .sourceCode { overflow: visible; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { color: #008000; } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { color: #008000; font-weight: bold; } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+        </style>
+                <link rel="stylesheet" href="/pandoc-templates/docs.css" />
+         
+        <script
+            data-external="1"
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+        ></script>
+        <script>
+        // Tabset functionality for pandoc-rendered markdown
+        // Emulates R Markdown's {.tabset} behavior
+        document.addEventListener('DOMContentLoaded', function() {
+          // Find all headers with 'tabset' class (pandoc applies class to header, not section)
+          document.querySelectorAll('h1.tabset, h2.tabset, h3.tabset, h4.tabset, h5.tabset, h6.tabset').forEach(function(tabsetHeader) {
+            const tabLevel = parseInt(tabsetHeader.tagName[1]);
+            const childHeaderTag = 'H' + (tabLevel + 1);
+
+            // Find all child sections (tabs) - siblings until next same-level header
+            const tabs = [];
+            const introContent = []; // Content before first tab
+            let currentTab = null;
+
+            let sibling = tabsetHeader.nextElementSibling;
+            while (sibling) {
+              if (sibling.tagName === childHeaderTag) {
+                // New tab starts
+                if (currentTab) tabs.push(currentTab);
+                currentTab = {
+                  title: sibling.textContent,
+                  id: sibling.id || sibling.textContent.toLowerCase().replace(/\s+/g, '-'),
+                  header: sibling,
+                  content: []
+                };
+              } else if (sibling.tagName && sibling.tagName[0] === 'H' && parseInt(sibling.tagName[1]) <= tabLevel) {
+                // Hit a same-level or higher header, stop
+                break;
+              } else if (currentTab) {
+                // Add content to current tab
+                currentTab.content.push(sibling);
+              } else {
+                // Content before first tab (intro text)
+                introContent.push(sibling);
+              }
+              sibling = sibling.nextElementSibling;
+            }
+            if (currentTab) tabs.push(currentTab);
+
+            if (tabs.length === 0) return;
+
+            // Create tab UI
+            const tabContainer = document.createElement('div');
+            tabContainer.className = 'tab-container';
+
+            // Create tab buttons
+            const tabButtons = document.createElement('div');
+            tabButtons.className = 'tab-buttons';
+
+            tabs.forEach(function(tab, index) {
+              const button = document.createElement('button');
+              button.className = 'tab-button' + (index === 0 ? ' active' : '');
+              button.textContent = tab.title;
+              button.setAttribute('data-tab', tab.id);
+              button.addEventListener('click', function() {
+                // Deactivate all tabs in this container
+                tabContainer.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                tabContainer.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                // Activate clicked tab
+                button.classList.add('active');
+                tabContainer.querySelector('.tab-panel[data-tab="' + tab.id + '"]').classList.add('active');
+              });
+              tabButtons.appendChild(button);
+            });
+
+            tabContainer.appendChild(tabButtons);
+
+            // Create tab panels and move content
+            tabs.forEach(function(tab, index) {
+              const panel = document.createElement('div');
+              panel.className = 'tab-panel' + (index === 0 ? ' active' : '');
+              panel.setAttribute('data-tab', tab.id);
+              tab.content.forEach(function(el) {
+                panel.appendChild(el);
+              });
+              tabContainer.appendChild(panel);
+              // Remove the original tab header
+              tab.header.remove();
+            });
+
+            // Insert intro content right after tabset header, then tab container
+            let insertPoint = tabsetHeader;
+            introContent.forEach(function(el) {
+              insertPoint.after(el);
+              insertPoint = el;
+            });
+            insertPoint.after(tabContainer);
+          });
+
+          // Image Maximizer functionality
+          // Wraps images and SVGs in containers with expand functionality
+          const wrapElement = function(element) {
+            // Skip if already wrapped
+            if (element.parentElement && element.parentElement.classList.contains('img-wrapper')) return;
+
+            // Get element dimensions
+            const getWidth = function() {
+              if (element.tagName === 'IMG') {
+                return element.naturalWidth || element.width || element.clientWidth;
+              } else if (element.tagName === 'SVG') {
+                // For inline SVGs, try multiple methods to get width
+                // 1. Check viewBox attribute for intended dimensions
+                const viewBox = element.getAttribute('viewBox');
+                if (viewBox) {
+                  const parts = viewBox.split(/\s+|,/);
+                  if (parts.length >= 4) {
+                    const vbWidth = parseFloat(parts[2]);
+                    if (vbWidth > 0) return vbWidth;
+                  }
+                }
+                // 2. Check explicit width attribute
+                const widthAttr = element.getAttribute('width');
+                if (widthAttr && !widthAttr.includes('%')) {
+                  const w = parseFloat(widthAttr);
+                  if (w > 0) return w;
+                }
+                // 3. Try getBBox (may throw if SVG not rendered)
+                try {
+                  const bbox = element.getBBox ? element.getBBox() : null;
+                  if (bbox && bbox.width > 0) return bbox.width;
+                } catch (e) {
+                  // getBBox can throw if element is not in DOM or not rendered
+                }
+                // 4. Fall back to client dimensions
+                return element.clientWidth || element.getBoundingClientRect().width;
+              }
+              return 0;
+            };
+
+            // Only apply to images/SVGs wider than 200px (skip small icons)
+            const width = getWidth();
+            if (width < 200) return;
+
+            // Handle parent element - <div> inside <p> is invalid HTML and breaks rendering
+            const parent = element.parentNode;
+            if (parent && parent.tagName === 'P') {
+              // Replace <p> with <figure> to allow block-level content
+              const figure = document.createElement('figure');
+              figure.className = 'img-figure';
+              // Move all children from <p> to <figure>
+              while (parent.firstChild) {
+                figure.appendChild(parent.firstChild);
+              }
+              parent.parentNode.replaceChild(figure, parent);
+            }
+
+            // Create wrapper
+            const wrapper = document.createElement('div');
+            wrapper.className = 'img-wrapper';
+
+            // Create expand icon
+            const expandIcon = document.createElement('div');
+            expandIcon.className = 'img-expand-icon';
+            expandIcon.innerHTML = '⤢'; // Expand arrow symbol
+            expandIcon.setAttribute('title', 'Click to expand');
+
+            // Wrap element and add icon
+            element.parentNode.insertBefore(wrapper, element);
+            wrapper.appendChild(element);
+            wrapper.appendChild(expandIcon);
+
+            // Add click handler to maximize
+            const maximize = function() {
+              // Prevent body scroll
+              document.body.style.overflow = 'hidden';
+
+              // Create overlay
+              const overlay = document.createElement('div');
+              overlay.className = 'img-maximized-overlay';
+
+              // Create canvas container (handles pan/zoom transforms)
+              const canvas = document.createElement('div');
+              canvas.className = 'img-maximized-canvas';
+
+              // Create content container
+              const content = document.createElement('div');
+              content.className = 'img-maximized-content';
+
+              // Clone element
+              const maximizedElement = element.cloneNode(true);
+              maximizedElement.className = 'img-maximized';
+              
+              // Determine base dimensions for the image
+              let baseWidth, baseHeight;
+              const isSvg = element.tagName === 'IMG' && element.src && element.src.toLowerCase().endsWith('.svg');
+              
+              if (element.tagName === 'IMG') {
+                const natWidth = element.naturalWidth || element.clientWidth;
+                const natHeight = element.naturalHeight || element.clientHeight;
+                
+                if (natWidth && natHeight) {
+                  const maxW = window.innerWidth * 0.85;
+                  const maxH = window.innerHeight * 0.85;
+                  const aspectRatio = natWidth / natHeight;
+                  
+                  if (isSvg) {
+                    // Scale SVG to fit viewport initially
+                    if (maxW / aspectRatio <= maxH) {
+                      baseWidth = maxW;
+                      baseHeight = maxW / aspectRatio;
+                    } else {
+                      baseHeight = maxH;
+                      baseWidth = maxH * aspectRatio;
+                    }
+                    // Add white background for SVGs
+                    maximizedElement.style.backgroundColor = '#ffffff';
+                    maximizedElement.style.padding = '20px';
+                    maximizedElement.style.borderRadius = '8px';
+                  } else {
+                    // For raster images, start at natural size or fit to viewport
+                    const ratio = Math.min(maxW / natWidth, maxH / natHeight, 1);
+                    baseWidth = natWidth * ratio;
+                    baseHeight = natHeight * ratio;
+                  }
+                  
+                  maximizedElement.style.width = Math.round(baseWidth) + 'px';
+                  maximizedElement.style.height = Math.round(baseHeight) + 'px';
+                }
+              }
+
+              // Create controls container
+              const controls = document.createElement('div');
+              controls.className = 'img-maximized-controls';
+              
+              // Zoom indicator
+              const zoomIndicator = document.createElement('span');
+              zoomIndicator.className = 'img-zoom-indicator';
+              zoomIndicator.textContent = '100%';
+              
+              // Reset button
+              const resetBtn = document.createElement('button');
+              resetBtn.className = 'img-control-btn';
+              resetBtn.innerHTML = '⟲';
+              resetBtn.setAttribute('title', 'Reset zoom (R)');
+              
+              // Close button
+              const closeBtn = document.createElement('button');
+              closeBtn.className = 'img-close-btn';
+              closeBtn.innerHTML = '×';
+              closeBtn.setAttribute('title', 'Close (ESC)');
+              
+              controls.appendChild(zoomIndicator);
+              controls.appendChild(resetBtn);
+              controls.appendChild(closeBtn);
+
+              // Assemble
+              content.appendChild(maximizedElement);
+              canvas.appendChild(content);
+              overlay.appendChild(canvas);
+              overlay.appendChild(controls);
+              document.body.appendChild(overlay);
+
+              // Pan and zoom state
+              let scale = 1;
+              let panX = 0;
+              let panY = 0;
+              let isDragging = false;
+              let dragStartX = 0;
+              let dragStartY = 0;
+              let panStartX = 0;
+              let panStartY = 0;
+              
+              const updateTransform = function() {
+                content.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + scale + ')';
+                zoomIndicator.textContent = Math.round(scale * 100) + '%';
+              };
+              
+              const resetView = function() {
+                scale = 1;
+                panX = 0;
+                panY = 0;
+                updateTransform();
+              };
+
+              // Zoom with mouse wheel (zoom toward cursor position)
+              canvas.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left - rect.width / 2;
+                const mouseY = e.clientY - rect.top - rect.height / 2;
+                
+                const prevScale = scale;
+                const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+                scale = Math.min(Math.max(scale * zoomFactor, 0.1), 20);
+                
+                // Adjust pan to zoom toward cursor
+                const scaleChange = scale / prevScale;
+                panX = mouseX - (mouseX - panX) * scaleChange;
+                panY = mouseY - (mouseY - panY) * scaleChange;
+                
+                updateTransform();
+              }, { passive: false });
+
+              // Pan with mouse drag
+              canvas.addEventListener('mousedown', function(e) {
+                if (e.button !== 0) return; // Left click only
+                if (e.target === closeBtn || e.target === resetBtn) return;
+                
+                isDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                panStartX = panX;
+                panStartY = panY;
+                canvas.style.cursor = 'grabbing';
+                e.preventDefault();
+              });
+
+              document.addEventListener('mousemove', function moveHandler(e) {
+                if (!isDragging) return;
+                
+                panX = panStartX + (e.clientX - dragStartX);
+                panY = panStartY + (e.clientY - dragStartY);
+                updateTransform();
+              });
+
+              document.addEventListener('mouseup', function upHandler(e) {
+                if (isDragging) {
+                  isDragging = false;
+                  canvas.style.cursor = '';
+                }
+              });
+
+              // Touch support for mobile
+              let lastTouchDist = 0;
+              let lastTouchX = 0;
+              let lastTouchY = 0;
+              
+              canvas.addEventListener('touchstart', function(e) {
+                if (e.touches.length === 1) {
+                  isDragging = true;
+                  dragStartX = e.touches[0].clientX;
+                  dragStartY = e.touches[0].clientY;
+                  panStartX = panX;
+                  panStartY = panY;
+                } else if (e.touches.length === 2) {
+                  isDragging = false;
+                  lastTouchDist = Math.hypot(
+                    e.touches[1].clientX - e.touches[0].clientX,
+                    e.touches[1].clientY - e.touches[0].clientY
+                  );
+                  lastTouchX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                  lastTouchY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                }
+              }, { passive: true });
+
+              canvas.addEventListener('touchmove', function(e) {
+                if (e.touches.length === 1 && isDragging) {
+                  panX = panStartX + (e.touches[0].clientX - dragStartX);
+                  panY = panStartY + (e.touches[0].clientY - dragStartY);
+                  updateTransform();
+                  e.preventDefault();
+                } else if (e.touches.length === 2) {
+                  const dist = Math.hypot(
+                    e.touches[1].clientX - e.touches[0].clientX,
+                    e.touches[1].clientY - e.touches[0].clientY
+                  );
+                  const touchX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                  const touchY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                  
+                  if (lastTouchDist > 0) {
+                    const prevScale = scale;
+                    scale = Math.min(Math.max(scale * (dist / lastTouchDist), 0.1), 20);
+                    
+                    // Zoom toward pinch center
+                    const rect = canvas.getBoundingClientRect();
+                    const centerX = touchX - rect.left - rect.width / 2;
+                    const centerY = touchY - rect.top - rect.height / 2;
+                    const scaleChange = scale / prevScale;
+                    panX = centerX - (centerX - panX) * scaleChange;
+                    panY = centerY - (centerY - panY) * scaleChange;
+                  }
+                  
+                  lastTouchDist = dist;
+                  lastTouchX = touchX;
+                  lastTouchY = touchY;
+                  updateTransform();
+                  e.preventDefault();
+                }
+              }, { passive: false });
+
+              canvas.addEventListener('touchend', function(e) {
+                isDragging = false;
+                lastTouchDist = 0;
+              });
+
+              // Trigger animation
+              setTimeout(function() {
+                overlay.classList.add('active');
+              }, 10);
+
+              // Close handler
+              const close = function() {
+                overlay.classList.remove('active');
+                setTimeout(function() {
+                  overlay.remove();
+                  document.body.style.overflow = '';
+                }, 200);
+              };
+
+              // Event listeners for controls and keyboard
+              closeBtn.addEventListener('click', close);
+              resetBtn.addEventListener('click', resetView);
+              
+              overlay.addEventListener('click', function(e) {
+                if (e.target === overlay || e.target === canvas) close();
+              });
+              
+              document.addEventListener('keydown', function escHandler(e) {
+                if (e.key === 'Escape') {
+                  close();
+                  document.removeEventListener('keydown', escHandler);
+                } else if (e.key === 'r' || e.key === 'R') {
+                  resetView();
+                } else if (e.key === '+' || e.key === '=') {
+                  scale = Math.min(scale * 1.2, 20);
+                  updateTransform();
+                } else if (e.key === '-') {
+                  scale = Math.max(scale * 0.8, 0.1);
+                  updateTransform();
+                }
+              });
+            };
+
+            element.addEventListener('click', maximize);
+            expandIcon.addEventListener('click', maximize);
+          };
+
+          // Process inline SVGs immediately
+          document.querySelectorAll('svg').forEach(wrapElement);
+
+          // Process images - wait for load to get accurate dimensions
+          document.querySelectorAll('img').forEach(function(img) {
+            if (img.complete) {
+              wrapElement(img);
+            } else {
+              img.addEventListener('load', function() {
+                wrapElement(img);
+              });
+            }
+          });
+        });
+        </script>
+    </head>
+    <body>
+                 <header id="title-block-header">
+            <div class="left">
+                <h1 class="title">Referencia de API - IncidentFlow</h1>
+                            </div>
+            <div class="right">
+                             </div>
+        </header>
+                 <nav id="TOC" role="doc-toc">
+             <ul>
+<li><a href="#introducción" id="toc-introducción">Introducción</a></li>
+<li><a href="#niveles-de-severidad"
+id="toc-niveles-de-severidad">Niveles de Severidad</a></li>
+<li><a href="#estados-de-incidente"
+id="toc-estados-de-incidente">Estados de Incidente</a></li>
+<li><a href="#roles" id="toc-roles">Roles</a></li>
+<li><a href="#incidentes" id="toc-incidentes">Incidentes</a>
+<ul>
+<li><a href="#crear-incidente" id="toc-crear-incidente">Crear
+Incidente</a></li>
+<li><a href="#triaje-de-incidente" id="toc-triaje-de-incidente">Triaje
+de Incidente</a></li>
+<li><a href="#cambiar-estado" id="toc-cambiar-estado">Cambiar
+Estado</a></li>
+<li><a href="#asignar-incidente" id="toc-asignar-incidente">Asignar
+Incidente</a></li>
+<li><a href="#cambiar-severidad" id="toc-cambiar-severidad">Cambiar
+Severidad</a></li>
+</ul></li>
+<li><a href="#comentarios" id="toc-comentarios">Comentarios</a>
+<ul>
+<li><a href="#agregar-comentario" id="toc-agregar-comentario">Agregar
+Comentario</a></li>
+</ul></li>
+<li><a href="#códigos-de-estado" id="toc-códigos-de-estado">Códigos de
+Estado</a></li>
+<li><a href="#formato-de-errores" id="toc-formato-de-errores">Formato de
+Errores</a></li>
+<li><a href="#matriz-de-permisos-por-rol"
+id="toc-matriz-de-permisos-por-rol">Matriz de Permisos por Rol</a></li>
+<li><a href="#ejemplos" id="toc-ejemplos">Ejemplos</a>
+<ul>
+<li><a href="#ejemplo-1-crear-y-procesar-un-incidente"
+id="toc-ejemplo-1-crear-y-procesar-un-incidente">Ejemplo 1: Crear y
+Procesar un Incidente</a></li>
+</ul></li>
+<li><a href="#notas-de-desarrollo" id="toc-notas-de-desarrollo">Notas de
+Desarrollo</a></li>
+</ul>
+        </nav>
+         <h2 id="introducción">Introducción</h2>
+<p>IncidentFlow expone una API REST construida con FastAPI para todas
+las operaciones. Este documento proporciona la referencia completa para
+todos los endpoints, incluyendo ejemplos de solicitud/respuesta,
+autenticación y reglas de autorización.</p>
+<p><strong>URL Base</strong>: <code>http://localhost:8000</code>
+(desarrollo)</p>
+<p><strong>Autenticación</strong>: Token Bearer en el encabezado
+<code>Authorization</code></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer &lt;token&gt;&quot;</span> http://localhost:8000/incidents</span></code></pre></div>
+<h2 id="niveles-de-severidad">Niveles de Severidad</h2>
+<p>Valores válidos de severidad (sensible a mayúsculas, tipo
+título):</p>
+<ul>
+<li><code>Low</code> - Problemas menores, puede esperar</li>
+<li><code>Medium</code> - Afecta a algunos usuarios, debe resolverse
+hoy</li>
+<li><code>High</code> - Afecta a muchos usuarios, requiere atención
+inmediata</li>
+<li><code>Critical</code> - Servicio caído, requiere atención inmediata
+del Commander</li>
+</ul>
+<h2 id="estados-de-incidente">Estados de Incidente</h2>
+<p>Estados válidos para transición (sensible a mayúsculas,
+MAYÚSCULAS):</p>
+<ul>
+<li><code>OPEN</code> - Estado inicial al crear</li>
+<li><code>TRIAGED</code> - Evaluado y con severidad asignada</li>
+<li><code>ASSIGNED</code> - Asignado a un respondedor</li>
+<li><code>IN_PROGRESS</code> - Trabajo en progreso</li>
+<li><code>RESOLVED</code> - Solución implementada</li>
+<li><code>CLOSED</code> - Cerrado formalmente</li>
+<li><code>CANCELLED</code> - Cancelado/falsa alarma</li>
+<li><code>ESCALATED</code> - Escalado a un nivel superior</li>
+</ul>
+<h2 id="roles">Roles</h2>
+<p>Nombres de roles válidos en el sistema (sensibles a mayúsculas):</p>
+<ul>
+<li><code>Admin</code> - Acceso completo</li>
+<li><code>Operator</code> - Crear incidentes, agregar comentarios</li>
+<li><code>Incident_commander</code> - Coordinar incidentes, asignar,
+cambiar estados</li>
+<li><code>Technical_responder</code> - Agregar comentarios, hacer
+trabajo técnico</li>
+<li><code>Incident_manager</code> - Ver y cambiar severidad</li>
+</ul>
+<h2 id="incidentes">Incidentes</h2>
+<h3 id="crear-incidente">Crear Incidente</h3>
+<p><strong>POST</strong> <code>/incidents</code></p>
+<p>Crear un nuevo incidente. Requiere rol <code>Admin</code> u
+<code>Operator</code>.</p>
+<p><strong>Encabezados:</strong></p>
+<pre><code>Authorization: Bearer &lt;token&gt;
+Content-Type: application/json</code></pre>
+<p><strong>Cuerpo de la Solicitud:</strong></p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Servicio de pagos caído&quot;</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Los clientes no pueden completar transacciones. Error 500 en la API de pagos.&quot;</span><span class="fu">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;severity&quot;</span><span class="fu">:</span> <span class="st">&quot;Critical&quot;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta:</strong> <code>200 OK</code></p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Servicio de pagos caído&quot;</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Los clientes no pueden completar transacciones...&quot;</span><span class="fu">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;severity&quot;</span><span class="fu">:</span> <span class="st">&quot;Critical&quot;</span><span class="fu">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;OPEN&quot;</span><span class="fu">,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;creator_id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;assigned_user_id&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-03T10:30:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;updated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-03T10:30:00Z&quot;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta de Error:</strong> <code>400 Bad Request</code></p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Nivel de severidad inválido: CRITICAL&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta de Error:</strong> <code>403 Forbidden</code></p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Permisos insuficientes&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="triaje-de-incidente">Triaje de Incidente</h3>
+<p><strong>POST</strong>
+<code>/incidents/{incident_id}/triage</code></p>
+<p>Evaluar y triar un incidente (cambiar su severidad). Requiere rol
+<code>Admin</code> o <code>Incident_commander</code>.</p>
+<p><strong>Parámetros de Ruta:</strong></p>
+<ul>
+<li><code>incident_id</code> (int) - El ID del incidente</li>
+</ul>
+<p><strong>Encabezados:</strong></p>
+<pre><code>Authorization: Bearer &lt;token&gt;
+Content-Type: application/json</code></pre>
+<p><strong>Cuerpo de la Solicitud:</strong></p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;new_severity&quot;</span><span class="fu">:</span> <span class="st">&quot;Critical&quot;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta:</strong> <code>200 OK</code></p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;severity&quot;</span><span class="fu">:</span> <span class="st">&quot;Critical&quot;</span><span class="fu">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;OPEN&quot;</span><span class="fu">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;updated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-03T10:35:00Z&quot;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta de Error:</strong> <code>404 Not Found</code></p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Incidente con ID 999 no encontrado.&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="cambiar-estado">Cambiar Estado</h3>
+<p><strong>POST</strong>
+<code>/incidents/{incident_id}/transition-state</code></p>
+<p>Cambiar el estado del incidente. Requiere rol <code>Admin</code> o
+<code>Incident_commander</code>.</p>
+<p><strong>Parámetros de Ruta:</strong></p>
+<ul>
+<li><code>incident_id</code> (int)</li>
+</ul>
+<p><strong>Encabezados:</strong></p>
+<pre><code>Authorization: Bearer &lt;token&gt;
+Content-Type: application/json</code></pre>
+<p><strong>Cuerpo de la Solicitud:</strong></p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;new_state&quot;</span><span class="fu">:</span> <span class="st">&quot;IN_PROGRESS&quot;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Transiciones de Estado Válidas:</strong></p>
+<pre><code>OPEN → ASSIGNED → IN_PROGRESS → RESOLVED → CLOSED
+OPEN → CANCELLED
+OPEN → ESCALATED
+IN_PROGRESS → ESCALATED
+RESOLVED → CLOSED
+ Cualquier estado → CANCELLED
+ Cualquier estado → ESCALATED</code></pre>
+<p><strong>Respuesta:</strong> <code>200 OK</code></p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;IN_PROGRESS&quot;</span><span class="fu">,</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;updated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-03T10:40:00Z&quot;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta de Error:</strong> <code>400 Bad Request</code>
+(Transición inválida)</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Transición de estado inválida o estado del incidente inválido&quot;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta de Error:</strong> <code>403 Forbidden</code></p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Permisos insuficientes&quot;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="asignar-incidente">Asignar Incidente</h3>
+<p><strong>POST</strong>
+<code>/incidents/{incident_id}/assign</code></p>
+<p>Asignar el incidente a un respondedor técnico. Requiere rol
+<code>Admin</code> o <code>Incident_commander</code>.</p>
+<p><strong>Parámetros de Ruta:</strong></p>
+<ul>
+<li><code>incident_id</code> (int)</li>
+</ul>
+<p><strong>Encabezados:</strong></p>
+<pre><code>Authorization: Bearer &lt;token&gt;
+Content-Type: application/json</code></pre>
+<p><strong>Cuerpo de la Solicitud:</strong></p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;assigned_user_id&quot;</span><span class="fu">:</span> <span class="dv">5</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta:</strong> <code>200 OK</code></p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;assigned_user_id&quot;</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;ASSIGNED&quot;</span><span class="fu">,</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;updated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-03T10:40:00Z&quot;</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta de Error:</strong> <code>400 Bad Request</code></p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Usuario no encontrado o asignación inválida&quot;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="cambiar-severidad">Cambiar Severidad</h3>
+<p><strong>POST</strong>
+<code>/incidents/{incident_id}/change_severity</code></p>
+<p>Cambiar la severidad del incidente. Requiere rol <code>Admin</code> o
+<code>Incident_manager</code>.</p>
+<p><strong>Parámetros de Ruta:</strong></p>
+<ul>
+<li><code>incident_id</code> (int)</li>
+</ul>
+<p><strong>Encabezados:</strong></p>
+<pre><code>Authorization: Bearer &lt;token&gt;
+Content-Type: application/json</code></pre>
+<p><strong>Cuerpo de la Solicitud:</strong></p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;new_severity&quot;</span><span class="fu">:</span> <span class="st">&quot;Critical&quot;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta:</strong> <code>200 OK</code></p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;severity&quot;</span><span class="fu">:</span> <span class="st">&quot;Critical&quot;</span><span class="fu">,</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;updated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-03T10:40:00Z&quot;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h2 id="comentarios">Comentarios</h2>
+<h3 id="agregar-comentario">Agregar Comentario</h3>
+<p><strong>POST</strong>
+<code>/incidents/{incident_id}/comments</code></p>
+<p>Agregar un comentario a la línea de tiempo del incidente. Requiere
+rol <code>Admin</code>, <code>Operator</code>, o
+<code>Technical_responder</code>.</p>
+<p><strong>Parámetros de Ruta:</strong></p>
+<ul>
+<li><code>incident_id</code> (int)</li>
+</ul>
+<p><strong>Encabezados:</strong></p>
+<pre><code>Authorization: Bearer &lt;token&gt;
+Content-Type: application/json</code></pre>
+<p><strong>Cuerpo de la Solicitud:</strong></p>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;content&quot;</span><span class="fu">:</span> <span class="st">&quot;Investigación en curso. Se encontró el problema en los logs del servicio payment-gateway.&quot;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta:</strong> <code>200 OK</code></p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;comment_id&quot;</span><span class="fu">:</span> <span class="dv">42</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta de Error:</strong> <code>400 Bad Request</code></p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;El contenido del comentario es requerido&quot;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Respuesta de Error:</strong> <code>404 Not Found</code></p>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Incidente con ID 999 no encontrado.&quot;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h2 id="códigos-de-estado">Códigos de Estado</h2>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>OK - Solicitud exitosa</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request - Entrada inválida o transición de estado inválida</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden - Permisos insuficientes</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found - El recurso no existe</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error</td>
+</tr>
+</tbody>
+</table>
+<h2 id="formato-de-errores">Formato de Errores</h2>
+<p>Los errores siguen este formato:</p>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Mensaje de error legible por humanos&quot;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h2 id="matriz-de-permisos-por-rol">Matriz de Permisos por Rol</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 8%" />
+<col style="width: 12%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr>
+<th>Acción</th>
+<th>Admin</th>
+<th>Operator</th>
+<th>Incident_commander</th>
+<th>Technical_responder</th>
+<th>Incident_manager</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Crear Incidente</td>
+<td>✓</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>Triar</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>Cambiar Estado</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>Asignar</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>Cambiar Severidad</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Agregar Comentario</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✗</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ejemplos">Ejemplos</h2>
+<h3 id="ejemplo-1-crear-y-procesar-un-incidente">Ejemplo 1: Crear y
+Procesar un Incidente</h3>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Crear incidente Crítico</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="va">TOKEN</span><span class="op">=</span><span class="st">&quot;eyJ...&quot;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents <span class="dt">\</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;title&quot;: &quot;Pool de conexiones de base de datos agotado&quot;,</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;description&quot;: &quot;Todas las conexiones de base de datos están en uso, consultas fallando&quot;,</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;severity&quot;: &quot;Critical&quot;</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Respuesta: {&quot;id&quot;: 1, &quot;state&quot;: &quot;OPEN&quot;, ...}</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Triar el incidente</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="va">INCIDENT_ID</span><span class="op">=</span>1</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents/<span class="va">$INCIDENT_ID</span>/triage <span class="dt">\</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;new_severity&quot;: &quot;Critical&quot;}&#39;</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Asignar al respondedor (user_id = 5)</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents/<span class="va">$INCIDENT_ID</span>/assign <span class="dt">\</span></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;assigned_user_id&quot;: 5}&#39;</span></span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Agregar comentario</span></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents/<span class="va">$INCIDENT_ID</span>/comments <span class="dt">\</span></span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;content&quot;: &quot;Se agregaron 10 servidores más de base de datos&quot;}&#39;</span></span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Transicionar a IN_PROGRESS</span></span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents/<span class="va">$INCIDENT_ID</span>/transition-state <span class="dt">\</span></span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;new_state&quot;: &quot;IN_PROGRESS&quot;}&#39;</span></span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Transicionar a RESOLVED</span></span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents/<span class="va">$INCIDENT_ID</span>/transition-state <span class="dt">\</span></span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;new_state&quot;: &quot;RESOLVED&quot;}&#39;</span></span>
+<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. Cerrar el incidente</span></span>
+<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents/<span class="va">$INCIDENT_ID</span>/transition-state <span class="dt">\</span></span>
+<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;new_state&quot;: &quot;CLOSED&quot;}&#39;</span></span></code></pre></div>
+<h2 id="notas-de-desarrollo">Notas de Desarrollo</h2>
+<ul>
+<li>Todos los IDs de incidentes son enteros (no UUIDs)</li>
+<li>Todos los timestamps están en UTC (formato ISO 8601)</li>
+<li>Los valores de severidad son tipo título: <code>Low</code>,
+<code>Medium</code>, <code>High</code>, <code>Critical</code></li>
+<li>Los valores de estado son MAYÚSCULAS: <code>OPEN</code>,
+<code>IN_PROGRESS</code>, <code>RESOLVED</code>, <code>CLOSED</code>,
+<code>CANCELLED</code>, <code>ESCALATED</code></li>
+<li>Los nombres de roles usan guiones bajos:
+<code>Incident_commander</code>, <code>Technical_responder</code>,
+<code>Incident_manager</code></li>
+<li>Los IDs de usuario son enteros</li>
+<li>Todos los endpoints POST que modifican retornan el incidente u
+objeto actualizado</li>
+</ul> 
+    </body>
+</html>

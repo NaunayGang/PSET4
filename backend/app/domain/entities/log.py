@@ -1,12 +1,16 @@
 from dataclasses import dataclass
 from datetime import datetime
-from enums import LogLevel
+from typing import Optional
+
+from app.domain.enums.log_level import LogLevel
+
 
 @dataclass
 class Log:
-    id: int
-    timestamp: datetime
+    timestamp: datetime | None
     log_level: LogLevel
     message: str
+    id: Optional[int] = None
+
 
 

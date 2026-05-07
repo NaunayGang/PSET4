@@ -1,9 +1,17 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
+
 from app.domain.enums.severity import Severity
 from app.domain.enums.state import State
 from app.infrastructure.database.base import Base
-from sqlalchemy import String, DateTime, ForeignKey, Enum as SAEnum, Integer, func
+from sqlalchemy import DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from .comment import Comment
+    from .notification import Notification
+    from .user import User
 
 class Incident(Base):
     __tablename__ = "incidents"
@@ -13,6 +21,7 @@ class Incident(Base):
     description: Mapped[str | None] = mapped_column(String(1000), nullable=True)
     severity: Mapped[Severity] = mapped_column(SAEnum(Severity), nullable=False)
     state: Mapped[State] = mapped_column(SAEnum(State), nullable=False)
+    created_by: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     assigned_to: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -24,6 +33,11 @@ class Incident(Base):
         nullable=True,
         onupdate=func.now(),
     )
+    summary_id: Mapped[int | None] = mapped_column(ForeignKey("summaries.id"), nullable=True)
 
     comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="incident")
-    assigned_user: Mapped["User"] = relationship("User", back_populates="incidents", foreign_keys=[assigned_to])
+    notifications: Mapped[list["Notification"]] = relationship("Notification")
+    assigned_user: Mapped["User"] = relationship(
+        "User", back_populates="incidents", foreign_keys=[assigned_to]
+    )
+

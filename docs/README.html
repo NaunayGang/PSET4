@@ -1,0 +1,1031 @@
+<!doctype html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    lang=""
+    xml:lang=""
+    >
+    <head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="pandoc" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=yes"
+        />
+                   <title>README</title>
+        <style>
+            code{white-space: pre-wrap;}
+            span.smallcaps{font-variant: small-caps;}
+            div.columns{display: flex; gap: min(4vw, 1.5em);}
+            div.column{flex: auto; overflow-x: auto;}
+            div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+            /* The extra [class] is a hack that increases specificity enough to
+               override a similar rule in reveal.js */
+            ul.task-list[class]{list-style: none;}
+            ul.task-list li input[type="checkbox"] {
+              font-size: inherit;
+              width: 0.8em;
+              margin: 0 0.8em 0.2em -1.6em;
+              vertical-align: middle;
+            }
+            /* CSS for syntax highlighting */
+            html { -webkit-text-size-adjust: 100%; }
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            .sourceCode { overflow: visible; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { color: #008000; } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { color: #008000; font-weight: bold; } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+        </style>
+                <link rel="stylesheet" href="/pandoc-templates/docs.css" />
+         
+        <script
+            data-external="1"
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+        ></script>
+        <script>
+        // Tabset functionality for pandoc-rendered markdown
+        // Emulates R Markdown's {.tabset} behavior
+        document.addEventListener('DOMContentLoaded', function() {
+          // Find all headers with 'tabset' class (pandoc applies class to header, not section)
+          document.querySelectorAll('h1.tabset, h2.tabset, h3.tabset, h4.tabset, h5.tabset, h6.tabset').forEach(function(tabsetHeader) {
+            const tabLevel = parseInt(tabsetHeader.tagName[1]);
+            const childHeaderTag = 'H' + (tabLevel + 1);
+
+            // Find all child sections (tabs) - siblings until next same-level header
+            const tabs = [];
+            const introContent = []; // Content before first tab
+            let currentTab = null;
+
+            let sibling = tabsetHeader.nextElementSibling;
+            while (sibling) {
+              if (sibling.tagName === childHeaderTag) {
+                // New tab starts
+                if (currentTab) tabs.push(currentTab);
+                currentTab = {
+                  title: sibling.textContent,
+                  id: sibling.id || sibling.textContent.toLowerCase().replace(/\s+/g, '-'),
+                  header: sibling,
+                  content: []
+                };
+              } else if (sibling.tagName && sibling.tagName[0] === 'H' && parseInt(sibling.tagName[1]) <= tabLevel) {
+                // Hit a same-level or higher header, stop
+                break;
+              } else if (currentTab) {
+                // Add content to current tab
+                currentTab.content.push(sibling);
+              } else {
+                // Content before first tab (intro text)
+                introContent.push(sibling);
+              }
+              sibling = sibling.nextElementSibling;
+            }
+            if (currentTab) tabs.push(currentTab);
+
+            if (tabs.length === 0) return;
+
+            // Create tab UI
+            const tabContainer = document.createElement('div');
+            tabContainer.className = 'tab-container';
+
+            // Create tab buttons
+            const tabButtons = document.createElement('div');
+            tabButtons.className = 'tab-buttons';
+
+            tabs.forEach(function(tab, index) {
+              const button = document.createElement('button');
+              button.className = 'tab-button' + (index === 0 ? ' active' : '');
+              button.textContent = tab.title;
+              button.setAttribute('data-tab', tab.id);
+              button.addEventListener('click', function() {
+                // Deactivate all tabs in this container
+                tabContainer.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                tabContainer.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                // Activate clicked tab
+                button.classList.add('active');
+                tabContainer.querySelector('.tab-panel[data-tab="' + tab.id + '"]').classList.add('active');
+              });
+              tabButtons.appendChild(button);
+            });
+
+            tabContainer.appendChild(tabButtons);
+
+            // Create tab panels and move content
+            tabs.forEach(function(tab, index) {
+              const panel = document.createElement('div');
+              panel.className = 'tab-panel' + (index === 0 ? ' active' : '');
+              panel.setAttribute('data-tab', tab.id);
+              tab.content.forEach(function(el) {
+                panel.appendChild(el);
+              });
+              tabContainer.appendChild(panel);
+              // Remove the original tab header
+              tab.header.remove();
+            });
+
+            // Insert intro content right after tabset header, then tab container
+            let insertPoint = tabsetHeader;
+            introContent.forEach(function(el) {
+              insertPoint.after(el);
+              insertPoint = el;
+            });
+            insertPoint.after(tabContainer);
+          });
+
+          // Image Maximizer functionality
+          // Wraps images and SVGs in containers with expand functionality
+          const wrapElement = function(element) {
+            // Skip if already wrapped
+            if (element.parentElement && element.parentElement.classList.contains('img-wrapper')) return;
+
+            // Get element dimensions
+            const getWidth = function() {
+              if (element.tagName === 'IMG') {
+                return element.naturalWidth || element.width || element.clientWidth;
+              } else if (element.tagName === 'SVG') {
+                // For inline SVGs, try multiple methods to get width
+                // 1. Check viewBox attribute for intended dimensions
+                const viewBox = element.getAttribute('viewBox');
+                if (viewBox) {
+                  const parts = viewBox.split(/\s+|,/);
+                  if (parts.length >= 4) {
+                    const vbWidth = parseFloat(parts[2]);
+                    if (vbWidth > 0) return vbWidth;
+                  }
+                }
+                // 2. Check explicit width attribute
+                const widthAttr = element.getAttribute('width');
+                if (widthAttr && !widthAttr.includes('%')) {
+                  const w = parseFloat(widthAttr);
+                  if (w > 0) return w;
+                }
+                // 3. Try getBBox (may throw if SVG not rendered)
+                try {
+                  const bbox = element.getBBox ? element.getBBox() : null;
+                  if (bbox && bbox.width > 0) return bbox.width;
+                } catch (e) {
+                  // getBBox can throw if element is not in DOM or not rendered
+                }
+                // 4. Fall back to client dimensions
+                return element.clientWidth || element.getBoundingClientRect().width;
+              }
+              return 0;
+            };
+
+            // Only apply to images/SVGs wider than 200px (skip small icons)
+            const width = getWidth();
+            if (width < 200) return;
+
+            // Handle parent element - <div> inside <p> is invalid HTML and breaks rendering
+            const parent = element.parentNode;
+            if (parent && parent.tagName === 'P') {
+              // Replace <p> with <figure> to allow block-level content
+              const figure = document.createElement('figure');
+              figure.className = 'img-figure';
+              // Move all children from <p> to <figure>
+              while (parent.firstChild) {
+                figure.appendChild(parent.firstChild);
+              }
+              parent.parentNode.replaceChild(figure, parent);
+            }
+
+            // Create wrapper
+            const wrapper = document.createElement('div');
+            wrapper.className = 'img-wrapper';
+
+            // Create expand icon
+            const expandIcon = document.createElement('div');
+            expandIcon.className = 'img-expand-icon';
+            expandIcon.innerHTML = '⤢'; // Expand arrow symbol
+            expandIcon.setAttribute('title', 'Click to expand');
+
+            // Wrap element and add icon
+            element.parentNode.insertBefore(wrapper, element);
+            wrapper.appendChild(element);
+            wrapper.appendChild(expandIcon);
+
+            // Add click handler to maximize
+            const maximize = function() {
+              // Prevent body scroll
+              document.body.style.overflow = 'hidden';
+
+              // Create overlay
+              const overlay = document.createElement('div');
+              overlay.className = 'img-maximized-overlay';
+
+              // Create canvas container (handles pan/zoom transforms)
+              const canvas = document.createElement('div');
+              canvas.className = 'img-maximized-canvas';
+
+              // Create content container
+              const content = document.createElement('div');
+              content.className = 'img-maximized-content';
+
+              // Clone element
+              const maximizedElement = element.cloneNode(true);
+              maximizedElement.className = 'img-maximized';
+              
+              // Determine base dimensions for the image
+              let baseWidth, baseHeight;
+              const isSvg = element.tagName === 'IMG' && element.src && element.src.toLowerCase().endsWith('.svg');
+              
+              if (element.tagName === 'IMG') {
+                const natWidth = element.naturalWidth || element.clientWidth;
+                const natHeight = element.naturalHeight || element.clientHeight;
+                
+                if (natWidth && natHeight) {
+                  const maxW = window.innerWidth * 0.85;
+                  const maxH = window.innerHeight * 0.85;
+                  const aspectRatio = natWidth / natHeight;
+                  
+                  if (isSvg) {
+                    // Scale SVG to fit viewport initially
+                    if (maxW / aspectRatio <= maxH) {
+                      baseWidth = maxW;
+                      baseHeight = maxW / aspectRatio;
+                    } else {
+                      baseHeight = maxH;
+                      baseWidth = maxH * aspectRatio;
+                    }
+                    // Add white background for SVGs
+                    maximizedElement.style.backgroundColor = '#ffffff';
+                    maximizedElement.style.padding = '20px';
+                    maximizedElement.style.borderRadius = '8px';
+                  } else {
+                    // For raster images, start at natural size or fit to viewport
+                    const ratio = Math.min(maxW / natWidth, maxH / natHeight, 1);
+                    baseWidth = natWidth * ratio;
+                    baseHeight = natHeight * ratio;
+                  }
+                  
+                  maximizedElement.style.width = Math.round(baseWidth) + 'px';
+                  maximizedElement.style.height = Math.round(baseHeight) + 'px';
+                }
+              }
+
+              // Create controls container
+              const controls = document.createElement('div');
+              controls.className = 'img-maximized-controls';
+              
+              // Zoom indicator
+              const zoomIndicator = document.createElement('span');
+              zoomIndicator.className = 'img-zoom-indicator';
+              zoomIndicator.textContent = '100%';
+              
+              // Reset button
+              const resetBtn = document.createElement('button');
+              resetBtn.className = 'img-control-btn';
+              resetBtn.innerHTML = '⟲';
+              resetBtn.setAttribute('title', 'Reset zoom (R)');
+              
+              // Close button
+              const closeBtn = document.createElement('button');
+              closeBtn.className = 'img-close-btn';
+              closeBtn.innerHTML = '×';
+              closeBtn.setAttribute('title', 'Close (ESC)');
+              
+              controls.appendChild(zoomIndicator);
+              controls.appendChild(resetBtn);
+              controls.appendChild(closeBtn);
+
+              // Assemble
+              content.appendChild(maximizedElement);
+              canvas.appendChild(content);
+              overlay.appendChild(canvas);
+              overlay.appendChild(controls);
+              document.body.appendChild(overlay);
+
+              // Pan and zoom state
+              let scale = 1;
+              let panX = 0;
+              let panY = 0;
+              let isDragging = false;
+              let dragStartX = 0;
+              let dragStartY = 0;
+              let panStartX = 0;
+              let panStartY = 0;
+              
+              const updateTransform = function() {
+                content.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + scale + ')';
+                zoomIndicator.textContent = Math.round(scale * 100) + '%';
+              };
+              
+              const resetView = function() {
+                scale = 1;
+                panX = 0;
+                panY = 0;
+                updateTransform();
+              };
+
+              // Zoom with mouse wheel (zoom toward cursor position)
+              canvas.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left - rect.width / 2;
+                const mouseY = e.clientY - rect.top - rect.height / 2;
+                
+                const prevScale = scale;
+                const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+                scale = Math.min(Math.max(scale * zoomFactor, 0.1), 20);
+                
+                // Adjust pan to zoom toward cursor
+                const scaleChange = scale / prevScale;
+                panX = mouseX - (mouseX - panX) * scaleChange;
+                panY = mouseY - (mouseY - panY) * scaleChange;
+                
+                updateTransform();
+              }, { passive: false });
+
+              // Pan with mouse drag
+              canvas.addEventListener('mousedown', function(e) {
+                if (e.button !== 0) return; // Left click only
+                if (e.target === closeBtn || e.target === resetBtn) return;
+                
+                isDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                panStartX = panX;
+                panStartY = panY;
+                canvas.style.cursor = 'grabbing';
+                e.preventDefault();
+              });
+
+              document.addEventListener('mousemove', function moveHandler(e) {
+                if (!isDragging) return;
+                
+                panX = panStartX + (e.clientX - dragStartX);
+                panY = panStartY + (e.clientY - dragStartY);
+                updateTransform();
+              });
+
+              document.addEventListener('mouseup', function upHandler(e) {
+                if (isDragging) {
+                  isDragging = false;
+                  canvas.style.cursor = '';
+                }
+              });
+
+              // Touch support for mobile
+              let lastTouchDist = 0;
+              let lastTouchX = 0;
+              let lastTouchY = 0;
+              
+              canvas.addEventListener('touchstart', function(e) {
+                if (e.touches.length === 1) {
+                  isDragging = true;
+                  dragStartX = e.touches[0].clientX;
+                  dragStartY = e.touches[0].clientY;
+                  panStartX = panX;
+                  panStartY = panY;
+                } else if (e.touches.length === 2) {
+                  isDragging = false;
+                  lastTouchDist = Math.hypot(
+                    e.touches[1].clientX - e.touches[0].clientX,
+                    e.touches[1].clientY - e.touches[0].clientY
+                  );
+                  lastTouchX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                  lastTouchY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                }
+              }, { passive: true });
+
+              canvas.addEventListener('touchmove', function(e) {
+                if (e.touches.length === 1 && isDragging) {
+                  panX = panStartX + (e.touches[0].clientX - dragStartX);
+                  panY = panStartY + (e.touches[0].clientY - dragStartY);
+                  updateTransform();
+                  e.preventDefault();
+                } else if (e.touches.length === 2) {
+                  const dist = Math.hypot(
+                    e.touches[1].clientX - e.touches[0].clientX,
+                    e.touches[1].clientY - e.touches[0].clientY
+                  );
+                  const touchX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                  const touchY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                  
+                  if (lastTouchDist > 0) {
+                    const prevScale = scale;
+                    scale = Math.min(Math.max(scale * (dist / lastTouchDist), 0.1), 20);
+                    
+                    // Zoom toward pinch center
+                    const rect = canvas.getBoundingClientRect();
+                    const centerX = touchX - rect.left - rect.width / 2;
+                    const centerY = touchY - rect.top - rect.height / 2;
+                    const scaleChange = scale / prevScale;
+                    panX = centerX - (centerX - panX) * scaleChange;
+                    panY = centerY - (centerY - panY) * scaleChange;
+                  }
+                  
+                  lastTouchDist = dist;
+                  lastTouchX = touchX;
+                  lastTouchY = touchY;
+                  updateTransform();
+                  e.preventDefault();
+                }
+              }, { passive: false });
+
+              canvas.addEventListener('touchend', function(e) {
+                isDragging = false;
+                lastTouchDist = 0;
+              });
+
+              // Trigger animation
+              setTimeout(function() {
+                overlay.classList.add('active');
+              }, 10);
+
+              // Close handler
+              const close = function() {
+                overlay.classList.remove('active');
+                setTimeout(function() {
+                  overlay.remove();
+                  document.body.style.overflow = '';
+                }, 200);
+              };
+
+              // Event listeners for controls and keyboard
+              closeBtn.addEventListener('click', close);
+              resetBtn.addEventListener('click', resetView);
+              
+              overlay.addEventListener('click', function(e) {
+                if (e.target === overlay || e.target === canvas) close();
+              });
+              
+              document.addEventListener('keydown', function escHandler(e) {
+                if (e.key === 'Escape') {
+                  close();
+                  document.removeEventListener('keydown', escHandler);
+                } else if (e.key === 'r' || e.key === 'R') {
+                  resetView();
+                } else if (e.key === '+' || e.key === '=') {
+                  scale = Math.min(scale * 1.2, 20);
+                  updateTransform();
+                } else if (e.key === '-') {
+                  scale = Math.max(scale * 0.8, 0.1);
+                  updateTransform();
+                }
+              });
+            };
+
+            element.addEventListener('click', maximize);
+            expandIcon.addEventListener('click', maximize);
+          };
+
+          // Process inline SVGs immediately
+          document.querySelectorAll('svg').forEach(wrapElement);
+
+          // Process images - wait for load to get accurate dimensions
+          document.querySelectorAll('img').forEach(function(img) {
+            if (img.complete) {
+              wrapElement(img);
+            } else {
+              img.addEventListener('load', function() {
+                wrapElement(img);
+              });
+            }
+          });
+        });
+        </script>
+    </head>
+    <body>
+                  <nav id="TOC" role="doc-toc">
+             <ul>
+<li><a href="#incidentflow" id="toc-incidentflow">IncidentFlow</a>
+<ul>
+<li><a href="#caso-de-negocio" id="toc-caso-de-negocio">Caso de
+Negocio</a></li>
+<li><a href="#integrantes" id="toc-integrantes">Integrantes</a></li>
+<li><a href="#descripción-del-problema"
+id="toc-descripción-del-problema">Descripción del Problema</a></li>
+<li><a href="#stack-técnico" id="toc-stack-técnico">Stack
+Técnico</a></li>
+<li><a href="#arquitectura-propuesta"
+id="toc-arquitectura-propuesta">Arquitectura Propuesta</a></li>
+<li><a href="#descripción-del-flujo"
+id="toc-descripción-del-flujo">Descripción del Flujo</a>
+<ul>
+<li><a href="#estados-principales" id="toc-estados-principales">Estados
+Principales</a></li>
+<li><a href="#roles-y-permisos" id="toc-roles-y-permisos">Roles y
+Permisos</a></li>
+<li><a href="#reglas-críticas" id="toc-reglas-críticas">Reglas
+Críticas</a></li>
+</ul></li>
+<li><a href="#interfaces-de-usuario"
+id="toc-interfaces-de-usuario">Interfaces de Usuario</a>
+<ul>
+<li><a href="#lista-principal-de-incidentes"
+id="toc-lista-principal-de-incidentes">Lista Principal de
+Incidentes</a></li>
+<li><a href="#formulario-de-creación"
+id="toc-formulario-de-creación">Formulario de Creación</a></li>
+<li><a href="#detalle-e-historial" id="toc-detalle-e-historial">Detalle
+e Historial</a></li>
+<li><a href="#filtros-y-paginación"
+id="toc-filtros-y-paginación">Filtros y Paginación</a></li>
+<li><a href="#dashboard-de-manager"
+id="toc-dashboard-de-manager">Dashboard de Manager</a></li>
+<li><a href="#dashboard-de-admin" id="toc-dashboard-de-admin">Dashboard
+de Admin</a></li>
+</ul></li>
+<li><a href="#cómo-correr-localmente"
+id="toc-cómo-correr-localmente">Cómo Correr Localmente</a>
+<ul>
+<li><a href="#requisitos-previos" id="toc-requisitos-previos">Requisitos
+Previos</a></li>
+<li><a href="#con-docker-compose-recomendado"
+id="toc-con-docker-compose-recomendado">Con Docker Compose
+(Recomendado)</a></li>
+<li><a href="#sin-docker-desarrollo-local"
+id="toc-sin-docker-desarrollo-local">Sin Docker (Desarrollo
+Local)</a></li>
+</ul></li>
+<li><a href="#cómo-correr-docker-compose"
+id="toc-cómo-correr-docker-compose">Cómo Correr Docker Compose</a></li>
+<li><a href="#flujo-de-github-actions"
+id="toc-flujo-de-github-actions">Flujo de GitHub Actions</a>
+<ul>
+<li><a href="#en-branch-dev" id="toc-en-branch-dev">En branch
+<code>dev</code></a></li>
+<li><a href="#en-branch-main" id="toc-en-branch-main">En branch
+<code>main</code></a></li>
+</ul></li>
+<li><a href="#documentación" id="toc-documentación">Documentación</a>
+<ul>
+<li><a href="#compilar-documentación"
+id="toc-compilar-documentación">Compilar Documentación</a></li>
+<li><a href="#servir-documentación-localmente"
+id="toc-servir-documentación-localmente">Servir Documentación
+Localmente</a></li>
+<li><a href="#secciones-de-documentación"
+id="toc-secciones-de-documentación">Secciones de Documentación</a></li>
+</ul></li>
+<li><a href="#nix" id="toc-nix">Nix</a>
+<ul>
+<li><a href="#obtener-nix" id="toc-obtener-nix">Obtener Nix</a></li>
+</ul></li>
+<li><a href="#github-project-issues"
+id="toc-github-project-issues">GitHub Project &amp; Issues</a></li>
+<li><a href="#environment-setup" id="toc-environment-setup">Environment
+Setup</a></li>
+<li><a href="#links-a-render" id="toc-links-a-render">Links a
+Render</a></li>
+<li><a href="#contributing" id="toc-contributing">Contributing</a></li>
+<li><a href="#próximas-fases" id="toc-próximas-fases">Próximas
+Fases</a></li>
+<li><a href="#licencia" id="toc-licencia">Licencia</a></li>
+</ul></li>
+</ul>
+        </nav>
+         <h1 id="incidentflow">IncidentFlow</h1>
+<p><strong>Sistema de escalamiento centralizado para incidentes
+operativos críticos</strong></p>
+<h2 id="caso-de-negocio">Caso de Negocio</h2>
+<p>La empresa opera servicios críticos donde incidentes (pagos fallidos,
+integraciones caídas, alertas de seguridad) requieren coordinación
+inmediata. Actualmente, los equipos se coordinan por chats dispersos, lo
+que genera pérdida de contexto, responsables poco claros y poca
+visibilidad.</p>
+<p><strong>IncidentFlow</strong> centraliza la gestión de incidentes con
+responsables claramente asignados, estados bien definidos, timeline
+confiable y notificaciones inmediatas para casos críticos.</p>
+<h2 id="integrantes">Integrantes</h2>
+<ul>
+<li><strong><span class="citation"
+data-cites="nikotov">@nikotov</span></strong> - Backend (Python,
+FastAPI, Clean Architecture)</li>
+<li><strong><span class="citation"
+data-cites="FelipeBhrqz">@FelipeBhrqz</span></strong> - Frontend
+(Streamlit)</li>
+<li><strong><span class="citation"
+data-cites="Nicothekiller">@Nicothekiller</span></strong> - DevOps
+(Docker, GitHub Actions, Render)</li>
+<li><strong><span class="citation"
+data-cites="yuuhikaze">@yuuhikaze</span></strong> - Documentación, UML,
+Tests (PlantUML, pytest)</li>
+</ul>
+<h2 id="descripción-del-problema">Descripción del Problema</h2>
+<p>Durante un incidente no queda claro:</p>
+<ul>
+<li>Quién está a cargo</li>
+<li>Qué severidad tiene</li>
+<li>Qué acciones se tomaron</li>
+<li>Quién fue notificado</li>
+<li>Si el incidente está resuelto</li>
+<li>Qué se aprendió al final</li>
+</ul>
+<h2 id="stack-técnico">Stack Técnico</h2>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Tecnología</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Backend</strong></td>
+<td>FastAPI (Python)</td>
+</tr>
+<tr>
+<td><strong>Frontend</strong></td>
+<td>Streamlit</td>
+</tr>
+<tr>
+<td><strong>Base de Datos</strong></td>
+<td>PostgreSQL</td>
+</tr>
+<tr>
+<td><strong>ORM</strong></td>
+<td>SQLAlchemy</td>
+</tr>
+<tr>
+<td><strong>Arquitectura</strong></td>
+<td>Hexagonal</td>
+</tr>
+<tr>
+<td><strong>Contenedores</strong></td>
+<td>Docker Compose</td>
+</tr>
+<tr>
+<td><strong>CI/CD</strong></td>
+<td>GitHub Actions</td>
+</tr>
+<tr>
+<td><strong>Deploy</strong></td>
+<td>Render (dev/prod)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="arquitectura-propuesta">Arquitectura Propuesta</h2>
+<p>La solución sigue <strong>Arquitectura Hexagonal</strong> en 4
+capas:</p>
+<pre><code>┌─────────────────────────────────────────┐
+│           Frontend (Streamlit)          │
+└─────────────────────┬───────────────────┘
+                      │
+┌─────────────────────┴───────────────────┐
+│              API Layer (FastAPI)        │
+├─────────────────────────────────────────┤
+│          Application Layer              │
+│     (Use Cases, Service Orchestration)  │
+├─────────────────────────────────────────┤
+│            Domain Layer                 │
+│  (Entities, Value Objects, Rules)       │
+├─────────────────────────────────────────┤
+│         Infrastructure Layer            │
+│    (DB, Repositories, Event Bus)        │
+└─────────────────────────────────────────┘</code></pre>
+<h2 id="descripción-del-flujo">Descripción del Flujo</h2>
+<h3 id="estados-principales">Estados Principales</h3>
+<pre><code>OPEN → TRIAGED → ASSIGNED → IN_PROGRESS → RESOLVED → CLOSED</code></pre>
+<h3 id="roles-y-permisos">Roles y Permisos</h3>
+<table>
+<thead>
+<tr>
+<th>Rol</th>
+<th>Crear</th>
+<th>Asignar</th>
+<th>Cambiar Estado</th>
+<th>Comentar</th>
+<th>Leer</th>
+<th>Auditar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Operator</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+<td>✓</td>
+<td>✓</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>Commander</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>Responder</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✓</td>
+<td>✓</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>Manager</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Admin</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reglas-críticas">Reglas Críticas</h3>
+<ul>
+<li>Incidentes <strong>CRITICAL</strong> notifican inmediatamente a
+Commander y Manager</li>
+<li><strong>CRITICAL</strong> no puede cerrarse sin resumen de
+resolución</li>
+<li>No se puede pasar a <strong>IN_PROGRESS</strong> sin responsable
+asignado</li>
+<li>Una vez <strong>CLOSED</strong>, un incidente no vuelve a
+<strong>IN_PROGRESS</strong></li>
+<li>Cambios de severidad deben auditarse</li>
+<li>Solo Commander/Admin pueden resolver o cerrar incidentes</li>
+</ul>
+<h2 id="interfaces-de-usuario">Interfaces de Usuario</h2>
+<h3 id="lista-principal-de-incidentes">Lista Principal de
+Incidentes</h3>
+<figure>
+<img src="./resources/images/incident-list-main-page.jpeg"
+alt="Incident List" />
+<figcaption aria-hidden="true">Incident List</figcaption>
+</figure>
+<h3 id="formulario-de-creación">Formulario de Creación</h3>
+<figure>
+<img src="./resources/images/create-new-incident-form.jpeg"
+alt="Create Incident" />
+<figcaption aria-hidden="true">Create Incident</figcaption>
+</figure>
+<h3 id="detalle-e-historial">Detalle e Historial</h3>
+<figure>
+<img src="./resources/images/incident-detail-and-timeline.jpeg"
+alt="Incident Detail" />
+<figcaption aria-hidden="true">Incident Detail</figcaption>
+</figure>
+<h3 id="filtros-y-paginación">Filtros y Paginación</h3>
+<figure>
+<img
+src="./resources/images/incident-list-with-filters-and-pagination.jpeg"
+alt="Incident List Filters" />
+<figcaption aria-hidden="true">Incident List Filters</figcaption>
+</figure>
+<h3 id="dashboard-de-manager">Dashboard de Manager</h3>
+<figure>
+<img src="./resources/images/manager-dashboard-reduced-view.jpeg"
+alt="Manager Dashboard" />
+<figcaption aria-hidden="true">Manager Dashboard</figcaption>
+</figure>
+<h3 id="dashboard-de-admin">Dashboard de Admin</h3>
+<figure>
+<img src="./resources/images/admin-dashboard.jpeg"
+alt="Admin Dashboard" />
+<figcaption aria-hidden="true">Admin Dashboard</figcaption>
+</figure>
+<h2 id="cómo-correr-localmente">Cómo Correr Localmente</h2>
+<h3 id="requisitos-previos">Requisitos Previos</h3>
+<p><strong>Nix (para reproducibilidad):</strong></p>
+<ul>
+<li>Linux/macOS/Windows (WSL2)</li>
+<li>Instala Nix desde: <a href="https://nixos.org/download/"
+class="uri">https://nixos.org/download/</a></li>
+</ul>
+<p>Si no tienes Nix, necesitas:</p>
+<ul>
+<li>Python 3.11+</li>
+<li>Docker &amp; Docker Compose</li>
+<li>Node.js 18+ (opcional, para frontend tools)</li>
+</ul>
+<h3 id="con-docker-compose-recomendado">Con Docker Compose
+(Recomendado)</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clonar repositorio</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/NaunayGang/PSET4.git</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> PSET4</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Levantar stack completo (prod)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">--profile</span> prod up <span class="at">-d</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Levantar stack completo (dev)</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">--profile</span> dev up <span class="at">-d</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Backend: http://localhost:8000</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Frontend: http://localhost:8501</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># PostgreSQL: localhost:5432</span></span></code></pre></div>
+<h3 id="sin-docker-desarrollo-local">Sin Docker (Desarrollo Local)</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Entrar al entorno Nix</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Backend</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> backend</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">DATABASE_URL</span><span class="op">=</span><span class="st">&quot;postgresql://user:password@localhost:5432/incidentflow&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ex">uvicorn</span> app.api.main:app <span class="at">--reload</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Frontend (en otra terminal)</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> frontend</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="ex">streamlit</span> run app/main.py</span></code></pre></div>
+<h2 id="cómo-correr-docker-compose">Cómo Correr Docker Compose</h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Levantar servicios</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver logs</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> logs <span class="at">-f</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Apagar servicios</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> down</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruir imágenes</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span> <span class="at">--build</span></span></code></pre></div>
+<h2 id="flujo-de-github-actions">Flujo de GitHub Actions</h2>
+<h3 id="en-branch-dev">En branch <code>dev</code></h3>
+<p>Cuando hay push a <code>dev</code>:</p>
+<ol type="1">
+<li>Instalar dependencias</li>
+<li>Lint (flake8/ruff)</li>
+<li>Tests (pytest)</li>
+<li>Build Docker backend</li>
+<li>Push a Docker Hub con tag <code>dev</code></li>
+<li>Deploy automático a Render dev environment</li>
+</ol>
+<h3 id="en-branch-main">En branch <code>main</code></h3>
+<p>Cuando hay push a <code>main</code> (solo mediante merge de PR):</p>
+<ol type="1">
+<li>Todas las validaciones de <code>dev</code></li>
+<li>Build Docker con tag <code>latest</code> y <code>prod</code></li>
+<li>Push a Docker Hub</li>
+<li>Deploy automático a Render prod environment</li>
+</ol>
+<p><strong>Nota</strong>: No se acepta deploy directo a producción desde
+branches feature.</p>
+<h2 id="documentación">Documentación</h2>
+<p>La documentación está ubicada en <code>./​docs-src/</code> y se
+compila a HTML.</p>
+<h3 id="compilar-documentación">Compilar Documentación</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop path:. <span class="at">--command</span> tern-core</span></code></pre></div>
+<p>Esto genera archivos HTML en la carpeta <code>docs/</code>.</p>
+<h3 id="servir-documentación-localmente">Servir Documentación
+Localmente</h3>
+<p>Sirve la documentación compilada (HTML) con:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop <span class="st">&#39;path:.#resources&#39;</span> <span class="at">--command</span> miniserve <span class="at">--color-scheme</span> monokai docs</span></code></pre></div>
+<p>Luego abre tu navegador en: <a href="http://localhost:8080"
+class="uri">http://localhost:8080</a></p>
+<h3 id="secciones-de-documentación">Secciones de Documentación</h3>
+<ul>
+<li><strong>discovery.html</strong>: Descubrimiento de requerimientos,
+contexto del negocio, reglas</li>
+<li><strong>requirements.html</strong>: Requerimientos funcionales y no
+funcionales</li>
+<li><strong>uml/</strong>: Diagramas (State Machine, Class, Sequence,
+Use Cases)</li>
+<li><strong>API Reference</strong>: Documentación de endpoints (generada
+a partir de docstrings)</li>
+</ul>
+<h2 id="nix">Nix</h2>
+<p>Nix es un gestor de paquetes declarativo que asegura
+reproducibilidad.</p>
+<h3 id="obtener-nix">Obtener Nix</h3>
+<p>Nix está disponible para todas las plataformas. Visita: <a
+href="https://nixos.org/download/"
+class="uri">https://nixos.org/download/</a></p>
+<p>Soportado en:</p>
+<ul>
+<li><strong>Linux</strong>: NixOS, Ubuntu, Fedora, Debian, Arch, y
+más</li>
+<li><strong>macOS</strong>: Intel y Apple Silicon</li>
+<li><strong>Windows</strong>: WSL2 (con Nix instalado en el
+subsistema)</li>
+</ul>
+<p>Sigue las instrucciones del sitio oficial para tu plataforma
+específica.</p>
+<h2 id="github-project-issues">GitHub Project &amp; Issues</h2>
+<p>El proyecto usa GitHub Project con columnas:</p>
+<ul>
+<li><strong>Backlog</strong>: Issues sin asignar o no priorizadas</li>
+<li><strong>Todo</strong>: Listas de trabajos por hacer</li>
+<li><strong>In Progress</strong>: Trabajo actual</li>
+<li><strong>In Review</strong>: En revisión (PR abierta)</li>
+<li><strong>Done</strong>: Completado</li>
+</ul>
+<p>Cada issue es una historia de usuario en formato:</p>
+<blockquote>
+<p>Como [rol], quiero [acción], para [beneficio].</p>
+</blockquote>
+<h2 id="environment-setup">Environment Setup</h2>
+<ol type="1">
+<li><p>Copy the template and create your local env file:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env</span></code></pre></div></li>
+<li><p>Edit <code>.env</code> and set your local values. At minimum:</p>
+<pre class="env"><code>DATABASE_URL=postgresql://app_user:YOUR_PASSWORD@localhost:5432/incident_flow_db</code></pre></li>
+<li><p>Run Alembic commands with this project’s
+<code>DATABASE_URL</code>:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">DATABASE_URL</span><span class="op">=</span>postgresql://app_user:YOUR_PASSWORD@localhost:5432/incident_flow_db</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">alembic</span> current</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">alembic</span> heads</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">alembic</span> upgrade head</span></code></pre></div></li>
+</ol>
+<p>Notes:</p>
+<ul>
+<li>Do not commit <code>.env</code>.</li>
+<li>Commit <code>.env.example</code> only.</li>
+<li>Keep one dedicated database per project to avoid migration
+conflicts.</li>
+</ul>
+<h2 id="links-a-render">Links a Render</h2>
+<ul>
+<li><strong>Dev</strong>: <a
+href="https://incidentflow-dev.onrender.com"
+class="uri">https://incidentflow-dev.onrender.com</a> (auto-deploya
+desde <code>dev</code>)</li>
+<li><strong>Prod</strong>: <a
+href="https://incidentflow-prod.onrender.com"
+class="uri">https://incidentflow-prod.onrender.com</a> (auto-deploya
+desde <code>main</code>)</li>
+</ul>
+<h2 id="contributing">Contributing</h2>
+<ol type="1">
+<li>Crea un branch con el nombre del issue:
+<code>git checkout -b issue-#123</code></li>
+<li>Haz commits descriptivos siguiendo Angular style:
+<code>feat:</code>, <code>fix:</code>, <code>docs:</code>, etc.</li>
+<li>Sube cambios y crea una PR</li>
+<li>Asegúrate que GitHub Actions pase</li>
+<li>Solicita review de compañeros</li>
+<li>Una vez aprobada, mergea a <code>dev</code> primero, luego a
+<code>main</code></li>
+</ol>
+<h2 id="próximas-fases">Próximas Fases</h2>
+<ul>
+<li><strong>PSet #4 (Actual)</strong>: Discovery, requisitos, setup
+DevOps, UML inicial</li>
+<li><strong>Proyecto Final</strong>: Implementación completa del
+MVP</li>
+</ul>
+<h2 id="licencia">Licencia</h2>
+<p>Proyecto académico - USFQ Systems Design</p> 
+    </body>
+</html>

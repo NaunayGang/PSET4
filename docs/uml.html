@@ -1,0 +1,992 @@
+<!doctype html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    lang=""
+    xml:lang=""
+    >
+    <head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="pandoc" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=yes"
+        />
+                   <title>uml</title>
+        <style>
+            code{white-space: pre-wrap;}
+            span.smallcaps{font-variant: small-caps;}
+            div.columns{display: flex; gap: min(4vw, 1.5em);}
+            div.column{flex: auto; overflow-x: auto;}
+            div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+            /* The extra [class] is a hack that increases specificity enough to
+               override a similar rule in reveal.js */
+            ul.task-list[class]{list-style: none;}
+            ul.task-list li input[type="checkbox"] {
+              font-size: inherit;
+              width: 0.8em;
+              margin: 0 0.8em 0.2em -1.6em;
+              vertical-align: middle;
+            }
+            /* CSS for syntax highlighting */
+            html { -webkit-text-size-adjust: 100%; }
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            .sourceCode { overflow: visible; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { color: #008000; } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { color: #008000; font-weight: bold; } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+        </style>
+                <link rel="stylesheet" href="/pandoc-templates/docs.css" />
+         
+        <script
+            data-external="1"
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+        ></script>
+        <script>
+        // Tabset functionality for pandoc-rendered markdown
+        // Emulates R Markdown's {.tabset} behavior
+        document.addEventListener('DOMContentLoaded', function() {
+          // Find all headers with 'tabset' class (pandoc applies class to header, not section)
+          document.querySelectorAll('h1.tabset, h2.tabset, h3.tabset, h4.tabset, h5.tabset, h6.tabset').forEach(function(tabsetHeader) {
+            const tabLevel = parseInt(tabsetHeader.tagName[1]);
+            const childHeaderTag = 'H' + (tabLevel + 1);
+
+            // Find all child sections (tabs) - siblings until next same-level header
+            const tabs = [];
+            const introContent = []; // Content before first tab
+            let currentTab = null;
+
+            let sibling = tabsetHeader.nextElementSibling;
+            while (sibling) {
+              if (sibling.tagName === childHeaderTag) {
+                // New tab starts
+                if (currentTab) tabs.push(currentTab);
+                currentTab = {
+                  title: sibling.textContent,
+                  id: sibling.id || sibling.textContent.toLowerCase().replace(/\s+/g, '-'),
+                  header: sibling,
+                  content: []
+                };
+              } else if (sibling.tagName && sibling.tagName[0] === 'H' && parseInt(sibling.tagName[1]) <= tabLevel) {
+                // Hit a same-level or higher header, stop
+                break;
+              } else if (currentTab) {
+                // Add content to current tab
+                currentTab.content.push(sibling);
+              } else {
+                // Content before first tab (intro text)
+                introContent.push(sibling);
+              }
+              sibling = sibling.nextElementSibling;
+            }
+            if (currentTab) tabs.push(currentTab);
+
+            if (tabs.length === 0) return;
+
+            // Create tab UI
+            const tabContainer = document.createElement('div');
+            tabContainer.className = 'tab-container';
+
+            // Create tab buttons
+            const tabButtons = document.createElement('div');
+            tabButtons.className = 'tab-buttons';
+
+            tabs.forEach(function(tab, index) {
+              const button = document.createElement('button');
+              button.className = 'tab-button' + (index === 0 ? ' active' : '');
+              button.textContent = tab.title;
+              button.setAttribute('data-tab', tab.id);
+              button.addEventListener('click', function() {
+                // Deactivate all tabs in this container
+                tabContainer.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                tabContainer.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                // Activate clicked tab
+                button.classList.add('active');
+                tabContainer.querySelector('.tab-panel[data-tab="' + tab.id + '"]').classList.add('active');
+              });
+              tabButtons.appendChild(button);
+            });
+
+            tabContainer.appendChild(tabButtons);
+
+            // Create tab panels and move content
+            tabs.forEach(function(tab, index) {
+              const panel = document.createElement('div');
+              panel.className = 'tab-panel' + (index === 0 ? ' active' : '');
+              panel.setAttribute('data-tab', tab.id);
+              tab.content.forEach(function(el) {
+                panel.appendChild(el);
+              });
+              tabContainer.appendChild(panel);
+              // Remove the original tab header
+              tab.header.remove();
+            });
+
+            // Insert intro content right after tabset header, then tab container
+            let insertPoint = tabsetHeader;
+            introContent.forEach(function(el) {
+              insertPoint.after(el);
+              insertPoint = el;
+            });
+            insertPoint.after(tabContainer);
+          });
+
+          // Image Maximizer functionality
+          // Wraps images and SVGs in containers with expand functionality
+          const wrapElement = function(element) {
+            // Skip if already wrapped
+            if (element.parentElement && element.parentElement.classList.contains('img-wrapper')) return;
+
+            // Get element dimensions
+            const getWidth = function() {
+              if (element.tagName === 'IMG') {
+                return element.naturalWidth || element.width || element.clientWidth;
+              } else if (element.tagName === 'SVG') {
+                // For inline SVGs, try multiple methods to get width
+                // 1. Check viewBox attribute for intended dimensions
+                const viewBox = element.getAttribute('viewBox');
+                if (viewBox) {
+                  const parts = viewBox.split(/\s+|,/);
+                  if (parts.length >= 4) {
+                    const vbWidth = parseFloat(parts[2]);
+                    if (vbWidth > 0) return vbWidth;
+                  }
+                }
+                // 2. Check explicit width attribute
+                const widthAttr = element.getAttribute('width');
+                if (widthAttr && !widthAttr.includes('%')) {
+                  const w = parseFloat(widthAttr);
+                  if (w > 0) return w;
+                }
+                // 3. Try getBBox (may throw if SVG not rendered)
+                try {
+                  const bbox = element.getBBox ? element.getBBox() : null;
+                  if (bbox && bbox.width > 0) return bbox.width;
+                } catch (e) {
+                  // getBBox can throw if element is not in DOM or not rendered
+                }
+                // 4. Fall back to client dimensions
+                return element.clientWidth || element.getBoundingClientRect().width;
+              }
+              return 0;
+            };
+
+            // Only apply to images/SVGs wider than 200px (skip small icons)
+            const width = getWidth();
+            if (width < 200) return;
+
+            // Handle parent element - <div> inside <p> is invalid HTML and breaks rendering
+            const parent = element.parentNode;
+            if (parent && parent.tagName === 'P') {
+              // Replace <p> with <figure> to allow block-level content
+              const figure = document.createElement('figure');
+              figure.className = 'img-figure';
+              // Move all children from <p> to <figure>
+              while (parent.firstChild) {
+                figure.appendChild(parent.firstChild);
+              }
+              parent.parentNode.replaceChild(figure, parent);
+            }
+
+            // Create wrapper
+            const wrapper = document.createElement('div');
+            wrapper.className = 'img-wrapper';
+
+            // Create expand icon
+            const expandIcon = document.createElement('div');
+            expandIcon.className = 'img-expand-icon';
+            expandIcon.innerHTML = '⤢'; // Expand arrow symbol
+            expandIcon.setAttribute('title', 'Click to expand');
+
+            // Wrap element and add icon
+            element.parentNode.insertBefore(wrapper, element);
+            wrapper.appendChild(element);
+            wrapper.appendChild(expandIcon);
+
+            // Add click handler to maximize
+            const maximize = function() {
+              // Prevent body scroll
+              document.body.style.overflow = 'hidden';
+
+              // Create overlay
+              const overlay = document.createElement('div');
+              overlay.className = 'img-maximized-overlay';
+
+              // Create canvas container (handles pan/zoom transforms)
+              const canvas = document.createElement('div');
+              canvas.className = 'img-maximized-canvas';
+
+              // Create content container
+              const content = document.createElement('div');
+              content.className = 'img-maximized-content';
+
+              // Clone element
+              const maximizedElement = element.cloneNode(true);
+              maximizedElement.className = 'img-maximized';
+              
+              // Determine base dimensions for the image
+              let baseWidth, baseHeight;
+              const isSvg = element.tagName === 'IMG' && element.src && element.src.toLowerCase().endsWith('.svg');
+              
+              if (element.tagName === 'IMG') {
+                const natWidth = element.naturalWidth || element.clientWidth;
+                const natHeight = element.naturalHeight || element.clientHeight;
+                
+                if (natWidth && natHeight) {
+                  const maxW = window.innerWidth * 0.85;
+                  const maxH = window.innerHeight * 0.85;
+                  const aspectRatio = natWidth / natHeight;
+                  
+                  if (isSvg) {
+                    // Scale SVG to fit viewport initially
+                    if (maxW / aspectRatio <= maxH) {
+                      baseWidth = maxW;
+                      baseHeight = maxW / aspectRatio;
+                    } else {
+                      baseHeight = maxH;
+                      baseWidth = maxH * aspectRatio;
+                    }
+                    // Add white background for SVGs
+                    maximizedElement.style.backgroundColor = '#ffffff';
+                    maximizedElement.style.padding = '20px';
+                    maximizedElement.style.borderRadius = '8px';
+                  } else {
+                    // For raster images, start at natural size or fit to viewport
+                    const ratio = Math.min(maxW / natWidth, maxH / natHeight, 1);
+                    baseWidth = natWidth * ratio;
+                    baseHeight = natHeight * ratio;
+                  }
+                  
+                  maximizedElement.style.width = Math.round(baseWidth) + 'px';
+                  maximizedElement.style.height = Math.round(baseHeight) + 'px';
+                }
+              }
+
+              // Create controls container
+              const controls = document.createElement('div');
+              controls.className = 'img-maximized-controls';
+              
+              // Zoom indicator
+              const zoomIndicator = document.createElement('span');
+              zoomIndicator.className = 'img-zoom-indicator';
+              zoomIndicator.textContent = '100%';
+              
+              // Reset button
+              const resetBtn = document.createElement('button');
+              resetBtn.className = 'img-control-btn';
+              resetBtn.innerHTML = '⟲';
+              resetBtn.setAttribute('title', 'Reset zoom (R)');
+              
+              // Close button
+              const closeBtn = document.createElement('button');
+              closeBtn.className = 'img-close-btn';
+              closeBtn.innerHTML = '×';
+              closeBtn.setAttribute('title', 'Close (ESC)');
+              
+              controls.appendChild(zoomIndicator);
+              controls.appendChild(resetBtn);
+              controls.appendChild(closeBtn);
+
+              // Assemble
+              content.appendChild(maximizedElement);
+              canvas.appendChild(content);
+              overlay.appendChild(canvas);
+              overlay.appendChild(controls);
+              document.body.appendChild(overlay);
+
+              // Pan and zoom state
+              let scale = 1;
+              let panX = 0;
+              let panY = 0;
+              let isDragging = false;
+              let dragStartX = 0;
+              let dragStartY = 0;
+              let panStartX = 0;
+              let panStartY = 0;
+              
+              const updateTransform = function() {
+                content.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + scale + ')';
+                zoomIndicator.textContent = Math.round(scale * 100) + '%';
+              };
+              
+              const resetView = function() {
+                scale = 1;
+                panX = 0;
+                panY = 0;
+                updateTransform();
+              };
+
+              // Zoom with mouse wheel (zoom toward cursor position)
+              canvas.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left - rect.width / 2;
+                const mouseY = e.clientY - rect.top - rect.height / 2;
+                
+                const prevScale = scale;
+                const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+                scale = Math.min(Math.max(scale * zoomFactor, 0.1), 20);
+                
+                // Adjust pan to zoom toward cursor
+                const scaleChange = scale / prevScale;
+                panX = mouseX - (mouseX - panX) * scaleChange;
+                panY = mouseY - (mouseY - panY) * scaleChange;
+                
+                updateTransform();
+              }, { passive: false });
+
+              // Pan with mouse drag
+              canvas.addEventListener('mousedown', function(e) {
+                if (e.button !== 0) return; // Left click only
+                if (e.target === closeBtn || e.target === resetBtn) return;
+                
+                isDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                panStartX = panX;
+                panStartY = panY;
+                canvas.style.cursor = 'grabbing';
+                e.preventDefault();
+              });
+
+              document.addEventListener('mousemove', function moveHandler(e) {
+                if (!isDragging) return;
+                
+                panX = panStartX + (e.clientX - dragStartX);
+                panY = panStartY + (e.clientY - dragStartY);
+                updateTransform();
+              });
+
+              document.addEventListener('mouseup', function upHandler(e) {
+                if (isDragging) {
+                  isDragging = false;
+                  canvas.style.cursor = '';
+                }
+              });
+
+              // Touch support for mobile
+              let lastTouchDist = 0;
+              let lastTouchX = 0;
+              let lastTouchY = 0;
+              
+              canvas.addEventListener('touchstart', function(e) {
+                if (e.touches.length === 1) {
+                  isDragging = true;
+                  dragStartX = e.touches[0].clientX;
+                  dragStartY = e.touches[0].clientY;
+                  panStartX = panX;
+                  panStartY = panY;
+                } else if (e.touches.length === 2) {
+                  isDragging = false;
+                  lastTouchDist = Math.hypot(
+                    e.touches[1].clientX - e.touches[0].clientX,
+                    e.touches[1].clientY - e.touches[0].clientY
+                  );
+                  lastTouchX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                  lastTouchY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                }
+              }, { passive: true });
+
+              canvas.addEventListener('touchmove', function(e) {
+                if (e.touches.length === 1 && isDragging) {
+                  panX = panStartX + (e.touches[0].clientX - dragStartX);
+                  panY = panStartY + (e.touches[0].clientY - dragStartY);
+                  updateTransform();
+                  e.preventDefault();
+                } else if (e.touches.length === 2) {
+                  const dist = Math.hypot(
+                    e.touches[1].clientX - e.touches[0].clientX,
+                    e.touches[1].clientY - e.touches[0].clientY
+                  );
+                  const touchX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                  const touchY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                  
+                  if (lastTouchDist > 0) {
+                    const prevScale = scale;
+                    scale = Math.min(Math.max(scale * (dist / lastTouchDist), 0.1), 20);
+                    
+                    // Zoom toward pinch center
+                    const rect = canvas.getBoundingClientRect();
+                    const centerX = touchX - rect.left - rect.width / 2;
+                    const centerY = touchY - rect.top - rect.height / 2;
+                    const scaleChange = scale / prevScale;
+                    panX = centerX - (centerX - panX) * scaleChange;
+                    panY = centerY - (centerY - panY) * scaleChange;
+                  }
+                  
+                  lastTouchDist = dist;
+                  lastTouchX = touchX;
+                  lastTouchY = touchY;
+                  updateTransform();
+                  e.preventDefault();
+                }
+              }, { passive: false });
+
+              canvas.addEventListener('touchend', function(e) {
+                isDragging = false;
+                lastTouchDist = 0;
+              });
+
+              // Trigger animation
+              setTimeout(function() {
+                overlay.classList.add('active');
+              }, 10);
+
+              // Close handler
+              const close = function() {
+                overlay.classList.remove('active');
+                setTimeout(function() {
+                  overlay.remove();
+                  document.body.style.overflow = '';
+                }, 200);
+              };
+
+              // Event listeners for controls and keyboard
+              closeBtn.addEventListener('click', close);
+              resetBtn.addEventListener('click', resetView);
+              
+              overlay.addEventListener('click', function(e) {
+                if (e.target === overlay || e.target === canvas) close();
+              });
+              
+              document.addEventListener('keydown', function escHandler(e) {
+                if (e.key === 'Escape') {
+                  close();
+                  document.removeEventListener('keydown', escHandler);
+                } else if (e.key === 'r' || e.key === 'R') {
+                  resetView();
+                } else if (e.key === '+' || e.key === '=') {
+                  scale = Math.min(scale * 1.2, 20);
+                  updateTransform();
+                } else if (e.key === '-') {
+                  scale = Math.max(scale * 0.8, 0.1);
+                  updateTransform();
+                }
+              });
+            };
+
+            element.addEventListener('click', maximize);
+            expandIcon.addEventListener('click', maximize);
+          };
+
+          // Process inline SVGs immediately
+          document.querySelectorAll('svg').forEach(wrapElement);
+
+          // Process images - wait for load to get accurate dimensions
+          document.querySelectorAll('img').forEach(function(img) {
+            if (img.complete) {
+              wrapElement(img);
+            } else {
+              img.addEventListener('load', function() {
+                wrapElement(img);
+              });
+            }
+          });
+        });
+        </script>
+    </head>
+    <body>
+                 <header id="title-block-header">
+            <div class="left">
+                <h1 class="title">Diagramas UML - Diseño del Sistema
+IncidentFlow</h1>
+                            </div>
+            <div class="right">
+                             </div>
+        </header>
+                 <nav id="TOC" role="doc-toc">
+             <ul>
+<li><a href="#visión-general" id="toc-visión-general">Visión
+General</a></li>
+<li><a href="#diagrama-de-máquina-de-estados"
+id="toc-diagrama-de-máquina-de-estados">Diagrama de Máquina de
+Estados</a>
+<ul>
+<li><a href="#descripciones-de-estados"
+id="toc-descripciones-de-estados">Descripciones de Estados</a></li>
+<li><a href="#transiciones-válidas"
+id="toc-transiciones-válidas">Transiciones Válidas</a></li>
+</ul></li>
+<li><a href="#diagrama-de-clases" id="toc-diagrama-de-clases">Diagrama
+de Clases</a>
+<ul>
+<li><a href="#entidades-principales"
+id="toc-entidades-principales">Entidades Principales</a></li>
+<li><a href="#enumeraciones"
+id="toc-enumeraciones">Enumeraciones</a></li>
+<li><a href="#interfaces-de-repository-inversión-de-dependencia"
+id="toc-interfaces-de-repository-inversión-de-dependencia">Interfaces de
+Repository (Inversión de Dependencia)</a></li>
+</ul></li>
+<li><a href="#diagrama-de-secuencia-flujo-de-incidente-critical"
+id="toc-diagrama-de-secuencia-flujo-de-incidente-critical">Diagrama de
+Secuencia: Flujo de Incidente CRITICAL</a>
+<ul>
+<li><a href="#pasos-del-flujo" id="toc-pasos-del-flujo">Pasos del
+Flujo</a></li>
+</ul></li>
+<li><a href="#diagrama-de-casos-de-uso"
+id="toc-diagrama-de-casos-de-uso">Diagrama de Casos de Uso</a>
+<ul>
+<li><a href="#capacidades-por-rol"
+id="toc-capacidades-por-rol">Capacidades por Rol</a></li>
+</ul></li>
+<li><a href="#diagrama-de-arquitectura-hexagonal"
+id="toc-diagrama-de-arquitectura-hexagonal">Diagrama de Arquitectura
+Hexagonal</a>
+<ul>
+<li><a href="#capas-explicadas" id="toc-capas-explicadas">Capas
+Explicadas</a></li>
+<li><a href="#principios-arquitectónicos-clave"
+id="toc-principios-arquitectónicos-clave">Principios Arquitectónicos
+Clave</a></li>
+</ul></li>
+<li><a href="#generación-de-diagramas"
+id="toc-generación-de-diagramas">Generación de Diagramas</a></li>
+<li><a href="#próximos-pasos" id="toc-próximos-pasos">Próximos
+Pasos</a></li>
+</ul>
+        </nav>
+         <h2 id="visión-general">Visión General</h2>
+<p>Este documento contiene los diagramas PlantUML que visualizan la
+arquitectura del sistema IncidentFlow, modelo de dominio, flujos de
+trabajo y casos de uso. Estos diagramas son esenciales para entender el
+diseño del sistema y sirven como referencia para la implementación.</p>
+<h2 id="diagrama-de-máquina-de-estados">Diagrama de Máquina de
+Estados</h2>
+<p>El diagrama de máquina de estados muestra el ciclo de vida de un
+incidente y todas las transiciones válidas entre estados.</p>
+<figure>
+<img src="../resources/images/IncidentFlowStateMachine.svg"
+alt="Diagrama de Máquina de Estados" />
+<figcaption aria-hidden="true">Diagrama de Máquina de
+Estados</figcaption>
+</figure>
+<h3 id="descripciones-de-estados">Descripciones de Estados</h3>
+<ul>
+<li><strong>OPEN</strong>: Estado inicial cuando se reporta un
+incidente</li>
+<li><strong>TRIAGED</strong>: El incidente ha sido evaluado por
+severidad e impacto</li>
+<li><strong>ASSIGNED</strong>: El incidente ha sido asignado a un
+respondedor técnico</li>
+<li><strong>IN_PROGRESS</strong>: El respondedor asignado está
+trabajando activamente en la solución</li>
+<li><strong>RESOLVED</strong>: La solución ha sido implementada pero aún
+no formalmente cerrada</li>
+<li><strong>CLOSED</strong>: El incidente está formalmente cerrado con
+resumen y auditoría completa</li>
+<li><strong>ESCALATED</strong>: Puede activarse desde cualquier estado;
+incidente escalado a un nivel superior</li>
+<li><strong>CANCELLED</strong>: El incidente fue una falsa alarma o ya
+no es relevante</li>
+</ul>
+<h3 id="transiciones-válidas">Transiciones Válidas</h3>
+<p>Desde <strong>OPEN</strong>:</p>
+<ul>
+<li>→ TRIAGED (después de evaluación)</li>
+<li>→ CANCELLED (si es falsa alarma)</li>
+<li>→ ESCALATED (si necesita escalamiento inmediato)</li>
+</ul>
+<p>Desde <strong>TRIAGED</strong>:</p>
+<ul>
+<li>→ ASSIGNED (cuando se asigna el respondedor)</li>
+<li>→ CANCELLED (si se determina que no es urgente)</li>
+<li>→ ESCALATED (si se necesita escalamiento)</li>
+</ul>
+<p>Desde <strong>ASSIGNED</strong>:</p>
+<ul>
+<li>→ IN_PROGRESS (cuando inicia el trabajo)</li>
+<li>→ CANCELLED (si no se necesita)</li>
+<li>→ ESCALATED (para escalar)</li>
+</ul>
+<p>Desde <strong>IN_PROGRESS</strong>:</p>
+<ul>
+<li>→ RESOLVED (cuando se implementa la solución)</li>
+<li>→ ESCALATED (para escalar)</li>
+</ul>
+<p>Desde <strong>RESOLVED</strong>:</p>
+<ul>
+<li>→ CLOSED (solo Commander/Admin puede cerrar; CRITICAL requiere
+resumen)</li>
+<li>→ IN_PROGRESS (si el problema reaparece)</li>
+</ul>
+<p>Desde <strong>ESCALATED</strong>:</p>
+<ul>
+<li>→ ASSIGNED (reasignar y continuar)</li>
+<li>→ IN_PROGRESS (continuar desde escalamiento)</li>
+</ul>
+<p>Desde <strong>CANCELLED</strong> o <strong>CLOSED</strong>:</p>
+<ul>
+<li>→ [Fin] (Estados terminales)</li>
+</ul>
+<h2 id="diagrama-de-clases">Diagrama de Clases</h2>
+<p>El diagrama de clases muestra las entidades del dominio, sus
+atributos, relaciones e interfaces clave para el patrón repository.</p>
+<figure>
+<img src="../resources/images/IncidentFlowClassDiagram.svg"
+alt="Diagrama de Clases" />
+<figcaption aria-hidden="true">Diagrama de Clases</figcaption>
+</figure>
+<h3 id="entidades-principales">Entidades Principales</h3>
+<p><strong>Usuario</strong></p>
+<ul>
+<li>id: UUID</li>
+<li>email: str</li>
+<li>nombre: str</li>
+<li>rol: Rol (Operator, Commander, Responder, Manager, Admin)</li>
+<li>activo: bool</li>
+<li>creado_en: DateTime</li>
+</ul>
+<p><strong>Incidente</strong> (Raíz de Agregado)</p>
+<ul>
+<li>id: UUID</li>
+<li>título: str</li>
+<li>descripción: str</li>
+<li>severidad: Severidad (LOW, MEDIUM, HIGH, CRITICAL)</li>
+<li>estado: EstadoIncidente</li>
+<li>creador_id: UUID (referencia a Usuario)</li>
+<li>asignador_id: UUID (referencia a Usuario, nullable)</li>
+<li>creado_en: DateTime</li>
+<li>actualizado_en: DateTime</li>
+<li>resuelto_en: DateTime (nullable)</li>
+<li>cerrado_en: DateTime (nullable)</li>
+<li>resumen_resolución: str (nullable)</li>
+</ul>
+<p>Métodos clave:</p>
+<ul>
+<li><code>cambiar_estado(nuevo_estado, usuario)</code>: Cambia el estado
+del incidente con validación</li>
+<li><code>asignar(usuario, commander)</code>: Asigna el incidente a un
+usuario</li>
+<li><code>agregar_comentario(texto, usuario)</code>: Agrega un
+comentario al timeline</li>
+<li><code>cambiar_severidad(nueva_severidad, usuario)</code>: Cambia la
+severidad con auditoría</li>
+<li><code>puede_cerrar()</code>: Valida si el incidente puede cerrarse
+(CRITICAL requiere resumen)</li>
+<li><code>es_critical()</code>: Retorna true si la severidad es
+CRITICAL</li>
+</ul>
+<p><strong>Comentario</strong></p>
+<ul>
+<li>id: UUID</li>
+<li>incidente_id: UUID (referencia a Incidente)</li>
+<li>autor_id: UUID (referencia a Usuario)</li>
+<li>texto: str</li>
+<li>creado_en: DateTime</li>
+</ul>
+<p><strong>LogAuditoría</strong> (para cumplimiento y depuración)</p>
+<ul>
+<li>id: UUID</li>
+<li>incidente_id: UUID (referencia a Incidente)</li>
+<li>usuario_id: UUID (referencia a Usuario)</li>
+<li>acción: str (qué cambió: estado, severidad, asignación, etc)</li>
+<li>valor_anterior: str (nullable)</li>
+<li>valor_nuevo: str (nullable)</li>
+<li>timestamp: DateTime</li>
+<li>detalles: JSON (contexto adicional)</li>
+</ul>
+<p><strong>Notificación</strong></p>
+<ul>
+<li>id: UUID</li>
+<li>usuario_id: UUID (referencia a Usuario)</li>
+<li>incidente_id: UUID (referencia a Incidente)</li>
+<li>tipo_evento: str (INCIDENTE_CREADO, SEVERIDAD_CAMBIADA, etc)</li>
+<li>mensaje: str</li>
+<li>leída: bool</li>
+<li>created_at: DateTime</li>
+</ul>
+<h3 id="enumeraciones">Enumeraciones</h3>
+<p><strong>Severidad</strong></p>
+<ul>
+<li>LOW</li>
+<li>MEDIUM</li>
+<li>HIGH</li>
+<li>CRITICAL</li>
+</ul>
+<p><strong>EstadoIncidente</strong></p>
+<ul>
+<li>OPEN</li>
+<li>TRIAGED</li>
+<li>ASSIGNED</li>
+<li>IN_PROGRESS</li>
+<li>RESOLVED</li>
+<li>CLOSED</li>
+<li>ESCALATED</li>
+<li>CANCELLED</li>
+</ul>
+<p><strong>Rol</strong></p>
+<ul>
+<li>OPERATOR</li>
+<li>COMMANDER</li>
+<li>RESPONDER</li>
+<li>MANAGER</li>
+<li>ADMIN</li>
+</ul>
+<h3 id="interfaces-de-repository-inversión-de-dependencia">Interfaces de
+Repository (Inversión de Dependencia)</h3>
+<p>Todas las implementaciones de la capa de infraestructura dependen de
+estas interfaces del dominio:</p>
+<ul>
+<li><strong>IIncidentRepository</strong>: Operaciones CRUD en
+incidentes, filtrado por estado/severidad/asignado</li>
+<li><strong>ICommentRepository</strong>: Crear y recuperar comentarios
+de incidentes</li>
+<li><strong>IAuditLogRepository</strong>: Crear y recuperar logs de
+auditoría</li>
+<li><strong>IUserRepository</strong>: Recuperar información de usuario
+por ID o email</li>
+<li><strong>IEventBus</strong>: Publicar eventos, suscribir a
+manejadores de eventos</li>
+</ul>
+<h2 id="diagrama-de-secuencia-flujo-de-incidente-critical">Diagrama de
+Secuencia: Flujo de Incidente CRITICAL</h2>
+<p>Este diagrama de secuencia ilustra el ciclo de vida completo de un
+incidente de severidad CRITICAL desde su creación hasta la resolución y
+cierre.</p>
+<figure>
+<img src="../resources/images/IncidentFlowSequenceCritical.svg"
+alt="Diagrama de Secuencia" />
+<figcaption aria-hidden="true">Diagrama de Secuencia</figcaption>
+</figure>
+<h3 id="pasos-del-flujo">Pasos del Flujo</h3>
+<ol type="1">
+<li><strong>Operador crea incidente CRITICAL</strong> vía UI de
+Streamlit</li>
+<li><strong>Frontend envía solicitud POST /incidentes</strong> a la
+API</li>
+<li><strong>Capa API valida</strong> y rutea a la capa de
+Aplicación</li>
+<li><strong>Capa de Aplicación:</strong></li>
+</ol>
+<ul>
+<li>Valida datos del incidente</li>
+<li>Guarda en base de datos</li>
+<li>Publica evento INCIDENTE_CREADO</li>
+<li>Como severidad=CRITICAL, publica eventos de notificación</li>
+</ul>
+<ol start="5" type="1">
+<li><strong>Event Bus notifica</strong> a Commander y Manager
+inmediatamente (notificaciones en memoria)</li>
+<li><strong>Commander recibe notificación</strong> y ve los detalles del
+incidente</li>
+<li><strong>Commander asigna</strong> incidente a un Technical Responder
+y cambia estado a ASSIGNED</li>
+<li><strong>Sistema аудит</strong> la asignación y publica evento
+INCIDENTE_ASIGNADO</li>
+<li><strong>Responder es notificado</strong> de la asignación</li>
+<li><strong>Responder inicia trabajo</strong>, transiciona a
+IN_PROGRESS</li>
+<li><strong>Responder agrega comentario</strong> con detalles de
+investigación</li>
+<li><strong>Responder resuelve</strong> el incidente y transiciona a
+RESOLVED</li>
+<li><strong>Sistema notifica</strong> al Manager de la resolución</li>
+<li><strong>Commander cierra</strong> el incidente (solo Commander/Admin
+puede hacer esto para CRITICAL)</li>
+<li><strong>Sistema valida</strong> que el incidente CRITICAL tiene un
+resumen antes de permitir el cierre</li>
+<li><strong>Sistema аудит</strong> el cierre y publica evento
+INCIDENTE_CERRADO</li>
+<li><strong>Estado final</strong>: Incidente está CERRADO con timeline
+completo y auditoría</li>
+</ol>
+<h2 id="diagrama-de-casos-de-uso">Diagrama de Casos de Uso</h2>
+<p>El diagrama de casos de uso muestra qué acciones puede realizar cada
+rol en el sistema IncidentFlow.</p>
+<figure>
+<img src="../resources/images/IncidentFlowUseCaseDiagram.svg"
+alt="Diagrama de Casos de Uso" />
+<figcaption aria-hidden="true">Diagrama de Casos de Uso</figcaption>
+</figure>
+<h3 id="capacidades-por-rol">Capacidades por Rol</h3>
+<p><strong>Operador</strong></p>
+<ul>
+<li>Crear Incidente</li>
+<li>Agregar Comentario</li>
+<li>Ver Incidente</li>
+<li>Ver Dashboard (lista básica)</li>
+</ul>
+<p><strong>Incident Commander</strong> (Más Acciones)</p>
+<ul>
+<li>Crear Incidente</li>
+<li>Triar Incidente</li>
+<li>Asignar Incidente</li>
+<li>Agregar Comentario</li>
+<li>Cambiar Estado (con restricciones)</li>
+<li>Cambiar Severidad</li>
+<li>Ver Incidente</li>
+<li>Ver Dashboard (con enfoque en asignaciones y timeline)</li>
+<li>Escalar Incidente</li>
+<li>Cerrar Incidente (restringido: CRITICAL necesita resumen)</li>
+</ul>
+<p><strong>Technical Responder</strong></p>
+<ul>
+<li>Agregar Comentario</li>
+<li>Cambiar Estado (limitado: puede mover a IN_PROGRESS, RESOLVED)</li>
+<li>Ver Incidente</li>
+<li>Ver Dashboard (sus incidentes asignados)</li>
+</ul>
+<p><strong>Manager</strong> (Solo Lectura + Auditoría)</p>
+<ul>
+<li>Ver Incidente (solo lectura)</li>
+<li>Ver Dashboard (métricas, distribución de incidentes, count sin
+asignar)</li>
+<li>Ver Log de Auditoría (visibilidad completa para cumplimiento)</li>
+</ul>
+<p><strong>Admin</strong> (Acceso Completo)</p>
+<ul>
+<li>Todas las acciones de todos los roles</li>
+<li>Crear/Gestionar Usuarios</li>
+<li>Reasignar Incidentes</li>
+<li>Acceso Completo al Log de Auditoría</li>
+</ul>
+<h2 id="diagrama-de-arquitectura-hexagonal">Diagrama de Arquitectura
+Hexagonal</h2>
+<p>Este diagrama muestra cómo el sistema está organizado en una
+arquitectura hexagonal (clean) con clara separación de
+responsabilidades.</p>
+<figure>
+<img src="../resources/images/IncidentFlowArchitecture.svg"
+alt="Arquitectura Hexagonal" />
+<figcaption aria-hidden="true">Arquitectura Hexagonal</figcaption>
+</figure>
+<h3 id="capas-explicadas">Capas Explicadas</h3>
+<h4 id="capa-de-frontend">Capa de Frontend</h4>
+<ul>
+<li><strong>UI Streamlit</strong>: Interfaz multi-página para diferentes
+roles de usuario</li>
+<li>Maneja lógica de presentación e interacción del usuario</li>
+<li>Llama a endpoints de la API del Backend</li>
+</ul>
+<h4 id="capa-api">Capa API</h4>
+<ul>
+<li><strong>Endpoints REST FastAPI</strong>: Toda comunicación
+externa</li>
+<li>Validación de solicitudes y serialización de respuestas</li>
+<li>Decoradores de permisos para autorización</li>
+</ul>
+<h4 id="capa-de-aplicación">Capa de Aplicación</h4>
+<ul>
+<li><strong>Casos de Uso</strong>: Operaciones de negocio
+(CrearIncidente, TriarIncidente, etc)</li>
+<li>Orquesta entidades del dominio y servicios de infraestructura</li>
+<li>No hay llamadas directas a base de datos; depende de interfaces de
+repository</li>
+<li>DTOs validan entrada y dan forma a la salida</li>
+</ul>
+<h4 id="capa-de-dominio-core---sin-dependencias-externas">Capa de
+Dominio (Core - Sin Dependencias Externas)</h4>
+<ul>
+<li><strong>Entidades</strong>: Objetos de negocio con identidad
+(Incidente, Usuario, Comentario)</li>
+<li><strong>Objetos de Valor</strong>: Enumeraciones (Severidad,
+EstadoIncidente, Rol)</li>
+<li><strong>Reglas de Negocio</strong>: Máquina de estados,
+restricciones CRITICAL, permisos</li>
+<li><strong>Abstracciones (Interfaces)</strong>: IIncidentRepository,
+IEventBus, etc</li>
+<li><strong>Esta capa es testeable en aislamiento</strong> sin
+mocks</li>
+</ul>
+<h4 id="capa-de-infraestructura">Capa de Infraestructura</h4>
+<ul>
+<li><strong>Repositories</strong>: Implementaciones concretas de
+interfaces del dominio</li>
+<li><strong>Base de Datos</strong>: PostgreSQL con ORM SQLAlchemy y
+migraciones Alembic</li>
+<li><strong>Event Bus</strong>: Publicar/suscribir en memoria para
+eventos y notificaciones</li>
+<li>Depende de abstracciones del dominio (principio de inversión de
+dependencia)</li>
+</ul>
+<h3 id="principios-arquitectónicos-clave">Principios Arquitectónicos
+Clave</h3>
+<ol type="1">
+<li><strong>Inversión de Dependencia</strong>: Módulos de alto nivel no
+dependen de módulos de bajo nivel; ambos dependen de abstracciones</li>
+<li><strong>Responsabilidad Única</strong>: Cada capa tiene una razón
+para cambiar</li>
+<li><strong>Testabilidad</strong>: Capa de dominio es testeable sin test
+doubles</li>
+<li><strong>Flexibilidad</strong>: Fácil cambiar implementaciones (ej:
+diferente base de datos, event bus)</li>
+</ol>
+<h2 id="generación-de-diagramas">Generación de Diagramas</h2>
+<p>Todos los diagramas se generan desde archivos fuente PlantUML (.puml)
+y se compilan a PNG usando:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> shell nixpkgs#plantuml <span class="at">--command</span> plantuml <span class="at">-o</span> docs-src/resources/images docs-src/uml/<span class="pp">*</span>.puml</span></code></pre></div>
+<p>O vía el método de compilación documentado:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop path:. <span class="at">--command</span> tern-core</span></code></pre></div>
+<h2 id="próximos-pasos">Próximos Pasos</h2>
+<p>Estos diagramas deben guiar:</p>
+<ul>
+<li>Implementación de la capa de dominio y repositories del backend</li>
+<li>Diseño de UI y flujo de trabajo del frontend</li>
+<li>Diseño y validación de endpoints de API</li>
+<li>Diseño de casos de prueba y fixtures de testing</li>
+<li>Discusiones de equipo y code reviews</li>
+</ul> 
+    </body>
+</html>

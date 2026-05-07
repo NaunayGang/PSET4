@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Severity(str, Enum):
     LOW = "low"
     MEDIUM = "medium"
@@ -8,3 +9,4 @@ class Severity(str, Enum):
 
     def __str__(self) -> str:
         return self.value
+

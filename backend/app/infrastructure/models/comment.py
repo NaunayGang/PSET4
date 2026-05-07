@@ -1,7 +1,14 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
+
 from app.infrastructure.database.base import Base
-from sqlalchemy import String, DateTime, ForeignKey, Enum as SAEnum, Integer, func
+from sqlalchemy import DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from .incident import Incident
+    from .user import User
+
 
 class Comment(Base):
     __tablename__ = "comments"
@@ -18,3 +25,4 @@ class Comment(Base):
 
     author: Mapped["User"] = relationship("User", back_populates="comments")
     incident: Mapped["Incident"] = relationship("Incident", back_populates="comments")
+

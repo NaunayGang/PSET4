@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 
+
 @dataclass
 class Comment:
     id: int
@@ -8,3 +9,4 @@ class Comment:
     author_id: int
     timestamp: datetime
     content: str
+

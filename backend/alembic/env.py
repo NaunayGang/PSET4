@@ -1,15 +1,15 @@
+import os
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from app.infrastructure.database.base import Base
+from sqlalchemy import engine_from_config, pool
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
-import os
+
 db_url = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/incident_flow")
 config.set_main_option("sqlalchemy.url", db_url)
 
@@ -22,11 +22,6 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from app.infrastructure.database.base import Base
-from app.infrastructure.models.comment import Comment
-from app.infrastructure.models.incident import Incident
-from app.infrastructure.models.log import Log
-from app.infrastructure.models.user import User
 
 target_metadata = Base.metadata
 
@@ -79,7 +74,8 @@ def run_migrations_online() -> None:
         context.configure(
             compare_type=True,
             compare_server_default=True,
-            connection=connection, target_metadata=target_metadata
+            connection=connection,
+            target_metadata=target_metadata,
         )
 
         with context.begin_transaction():
