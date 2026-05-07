@@ -632,23 +632,44 @@ incident escalated to higher level</li>
 relevant</li>
 </ul>
 <h3 id="valid-transitions">Valid Transitions</h3>
-<p>From <strong>OPEN</strong>: - → TRIAGED (after evaluation) - →
-CANCELLED (if false alarm) - → ESCALATED (if needs immediate
-escalation)</p>
-<p>From <strong>TRIAGED</strong>: - → ASSIGNED (when responder assigned)
-- → CANCELLED (if determined not urgent) - → ESCALATED (if escalation
-needed)</p>
-<p>From <strong>ASSIGNED</strong>: - → IN_PROGRESS (when work starts) -
-→ CANCELLED (if not needed) - → ESCALATED (for escalation)</p>
-<p>From <strong>IN_PROGRESS</strong>: - → RESOLVED (when solution
-implemented) - → ESCALATED (for escalation)</p>
-<p>From <strong>RESOLVED</strong>: - → CLOSED (only Commander/Admin can
-close; CRITICAL requires summary) - → IN_PROGRESS (if issue
-resurfaces)</p>
-<p>From <strong>ESCALATED</strong>: - → ASSIGNED (reassign and continue)
-- → IN_PROGRESS (continue from escalation)</p>
-<p>From <strong>CANCELLED</strong> or <strong>CLOSED</strong>: - → [End]
-(Terminal states)</p>
+<p>From <strong>OPEN</strong>:</p>
+<ul>
+<li>→ TRIAGED (after evaluation)</li>
+<li>→ CANCELLED (if false alarm)</li>
+<li>→ ESCALATED (if needs immediate escalation)</li>
+</ul>
+<p>From <strong>TRIAGED</strong>:</p>
+<ul>
+<li>→ ASSIGNED (when responder assigned)</li>
+<li>→ CANCELLED (if determined not urgent)</li>
+<li>→ ESCALATED (if escalation needed)</li>
+</ul>
+<p>From <strong>ASSIGNED</strong>:</p>
+<ul>
+<li>→ IN_PROGRESS (when work starts)</li>
+<li>→ CANCELLED (if not needed)</li>
+<li>→ ESCALATED (for escalation)</li>
+</ul>
+<p>From <strong>IN_PROGRESS</strong>:</p>
+<ul>
+<li>→ RESOLVED (when solution implemented)</li>
+<li>→ ESCALATED (for escalation)</li>
+</ul>
+<p>From <strong>RESOLVED</strong>:</p>
+<ul>
+<li>→ CLOSED (only Commander/Admin can close; CRITICAL requires
+summary)</li>
+<li>→ IN_PROGRESS (if issue resurfaces)</li>
+</ul>
+<p>From <strong>ESCALATED</strong>:</p>
+<ul>
+<li>→ ASSIGNED (reassign and continue)</li>
+<li>→ IN_PROGRESS (continue from escalation)</li>
+</ul>
+<p>From <strong>CANCELLED</strong> or <strong>CLOSED</strong>:</p>
+<ul>
+<li>→ [End] (Terminal states)</li>
+</ul>
 <h2 id="class-diagram">Class Diagram</h2>
 <p>The class diagram shows the domain entities, their attributes,
 relationships, and key interfaces for the repository pattern.</p>
@@ -658,41 +679,101 @@ alt="Class Diagram" />
 <figcaption aria-hidden="true">Class Diagram</figcaption>
 </figure>
 <h3 id="core-entities">Core Entities</h3>
-<p><strong>User</strong> - id: UUID - email: str - name: str - role:
-Role (Operator, Commander, Responder, Manager, Admin) - active: bool -
-created_at: DateTime</p>
-<p><strong>Incident</strong> (Aggregate Root) - id: UUID - title: str -
-description: str - severity: Severity (LOW, MEDIUM, HIGH, CRITICAL) -
-state: IncidentState - creator_id: UUID (references User) - assignee_id:
-UUID (references User, nullable) - created_at: DateTime - updated_at:
-DateTime - resolved_at: DateTime (nullable) - closed_at: DateTime
-(nullable) - resolution_summary: str (nullable)</p>
-<p>Key methods: - <code>transition_state(new_state, user)</code>:
-Changes incident state with validation -
-<code>assign(user, commander)</code>: Assigns incident to a user -
-<code>add_comment(text, user)</code>: Adds a comment to incident
-timeline - <code>change_severity(new_severity, user)</code>: Changes
-severity with audit trail - <code>can_close()</code>: Validates if
-incident can be closed (CRITICAL requires summary) -
-<code>is_critical()</code>: Returns true if severity is CRITICAL</p>
-<p><strong>Comment</strong> - id: UUID - incident_id: UUID (references
-Incident) - author_id: UUID (references User) - text: str - created_at:
-DateTime</p>
-<p><strong>AuditLog</strong> (for compliance and debugging) - id: UUID -
-incident_id: UUID (references Incident) - user_id: UUID (references
-User) - action: str (what changed: state, severity, assignment, etc) -
-old_value: str (nullable) - new_value: str (nullable) - timestamp:
-DateTime - details: JSON (additional context)</p>
-<p><strong>Notification</strong> - id: UUID - user_id: UUID (references
-User) - incident_id: UUID (references Incident) - event_type: str
-(INCIDENT_CREATED, SEVERITY_CHANGED, etc) - message: str - read: bool -
-created_at: DateTime</p>
+<p><strong>User</strong></p>
+<ul>
+<li>id: UUID</li>
+<li>email: str</li>
+<li>name: str</li>
+<li>role: Role (Operator, Commander, Responder, Manager, Admin)</li>
+<li>active: bool</li>
+<li>created_at: DateTime</li>
+</ul>
+<p><strong>Incident</strong> (Aggregate Root)</p>
+<ul>
+<li>id: UUID</li>
+<li>title: str</li>
+<li>description: str</li>
+<li>severity: Severity (LOW, MEDIUM, HIGH, CRITICAL)</li>
+<li>state: IncidentState</li>
+<li>creator_id: UUID (references User)</li>
+<li>assignee_id: UUID (references User, nullable)</li>
+<li>created_at: DateTime</li>
+<li>updated_at: DateTime</li>
+<li>resolved_at: DateTime (nullable)</li>
+<li>closed_at: DateTime (nullable)</li>
+<li>resolution_summary: str (nullable)</li>
+</ul>
+<p>Key methods:</p>
+<ul>
+<li><code>transition_state(new_state, user)</code>: Changes incident
+state with validation</li>
+<li><code>assign(user, commander)</code>: Assigns incident to a
+user</li>
+<li><code>add_comment(text, user)</code>: Adds a comment to incident
+timeline</li>
+<li><code>change_severity(new_severity, user)</code>: Changes severity
+with audit trail</li>
+<li><code>can_close()</code>: Validates if incident can be closed
+(CRITICAL requires summary)</li>
+<li><code>is_critical()</code>: Returns true if severity is
+CRITICAL</li>
+</ul>
+<p><strong>Comment</strong></p>
+<ul>
+<li>id: UUID</li>
+<li>incident_id: UUID (references Incident)</li>
+<li>author_id: UUID (references User)</li>
+<li>text: str</li>
+<li>created_at: DateTime</li>
+</ul>
+<p><strong>AuditLog</strong> (for compliance and debugging)</p>
+<ul>
+<li>id: UUID</li>
+<li>incident_id: UUID (references Incident)</li>
+<li>user_id: UUID (references User)</li>
+<li>action: str (what changed: state, severity, assignment, etc)</li>
+<li>old_value: str (nullable)</li>
+<li>new_value: str (nullable)</li>
+<li>timestamp: DateTime</li>
+<li>details: JSON (additional context)</li>
+</ul>
+<p><strong>Notification</strong></p>
+<ul>
+<li>id: UUID</li>
+<li>user_id: UUID (references User)</li>
+<li>incident_id: UUID (references Incident)</li>
+<li>event_type: str (INCIDENT_CREATED, SEVERITY_CHANGED, etc)</li>
+<li>message: str</li>
+<li>read: bool</li>
+<li>created_at: DateTime</li>
+</ul>
 <h3 id="enumerations">Enumerations</h3>
-<p><strong>Severity</strong> - LOW - MEDIUM - HIGH - CRITICAL</p>
-<p><strong>IncidentState</strong> - OPEN - TRIAGED - ASSIGNED -
-IN_PROGRESS - RESOLVED - CLOSED - ESCALATED - CANCELLED</p>
-<p><strong>Role</strong> - OPERATOR - COMMANDER - RESPONDER - MANAGER -
-ADMIN</p>
+<p><strong>Severity</strong></p>
+<ul>
+<li>LOW</li>
+<li>MEDIUM</li>
+<li>HIGH</li>
+<li>CRITICAL</li>
+</ul>
+<p><strong>IncidentState</strong></p>
+<ul>
+<li>OPEN</li>
+<li>TRIAGED</li>
+<li>ASSIGNED</li>
+<li>IN_PROGRESS</li>
+<li>RESOLVED</li>
+<li>CLOSED</li>
+<li>ESCALATED</li>
+<li>CANCELLED</li>
+</ul>
+<p><strong>Role</strong></p>
+<ul>
+<li>OPERATOR</li>
+<li>COMMANDER</li>
+<li>RESPONDER</li>
+<li>MANAGER</li>
+<li>ADMIN</li>
+</ul>
 <h3 id="repository-interfaces-dependency-inversion">Repository
 Interfaces (Dependency Inversion)</h3>
 <p>All infrastructure layer implementations depend on these domain
@@ -725,13 +806,15 @@ UI</li>
 <li><strong>Frontend sends POST /incidents</strong> request to API</li>
 <li><strong>API layer validates</strong> and routes to Application
 layer</li>
-<li><strong>Application layer:</strong>
+<li><strong>Application layer:</strong></li>
+</ol>
 <ul>
 <li>Validates incident data</li>
 <li>Saves to database</li>
 <li>Publishes INCIDENT_CREATED event</li>
 <li>Because severity=CRITICAL, publishes notification events</li>
-</ul></li>
+</ul>
+<ol start="5" type="1">
 <li><strong>Event Bus notifies</strong> Commander and Manager
 immediately (in-memory notifications)</li>
 <li><strong>Commander receives notification</strong> and views incident
@@ -766,21 +849,47 @@ alt="Use Case Diagram" />
 <figcaption aria-hidden="true">Use Case Diagram</figcaption>
 </figure>
 <h3 id="role-capabilities">Role Capabilities</h3>
-<p><strong>Operator</strong> - Create Incident - Add Comment - View
-Incident - View Dashboard (basic list)</p>
-<p><strong>Incident Commander</strong> (Most Actions) - Create Incident
-- Triage Incident - Assign Incident - Add Comment - Change State (with
-restrictions) - Change Severity - View Incident - View Dashboard (with
-assignments and timeline focus) - Escalate Incident - Close Incident
-(restricted: CRITICAL needs summary)</p>
-<p><strong>Technical Responder</strong> - Add Comment - Change State
-(limited: can move to IN_PROGRESS, RESOLVED) - View Incident - View
-Dashboard (their assigned incidents)</p>
-<p><strong>Manager</strong> (Read-Only + Audit) - View Incident
-(read-only) - View Dashboard (metrics, incident distribution, unassigned
-count) - View Audit Log (full visibility for compliance)</p>
-<p><strong>Admin</strong> (Full Access) - All actions from all roles -
-Create/Manage Users - Reassign Incidents - Full Audit Log Access</p>
+<p><strong>Operator</strong></p>
+<ul>
+<li>Create Incident</li>
+<li>Add Comment</li>
+<li>View Incident</li>
+<li>View Dashboard (basic list)</li>
+</ul>
+<p><strong>Incident Commander</strong> (Most Actions)</p>
+<ul>
+<li>Create Incident</li>
+<li>Triage Incident</li>
+<li>Assign Incident</li>
+<li>Add Comment</li>
+<li>Change State (with restrictions)</li>
+<li>Change Severity</li>
+<li>View Incident</li>
+<li>View Dashboard (with assignments and timeline focus)</li>
+<li>Escalate Incident</li>
+<li>Close Incident (restricted: CRITICAL needs summary)</li>
+</ul>
+<p><strong>Technical Responder</strong></p>
+<ul>
+<li>Add Comment</li>
+<li>Change State (limited: can move to IN_PROGRESS, RESOLVED)</li>
+<li>View Incident</li>
+<li>View Dashboard (their assigned incidents)</li>
+</ul>
+<p><strong>Manager</strong> (Read-Only + Audit)</p>
+<ul>
+<li>View Incident (read-only)</li>
+<li>View Dashboard (metrics, incident distribution, unassigned
+count)</li>
+<li>View Audit Log (full visibility for compliance)</li>
+</ul>
+<p><strong>Admin</strong> (Full Access)</p>
+<ul>
+<li>All actions from all roles</li>
+<li>Create/Manage Users</li>
+<li>Reassign Incidents</li>
+<li>Full Audit Log Access</li>
+</ul>
 <h2 id="hexagonal-architecture-diagram">Hexagonal Architecture
 Diagram</h2>
 <p>This diagram shows how the system is organized in a hexagonal (clean)
@@ -857,9 +966,13 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop path:. <span class="at">--command</span> tern-core</span></code></pre></div>
 <h2 id="next-steps">Next Steps</h2>
-<p>These diagrams should guide: - Backend implementation of the domain
-layer and repositories - Frontend UI design and workflow implementation
-- API endpoint design and validation - Test case design and test
-fixtures - Team discussions and code reviews</p> 
+<p>These diagrams should guide:</p>
+<ul>
+<li>Backend implementation of the domain layer and repositories</li>
+<li>Frontend UI design and workflow implementation</li>
+<li>API endpoint design and validation</li>
+<li>Test case design and test fixtures</li>
+<li>Team discussions and code reviews</li>
+</ul> 
     </body>
 </html>
