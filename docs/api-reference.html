@@ -546,114 +546,121 @@
     <body>
                  <header id="title-block-header">
             <div class="left">
-                <h1 class="title">API Reference - IncidentFlow</h1>
+                <h1 class="title">Referencia de API - IncidentFlow</h1>
                             </div>
             <div class="right">
                              </div>
         </header>
                  <nav id="TOC" role="doc-toc">
              <ul>
-<li><a href="#introduction" id="toc-introduction">Introduction</a></li>
-<li><a href="#severity-levels" id="toc-severity-levels">Severity
-Levels</a></li>
-<li><a href="#incident-states" id="toc-incident-states">Incident
-States</a></li>
+<li><a href="#introducción" id="toc-introducción">Introducción</a></li>
+<li><a href="#niveles-de-severidad"
+id="toc-niveles-de-severidad">Niveles de Severidad</a></li>
+<li><a href="#estados-de-incidente"
+id="toc-estados-de-incidente">Estados de Incidente</a></li>
 <li><a href="#roles" id="toc-roles">Roles</a></li>
-<li><a href="#incidents" id="toc-incidents">Incidents</a>
+<li><a href="#incidentes" id="toc-incidentes">Incidentes</a>
 <ul>
-<li><a href="#create-incident" id="toc-create-incident">Create
-Incident</a></li>
-<li><a href="#triage-incident" id="toc-triage-incident">Triage
-Incident</a></li>
-<li><a href="#transition-state" id="toc-transition-state">Transition
-State</a></li>
-<li><a href="#assign-incident" id="toc-assign-incident">Assign
-Incident</a></li>
-<li><a href="#change-severity" id="toc-change-severity">Change
-Severity</a></li>
+<li><a href="#crear-incidente" id="toc-crear-incidente">Crear
+Incidente</a></li>
+<li><a href="#triaje-de-incidente" id="toc-triaje-de-incidente">Triaje
+de Incidente</a></li>
+<li><a href="#cambiar-estado" id="toc-cambiar-estado">Cambiar
+Estado</a></li>
+<li><a href="#asignar-incidente" id="toc-asignar-incidente">Asignar
+Incidente</a></li>
+<li><a href="#cambiar-severidad" id="toc-cambiar-severidad">Cambiar
+Severidad</a></li>
 </ul></li>
-<li><a href="#comments" id="toc-comments">Comments</a>
+<li><a href="#comentarios" id="toc-comentarios">Comentarios</a>
 <ul>
-<li><a href="#add-comment" id="toc-add-comment">Add Comment</a></li>
+<li><a href="#agregar-comentario" id="toc-agregar-comentario">Agregar
+Comentario</a></li>
 </ul></li>
-<li><a href="#status-codes" id="toc-status-codes">Status Codes</a></li>
-<li><a href="#error-format" id="toc-error-format">Error Format</a></li>
-<li><a href="#role-permission-matrix"
-id="toc-role-permission-matrix">Role Permission Matrix</a></li>
-<li><a href="#examples" id="toc-examples">Examples</a>
+<li><a href="#códigos-de-estado" id="toc-códigos-de-estado">Códigos de
+Estado</a></li>
+<li><a href="#formato-de-errores" id="toc-formato-de-errores">Formato de
+Errores</a></li>
+<li><a href="#matriz-de-permisos-por-rol"
+id="toc-matriz-de-permisos-por-rol">Matriz de Permisos por Rol</a></li>
+<li><a href="#ejemplos" id="toc-ejemplos">Ejemplos</a>
 <ul>
-<li><a href="#example-1-create-and-process-an-incident"
-id="toc-example-1-create-and-process-an-incident">Example 1: Create and
-Process an Incident</a></li>
+<li><a href="#ejemplo-1-crear-y-procesar-un-incidente"
+id="toc-ejemplo-1-crear-y-procesar-un-incidente">Ejemplo 1: Crear y
+Procesar un Incidente</a></li>
 </ul></li>
-<li><a href="#development-notes" id="toc-development-notes">Development
-Notes</a></li>
+<li><a href="#notas-de-desarrollo" id="toc-notas-de-desarrollo">Notas de
+Desarrollo</a></li>
 </ul>
         </nav>
-         <h2 id="introduction">Introduction</h2>
-<p>IncidentFlow exposes a REST API built with FastAPI for all
-operations. This document provides complete reference for all endpoints,
-including request/response examples, authentication, and authorization
-rules.</p>
-<p><strong>Base URL</strong>: <code>http://localhost:8000</code>
-(development)</p>
-<p><strong>Authentication</strong>: Bearer token in
-<code>Authorization</code> header (JWT)</p>
+         <h2 id="introducción">Introducción</h2>
+<p>IncidentFlow expone una API REST construida con FastAPI para todas
+las operaciones. Este documento proporciona la referencia completa para
+todos los endpoints, incluyendo ejemplos de solicitud/respuesta,
+autenticación y reglas de autorización.</p>
+<p><strong>URL Base</strong>: <code>http://localhost:8000</code>
+(desarrollo)</p>
+<p><strong>Autenticación</strong>: Token Bearer en el encabezado
+<code>Authorization</code></p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer &lt;token&gt;&quot;</span> http://localhost:8000/incidents</span></code></pre></div>
-<h2 id="severity-levels">Severity Levels</h2>
-<p>Valid severity values (case-sensitive, title-case):</p>
+<h2 id="niveles-de-severidad">Niveles de Severidad</h2>
+<p>Valores válidos de severidad (sensible a mayúsculas, tipo
+título):</p>
 <ul>
-<li><code>Low</code> - Minor issues, can wait</li>
-<li><code>Medium</code> - Affects some users, should be resolved
-today</li>
-<li><code>High</code> - Affects many users, needs immediate
-attention</li>
-<li><code>Critical</code> - Service down, requires Commander immediate
-attention</li>
+<li><code>Low</code> - Problemas menores, puede esperar</li>
+<li><code>Medium</code> - Afecta a algunos usuarios, debe resolverse
+hoy</li>
+<li><code>High</code> - Afecta a muchos usuarios, requiere atención
+inmediata</li>
+<li><code>Critical</code> - Servicio caído, requiere atención inmediata
+del Commander</li>
 </ul>
-<h2 id="incident-states">Incident States</h2>
-<p>Valid states for transition (case-sensitive, UPPERCASE):</p>
+<h2 id="estados-de-incidente">Estados de Incidente</h2>
+<p>Estados válidos para transición (sensible a mayúsculas,
+MAYÚSCULAS):</p>
 <ul>
-<li><code>OPEN</code> - Initial state when created</li>
-<li><code>IN_PROGRESS</code> - Work in progress</li>
-<li><code>RESOLVED</code> - Solution implemented</li>
-<li><code>CLOSED</code> - Formally closed</li>
-<li><code>CANCELLED</code> - Cancelled/false alarm</li>
-<li><code>ESCALATED</code> - Escalated to higher level</li>
+<li><code>OPEN</code> - Estado inicial al crear</li>
+<li><code>TRIAGED</code> - Evaluado y con severidad asignada</li>
+<li><code>ASSIGNED</code> - Asignado a un respondedor</li>
+<li><code>IN_PROGRESS</code> - Trabajo en progreso</li>
+<li><code>RESOLVED</code> - Solución implementada</li>
+<li><code>CLOSED</code> - Cerrado formalmente</li>
+<li><code>CANCELLED</code> - Cancelado/falsa alarma</li>
+<li><code>ESCALATED</code> - Escalado a un nivel superior</li>
 </ul>
 <h2 id="roles">Roles</h2>
-<p>Valid role names in the system (case-sensitive):</p>
+<p>Nombres de roles válidos en el sistema (sensibles a mayúsculas):</p>
 <ul>
-<li><code>Admin</code> - Full access</li>
-<li><code>Operator</code> - Create incidents, add comments</li>
-<li><code>Incident_commander</code> - Coordinate incidents, assign,
-change states</li>
-<li><code>Technical_responder</code> - Add comments, do technical
-work</li>
-<li><code>Incident_manager</code> - View and change severity</li>
+<li><code>Admin</code> - Acceso completo</li>
+<li><code>Operator</code> - Crear incidentes, agregar comentarios</li>
+<li><code>Incident_commander</code> - Coordinar incidentes, asignar,
+cambiar estados</li>
+<li><code>Technical_responder</code> - Agregar comentarios, hacer
+trabajo técnico</li>
+<li><code>Incident_manager</code> - Ver y cambiar severidad</li>
 </ul>
-<h2 id="incidents">Incidents</h2>
-<h3 id="create-incident">Create Incident</h3>
+<h2 id="incidentes">Incidentes</h2>
+<h3 id="crear-incidente">Crear Incidente</h3>
 <p><strong>POST</strong> <code>/incidents</code></p>
-<p>Create a new incident. Requires <code>Admin</code> or
-<code>Operator</code> role.</p>
-<p><strong>Headers:</strong></p>
+<p>Crear un nuevo incidente. Requiere rol <code>Admin</code> u
+<code>Operator</code>.</p>
+<p><strong>Encabezados:</strong></p>
 <pre><code>Authorization: Bearer &lt;token&gt;
 Content-Type: application/json</code></pre>
-<p><strong>Request Body:</strong></p>
+<p><strong>Cuerpo de la Solicitud:</strong></p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Payment service down&quot;</span><span class="fu">,</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Customers cannot complete transactions. Error 500 in payment API.&quot;</span><span class="fu">,</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Servicio de pagos caído&quot;</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Los clientes no pueden completar transacciones. Error 500 en la API de pagos.&quot;</span><span class="fu">,</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;severity&quot;</span><span class="fu">:</span> <span class="st">&quot;Critical&quot;</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Response:</strong> <code>200 OK</code></p>
+<p><strong>Respuesta:</strong> <code>200 OK</code></p>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Payment service down&quot;</span><span class="fu">,</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Customers cannot complete transactions...&quot;</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Servicio de pagos caído&quot;</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Los clientes no pueden completar transacciones...&quot;</span><span class="fu">,</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;severity&quot;</span><span class="fu">:</span> <span class="st">&quot;Critical&quot;</span><span class="fu">,</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;OPEN&quot;</span><span class="fu">,</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;creator_id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
@@ -661,34 +668,34 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-03T10:30:00Z&quot;</span><span class="fu">,</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;updated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-03T10:30:00Z&quot;</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Error Response:</strong> <code>400 Bad Request</code></p>
+<p><strong>Respuesta de Error:</strong> <code>400 Bad Request</code></p>
 <div class="sourceCode" id="cb5"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Invalid severity level: CRITICAL&quot;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Nivel de severidad inválido: CRITICAL&quot;</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Error Response:</strong> <code>403 Forbidden</code></p>
+<p><strong>Respuesta de Error:</strong> <code>403 Forbidden</code></p>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Not enough permissions&quot;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Permisos insuficientes&quot;</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<h3 id="triage-incident">Triage Incident</h3>
+<h3 id="triaje-de-incidente">Triaje de Incidente</h3>
 <p><strong>POST</strong>
 <code>/incidents/{incident_id}/triage</code></p>
-<p>Evaluate and triage an incident (change its severity). Requires
-<code>Admin</code> or <code>Incident_commander</code> role.</p>
-<p><strong>Path Parameters:</strong></p>
+<p>Evaluar y triar un incidente (cambiar su severidad). Requiere rol
+<code>Admin</code> o <code>Incident_commander</code>.</p>
+<p><strong>Parámetros de Ruta:</strong></p>
 <ul>
-<li><code>incident_id</code> (int) - The incident ID</li>
+<li><code>incident_id</code> (int) - El ID del incidente</li>
 </ul>
-<p><strong>Headers:</strong></p>
+<p><strong>Encabezados:</strong></p>
 <pre><code>Authorization: Bearer &lt;token&gt;
 Content-Type: application/json</code></pre>
-<p><strong>Request Body:</strong></p>
+<p><strong>Cuerpo de la Solicitud:</strong></p>
 <div class="sourceCode" id="cb8"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;new_severity&quot;</span><span class="fu">:</span> <span class="st">&quot;Critical&quot;</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Response:</strong> <code>200 OK</code></p>
+<p><strong>Respuesta:</strong> <code>200 OK</code></p>
 <div class="sourceCode" id="cb9"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
@@ -696,166 +703,166 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;OPEN&quot;</span><span class="fu">,</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;updated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-03T10:35:00Z&quot;</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Error Response:</strong> <code>404 Not Found</code></p>
+<p><strong>Respuesta de Error:</strong> <code>404 Not Found</code></p>
 <div class="sourceCode" id="cb10"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Incident with ID 999 not found.&quot;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Incidente con ID 999 no encontrado.&quot;</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<h3 id="transition-state">Transition State</h3>
+<h3 id="cambiar-estado">Cambiar Estado</h3>
 <p><strong>POST</strong>
 <code>/incidents/{incident_id}/transition-state</code></p>
-<p>Change incident state. Requires <code>Admin</code> or
-<code>Incident_commander</code> role.</p>
-<p><strong>Path Parameters:</strong></p>
+<p>Cambiar el estado del incidente. Requiere rol <code>Admin</code> o
+<code>Incident_commander</code>.</p>
+<p><strong>Parámetros de Ruta:</strong></p>
 <ul>
 <li><code>incident_id</code> (int)</li>
 </ul>
-<p><strong>Headers:</strong></p>
+<p><strong>Encabezados:</strong></p>
 <pre><code>Authorization: Bearer &lt;token&gt;
 Content-Type: application/json</code></pre>
-<p><strong>Request Body:</strong></p>
+<p><strong>Cuerpo de la Solicitud:</strong></p>
 <div class="sourceCode" id="cb12"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;new_state&quot;</span><span class="fu">:</span> <span class="st">&quot;IN_PROGRESS&quot;</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Valid State Transitions:</strong></p>
-<pre><code>OPEN → IN_PROGRESS
+<p><strong>Transiciones de Estado Válidas:</strong></p>
+<pre><code>OPEN → ASSIGNED → IN_PROGRESS → RESOLVED → CLOSED
 OPEN → CANCELLED
 OPEN → ESCALATED
-IN_PROGRESS → RESOLVED
 IN_PROGRESS → ESCALATED
 RESOLVED → CLOSED
-Any state → CANCELLED
-Any state → ESCALATED</code></pre>
-<p><strong>Response:</strong> <code>200 OK</code></p>
+ Cualquier estado → CANCELLED
+ Cualquier estado → ESCALATED</code></pre>
+<p><strong>Respuesta:</strong> <code>200 OK</code></p>
 <div class="sourceCode" id="cb14"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;IN_PROGRESS&quot;</span><span class="fu">,</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;updated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-03T10:40:00Z&quot;</span></span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Error Response:</strong> <code>400 Bad Request</code>
-(Invalid transition)</p>
+<p><strong>Respuesta de Error:</strong> <code>400 Bad Request</code>
+(Transición inválida)</p>
 <div class="sourceCode" id="cb15"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Invalid state transition or incident state&quot;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Transición de estado inválida o estado del incidente inválido&quot;</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Error Response:</strong> <code>403 Forbidden</code></p>
+<p><strong>Respuesta de Error:</strong> <code>403 Forbidden</code></p>
 <div class="sourceCode" id="cb16"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Not enough permissions&quot;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Permisos insuficientes&quot;</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<h3 id="assign-incident">Assign Incident</h3>
+<h3 id="asignar-incidente">Asignar Incidente</h3>
 <p><strong>POST</strong>
 <code>/incidents/{incident_id}/assign</code></p>
-<p>Assign incident to a technical responder. Requires <code>Admin</code>
-or <code>Incident_commander</code> role.</p>
-<p><strong>Path Parameters:</strong></p>
+<p>Asignar el incidente a un respondedor técnico. Requiere rol
+<code>Admin</code> o <code>Incident_commander</code>.</p>
+<p><strong>Parámetros de Ruta:</strong></p>
 <ul>
 <li><code>incident_id</code> (int)</li>
 </ul>
-<p><strong>Headers:</strong></p>
+<p><strong>Encabezados:</strong></p>
 <pre><code>Authorization: Bearer &lt;token&gt;
 Content-Type: application/json</code></pre>
-<p><strong>Request Body:</strong></p>
+<p><strong>Cuerpo de la Solicitud:</strong></p>
 <div class="sourceCode" id="cb18"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;assigned_user_id&quot;</span><span class="fu">:</span> <span class="dv">5</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Response:</strong> <code>200 OK</code></p>
+<p><strong>Respuesta:</strong> <code>200 OK</code></p>
 <div class="sourceCode" id="cb19"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;assigned_user_id&quot;</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;IN_PROGRESS&quot;</span><span class="fu">,</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;ASSIGNED&quot;</span><span class="fu">,</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;updated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-03T10:40:00Z&quot;</span></span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Error Response:</strong> <code>400 Bad Request</code></p>
+<p><strong>Respuesta de Error:</strong> <code>400 Bad Request</code></p>
 <div class="sourceCode" id="cb20"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;User not found or invalid assignment&quot;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Usuario no encontrado o asignación inválida&quot;</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<h3 id="change-severity">Change Severity</h3>
+<h3 id="cambiar-severidad">Cambiar Severidad</h3>
 <p><strong>POST</strong>
 <code>/incidents/{incident_id}/change_severity</code></p>
-<p>Change incident severity. Requires <code>Admin</code> or
-<code>Incident_manager</code> role.</p>
-<p><strong>Path Parameters:</strong></p>
+<p>Cambiar la severidad del incidente. Requiere rol <code>Admin</code> o
+<code>Incident_manager</code>.</p>
+<p><strong>Parámetros de Ruta:</strong></p>
 <ul>
 <li><code>incident_id</code> (int)</li>
 </ul>
-<p><strong>Headers:</strong></p>
+<p><strong>Encabezados:</strong></p>
 <pre><code>Authorization: Bearer &lt;token&gt;
 Content-Type: application/json</code></pre>
-<p><strong>Request Body:</strong></p>
+<p><strong>Cuerpo de la Solicitud:</strong></p>
 <div class="sourceCode" id="cb22"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;new_severity&quot;</span><span class="fu">:</span> <span class="st">&quot;Critical&quot;</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Response:</strong> <code>200 OK</code></p>
+<p><strong>Respuesta:</strong> <code>200 OK</code></p>
 <div class="sourceCode" id="cb23"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;severity&quot;</span><span class="fu">:</span> <span class="st">&quot;Critical&quot;</span><span class="fu">,</span></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;updated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-03T10:40:00Z&quot;</span></span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<h2 id="comments">Comments</h2>
-<h3 id="add-comment">Add Comment</h3>
+<h2 id="comentarios">Comentarios</h2>
+<h3 id="agregar-comentario">Agregar Comentario</h3>
 <p><strong>POST</strong>
 <code>/incidents/{incident_id}/comments</code></p>
-<p>Add a comment to incident timeline. Requires <code>Admin</code>,
-<code>Operator</code>, or <code>Technical_responder</code> role.</p>
-<p><strong>Path Parameters:</strong></p>
+<p>Agregar un comentario a la línea de tiempo del incidente. Requiere
+rol <code>Admin</code>, <code>Operator</code>, o
+<code>Technical_responder</code>.</p>
+<p><strong>Parámetros de Ruta:</strong></p>
 <ul>
 <li><code>incident_id</code> (int)</li>
 </ul>
-<p><strong>Headers:</strong></p>
+<p><strong>Encabezados:</strong></p>
 <pre><code>Authorization: Bearer &lt;token&gt;
 Content-Type: application/json</code></pre>
-<p><strong>Request Body:</strong></p>
+<p><strong>Cuerpo de la Solicitud:</strong></p>
 <div class="sourceCode" id="cb25"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;content&quot;</span><span class="fu">:</span> <span class="st">&quot;Investigation underway. Found issue in payment-gateway service logs.&quot;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;content&quot;</span><span class="fu">:</span> <span class="st">&quot;Investigación en curso. Se encontró el problema en los logs del servicio payment-gateway.&quot;</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Response:</strong> <code>200 OK</code></p>
+<p><strong>Respuesta:</strong> <code>200 OK</code></p>
 <div class="sourceCode" id="cb26"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;comment_id&quot;</span><span class="fu">:</span> <span class="dv">42</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Error Response:</strong> <code>400 Bad Request</code></p>
+<p><strong>Respuesta de Error:</strong> <code>400 Bad Request</code></p>
 <div class="sourceCode" id="cb27"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Comment content is required&quot;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;El contenido del comentario es requerido&quot;</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Error Response:</strong> <code>404 Not Found</code></p>
+<p><strong>Respuesta de Error:</strong> <code>404 Not Found</code></p>
 <div class="sourceCode" id="cb28"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Incident with ID 999 not found.&quot;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Incidente con ID 999 no encontrado.&quot;</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<h2 id="status-codes">Status Codes</h2>
+<h2 id="códigos-de-estado">Códigos de Estado</h2>
 <table>
 <thead>
 <tr>
-<th>Code</th>
-<th>Meaning</th>
+<th>Código</th>
+<th>Significado</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>200</td>
-<td>OK - Request succeeded</td>
+<td>OK - Solicitud exitosa</td>
 </tr>
 <tr>
 <td>400</td>
-<td>Bad Request - Invalid input or invalid state transition</td>
+<td>Bad Request - Entrada inválida o transición de estado inválida</td>
 </tr>
 <tr>
 <td>403</td>
-<td>Forbidden - Insufficient permissions</td>
+<td>Forbidden - Permisos insuficientes</td>
 </tr>
 <tr>
 <td>404</td>
-<td>Not Found - Resource doesn’t exist</td>
+<td>Not Found - El recurso no existe</td>
 </tr>
 <tr>
 <td>500</td>
@@ -863,13 +870,13 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb28-1"><a href=
 </tr>
 </tbody>
 </table>
-<h2 id="error-format">Error Format</h2>
-<p>Errors follow this format:</p>
+<h2 id="formato-de-errores">Formato de Errores</h2>
+<p>Los errores siguen este formato:</p>
 <div class="sourceCode" id="cb29"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Human-readable error message&quot;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Mensaje de error legible por humanos&quot;</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<h2 id="role-permission-matrix">Role Permission Matrix</h2>
+<h2 id="matriz-de-permisos-por-rol">Matriz de Permisos por Rol</h2>
 <table style="width:100%;">
 <colgroup>
 <col style="width: 9%" />
@@ -881,7 +888,7 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href=
 </colgroup>
 <thead>
 <tr>
-<th>Action</th>
+<th>Acción</th>
 <th>Admin</th>
 <th>Operator</th>
 <th>Incident_commander</th>
@@ -891,7 +898,7 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href=
 </thead>
 <tbody>
 <tr>
-<td>Create Incident</td>
+<td>Crear Incidente</td>
 <td>✓</td>
 <td>✓</td>
 <td>✗</td>
@@ -899,7 +906,7 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href=
 <td>✗</td>
 </tr>
 <tr>
-<td>Triage</td>
+<td>Triar</td>
 <td>✓</td>
 <td>✗</td>
 <td>✓</td>
@@ -907,7 +914,7 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href=
 <td>✗</td>
 </tr>
 <tr>
-<td>Transition State</td>
+<td>Cambiar Estado</td>
 <td>✓</td>
 <td>✗</td>
 <td>✓</td>
@@ -915,7 +922,7 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href=
 <td>✗</td>
 </tr>
 <tr>
-<td>Assign</td>
+<td>Asignar</td>
 <td>✓</td>
 <td>✗</td>
 <td>✓</td>
@@ -923,7 +930,7 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href=
 <td>✗</td>
 </tr>
 <tr>
-<td>Change Severity</td>
+<td>Cambiar Severidad</td>
 <td>✓</td>
 <td>✗</td>
 <td>✗</td>
@@ -931,7 +938,7 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href=
 <td>✓</td>
 </tr>
 <tr>
-<td>Add Comment</td>
+<td>Agregar Comentario</td>
 <td>✓</td>
 <td>✓</td>
 <td>✓</td>
@@ -940,73 +947,74 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href=
 </tr>
 </tbody>
 </table>
-<h2 id="examples">Examples</h2>
-<h3 id="example-1-create-and-process-an-incident">Example 1: Create and
-Process an Incident</h3>
+<h2 id="ejemplos">Ejemplos</h2>
+<h3 id="ejemplo-1-crear-y-procesar-un-incidente">Ejemplo 1: Crear y
+Procesar un Incidente</h3>
 <div class="sourceCode" id="cb30"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Create Critical incident</span></span>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Crear incidente Crítico</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="va">TOKEN</span><span class="op">=</span><span class="st">&quot;eyJ...&quot;</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents <span class="dt">\</span></span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;title&quot;: &quot;Database connection pool exhausted&quot;,</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;description&quot;: &quot;All database connections are in use, queries failing&quot;,</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;title&quot;: &quot;Pool de conexiones de base de datos agotado&quot;,</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;description&quot;: &quot;Todas las conexiones de base de datos están en uso, consultas fallando&quot;,</span></span>
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;severity&quot;: &quot;Critical&quot;</span></span>
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span>
 <span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Response: {&quot;id&quot;: 1, &quot;state&quot;: &quot;OPEN&quot;, ...}</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Respuesta: {&quot;id&quot;: 1, &quot;state&quot;: &quot;OPEN&quot;, ...}</span></span>
 <span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Triage the incident</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Triar el incidente</span></span>
 <span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="va">INCIDENT_ID</span><span class="op">=</span>1</span>
 <span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents/<span class="va">$INCIDENT_ID</span>/triage <span class="dt">\</span></span>
 <span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;new_severity&quot;: &quot;Critical&quot;}&#39;</span></span>
 <span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Assign to responder (user_id = 5)</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Asignar al respondedor (user_id = 5)</span></span>
 <span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents/<span class="va">$INCIDENT_ID</span>/assign <span class="dt">\</span></span>
 <span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;assigned_user_id&quot;: 5}&#39;</span></span>
 <span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Add comment</span></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Agregar comentario</span></span>
 <span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents/<span class="va">$INCIDENT_ID</span>/comments <span class="dt">\</span></span>
 <span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
-<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;content&quot;: &quot;Added 10 more database servers&quot;}&#39;</span></span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;content&quot;: &quot;Se agregaron 10 servidores más de base de datos&quot;}&#39;</span></span>
 <span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Transition to IN_PROGRESS</span></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Transicionar a IN_PROGRESS</span></span>
 <span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents/<span class="va">$INCIDENT_ID</span>/transition-state <span class="dt">\</span></span>
 <span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;new_state&quot;: &quot;IN_PROGRESS&quot;}&#39;</span></span>
 <span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Transition to RESOLVED</span></span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Transicionar a RESOLVED</span></span>
 <span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents/<span class="va">$INCIDENT_ID</span>/transition-state <span class="dt">\</span></span>
 <span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;new_state&quot;: &quot;RESOLVED&quot;}&#39;</span></span>
 <span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. Close the incident</span></span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. Cerrar el incidente</span></span>
 <span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST http://localhost:8000/incidents/<span class="va">$INCIDENT_ID</span>/transition-state <span class="dt">\</span></span>
 <span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Authorization: Bearer </span><span class="va">$TOKEN</span><span class="st">&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
 <span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;new_state&quot;: &quot;CLOSED&quot;}&#39;</span></span></code></pre></div>
-<h2 id="development-notes">Development Notes</h2>
+<h2 id="notas-de-desarrollo">Notas de Desarrollo</h2>
 <ul>
-<li>All incident IDs are integers (not UUIDs)</li>
-<li>All timestamps are in UTC (ISO 8601 format)</li>
-<li>Severity values are title-case: <code>Low</code>,
+<li>Todos los IDs de incidentes son enteros (no UUIDs)</li>
+<li>Todos los timestamps están en UTC (formato ISO 8601)</li>
+<li>Los valores de severidad son tipo título: <code>Low</code>,
 <code>Medium</code>, <code>High</code>, <code>Critical</code></li>
-<li>State values are UPPERCASE: <code>OPEN</code>,
+<li>Los valores de estado son MAYÚSCULAS: <code>OPEN</code>,
 <code>IN_PROGRESS</code>, <code>RESOLVED</code>, <code>CLOSED</code>,
 <code>CANCELLED</code>, <code>ESCALATED</code></li>
-<li>Role names use underscores: <code>Incident_commander</code>,
-<code>Technical_responder</code>, <code>Incident_manager</code></li>
-<li>User IDs are integers</li>
-<li>All POST endpoints that modify return the updated incident or
-object</li>
+<li>Los nombres de roles usan guiones bajos:
+<code>Incident_commander</code>, <code>Technical_responder</code>,
+<code>Incident_manager</code></li>
+<li>Los IDs de usuario son enteros</li>
+<li>Todos los endpoints POST que modifican retornan el incidente u
+objeto actualizado</li>
 </ul> 
     </body>
 </html>

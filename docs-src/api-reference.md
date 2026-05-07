@@ -1,81 +1,83 @@
 ---
-title: API Reference - IncidentFlow
+title: Referencia de API - IncidentFlow
 ---
 
-## Introduction
+## Introducción
 
-IncidentFlow exposes a REST API built with FastAPI for all operations. This document provides complete reference for all endpoints, including request/response examples, authentication, and authorization rules.
+IncidentFlow expone una API REST construida con FastAPI para todas las operaciones. Este documento proporciona la referencia completa para todos los endpoints, incluyendo ejemplos de solicitud/respuesta, autenticación y reglas de autorización.
 
-**Base URL**: `http://localhost:8000` (development)
+**URL Base**: `http://localhost:8000` (desarrollo)
 
-**Authentication**: Bearer token in `Authorization` header (JWT)
+**Autenticación**: Token Bearer en el encabezado `Authorization`
 
 ```bash
 curl -H "Authorization: Bearer <token>" http://localhost:8000/incidents
 ```
 
-## Severity Levels
+## Niveles de Severidad
 
-Valid severity values (case-sensitive, title-case):
+Valores válidos de severidad (sensible a mayúsculas, tipo título):
 
--   `Low` - Minor issues, can wait
--   `Medium` - Affects some users, should be resolved today
--   `High` - Affects many users, needs immediate attention
--   `Critical` - Service down, requires Commander immediate attention
+-   `Low` - Problemas menores, puede esperar
+-   `Medium` - Afecta a algunos usuarios, debe resolverse hoy
+-   `High` - Afecta a muchos usuarios, requiere atención inmediata
+-   `Critical` - Servicio caído, requiere atención inmediata del Commander
 
-## Incident States
+## Estados de Incidente
 
-Valid states for transition (case-sensitive, UPPERCASE):
+Estados válidos para transición (sensible a mayúsculas, MAYÚSCULAS):
 
--   `OPEN` - Initial state when created
--   `IN_PROGRESS` - Work in progress
--   `RESOLVED` - Solution implemented
--   `CLOSED` - Formally closed
--   `CANCELLED` - Cancelled/false alarm
--   `ESCALATED` - Escalated to higher level
+-   `OPEN` - Estado inicial al crear
+-   `TRIAGED` - Evaluado y con severidad asignada
+-   `ASSIGNED` - Asignado a un respondedor
+-   `IN_PROGRESS` - Trabajo en progreso
+-   `RESOLVED` - Solución implementada
+-   `CLOSED` - Cerrado formalmente
+-   `CANCELLED` - Cancelado/falsa alarma
+-   `ESCALATED` - Escalado a un nivel superior
 
 ## Roles
 
-Valid role names in the system (case-sensitive):
+Nombres de roles válidos en el sistema (sensibles a mayúsculas):
 
--   `Admin` - Full access
--   `Operator` - Create incidents, add comments
--   `Incident_commander` - Coordinate incidents, assign, change states
--   `Technical_responder` - Add comments, do technical work
--   `Incident_manager` - View and change severity
+-   `Admin` - Acceso completo
+-   `Operator` - Crear incidentes, agregar comentarios
+-   `Incident_commander` - Coordinar incidentes, asignar, cambiar estados
+-   `Technical_responder` - Agregar comentarios, hacer trabajo técnico
+-   `Incident_manager` - Ver y cambiar severidad
 
-## Incidents
+## Incidentes
 
-### Create Incident
+### Crear Incidente
 
 **POST** `/incidents`
 
-Create a new incident. Requires `Admin` or `Operator` role.
+Crear un nuevo incidente. Requiere rol `Admin` u `Operator`.
 
-**Headers:**
+**Encabezados:**
 
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
-**Request Body:**
+**Cuerpo de la Solicitud:**
 
 ```json
 {
-  "title": "Payment service down",
-  "description": "Customers cannot complete transactions. Error 500 in payment API.",
+  "title": "Servicio de pagos caído",
+  "description": "Los clientes no pueden completar transacciones. Error 500 en la API de pagos.",
   "severity": "Critical"
 }
 ```
 
-**Response:** `200 OK`
+**Respuesta:** `200 OK`
 
 ```json
 {
   "id": 1,
-  "title": "Payment service down",
-  "description": "Customers cannot complete transactions...",
+  "title": "Servicio de pagos caído",
+  "description": "Los clientes no pueden completar transacciones...",
   "severity": "Critical",
   "state": "OPEN",
   "creator_id": 1,
@@ -85,40 +87,40 @@ Content-Type: application/json
 }
 ```
 
-**Error Response:** `400 Bad Request`
+**Respuesta de Error:** `400 Bad Request`
 
 ```json
 {
-  "detail": "Invalid severity level: CRITICAL"
+  "detail": "Nivel de severidad inválido: CRITICAL"
 }
 ```
 
-**Error Response:** `403 Forbidden`
+**Respuesta de Error:** `403 Forbidden`
 
 ```json
 {
-  "detail": "Not enough permissions"
+  "detail": "Permisos insuficientes"
 }
 ```
 
-### Triage Incident
+### Triaje de Incidente
 
 **POST** `/incidents/{incident_id}/triage`
 
-Evaluate and triage an incident (change its severity). Requires `Admin` or `Incident_commander` role.
+Evaluar y triar un incidente (cambiar su severidad). Requiere rol `Admin` o `Incident_commander`.
 
-**Path Parameters:**
+**Parámetros de Ruta:**
 
--   `incident_id` (int) - The incident ID
+-   `incident_id` (int) - El ID del incidente
 
-**Headers:**
+**Encabezados:**
 
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
-**Request Body:**
+**Cuerpo de la Solicitud:**
 
 ```json
 {
@@ -126,7 +128,7 @@ Content-Type: application/json
 }
 ```
 
-**Response:** `200 OK`
+**Respuesta:** `200 OK`
 
 ```json
 {
@@ -137,32 +139,32 @@ Content-Type: application/json
 }
 ```
 
-**Error Response:** `404 Not Found`
+**Respuesta de Error:** `404 Not Found`
 
 ```json
 {
-  "detail": "Incident with ID 999 not found."
+  "detail": "Incidente con ID 999 no encontrado."
 }
 ```
 
-### Transition State
+### Cambiar Estado
 
 **POST** `/incidents/{incident_id}/transition-state`
 
-Change incident state. Requires `Admin` or `Incident_commander` role.
+Cambiar el estado del incidente. Requiere rol `Admin` o `Incident_commander`.
 
-**Path Parameters:**
+**Parámetros de Ruta:**
 
 -   `incident_id` (int)
 
-**Headers:**
+**Encabezados:**
 
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
-**Request Body:**
+**Cuerpo de la Solicitud:**
 
 ```json
 {
@@ -170,20 +172,19 @@ Content-Type: application/json
 }
 ```
 
-**Valid State Transitions:**
+**Transiciones de Estado Válidas:**
 
 ```
-OPEN → IN_PROGRESS
+OPEN → ASSIGNED → IN_PROGRESS → RESOLVED → CLOSED
 OPEN → CANCELLED
 OPEN → ESCALATED
-IN_PROGRESS → RESOLVED
 IN_PROGRESS → ESCALATED
 RESOLVED → CLOSED
-Any state → CANCELLED
-Any state → ESCALATED
+ Cualquier estado → CANCELLED
+ Cualquier estado → ESCALATED
 ```
 
-**Response:** `200 OK`
+**Respuesta:** `200 OK`
 
 ```json
 {
@@ -193,40 +194,40 @@ Any state → ESCALATED
 }
 ```
 
-**Error Response:** `400 Bad Request` (Invalid transition)
+**Respuesta de Error:** `400 Bad Request` (Transición inválida)
 
 ```json
 {
-  "detail": "Invalid state transition or incident state"
+  "detail": "Transición de estado inválida o estado del incidente inválido"
 }
 ```
 
-**Error Response:** `403 Forbidden`
+**Respuesta de Error:** `403 Forbidden`
 
 ```json
 {
-  "detail": "Not enough permissions"
+  "detail": "Permisos insuficientes"
 }
 ```
 
-### Assign Incident
+### Asignar Incidente
 
 **POST** `/incidents/{incident_id}/assign`
 
-Assign incident to a technical responder. Requires `Admin` or `Incident_commander` role.
+Asignar el incidente a un respondedor técnico. Requiere rol `Admin` o `Incident_commander`.
 
-**Path Parameters:**
+**Parámetros de Ruta:**
 
 -   `incident_id` (int)
 
-**Headers:**
+**Encabezados:**
 
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
-**Request Body:**
+**Cuerpo de la Solicitud:**
 
 ```json
 {
@@ -234,43 +235,43 @@ Content-Type: application/json
 }
 ```
 
-**Response:** `200 OK`
+**Respuesta:** `200 OK`
 
 ```json
 {
   "id": 1,
   "assigned_user_id": 5,
-  "state": "IN_PROGRESS",
+  "state": "ASSIGNED",
   "updated_at": "2026-05-03T10:40:00Z"
 }
 ```
 
-**Error Response:** `400 Bad Request`
+**Respuesta de Error:** `400 Bad Request`
 
 ```json
 {
-  "detail": "User not found or invalid assignment"
+  "detail": "Usuario no encontrado o asignación inválida"
 }
 ```
 
-### Change Severity
+### Cambiar Severidad
 
 **POST** `/incidents/{incident_id}/change_severity`
 
-Change incident severity. Requires `Admin` or `Incident_manager` role.
+Cambiar la severidad del incidente. Requiere rol `Admin` o `Incident_manager`.
 
-**Path Parameters:**
+**Parámetros de Ruta:**
 
 -   `incident_id` (int)
 
-**Headers:**
+**Encabezados:**
 
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
-**Request Body:**
+**Cuerpo de la Solicitud:**
 
 ```json
 {
@@ -278,7 +279,7 @@ Content-Type: application/json
 }
 ```
 
-**Response:** `200 OK`
+**Respuesta:** `200 OK`
 
 ```json
 {
@@ -288,34 +289,34 @@ Content-Type: application/json
 }
 ```
 
-## Comments
+## Comentarios
 
-### Add Comment
+### Agregar Comentario
 
 **POST** `/incidents/{incident_id}/comments`
 
-Add a comment to incident timeline. Requires `Admin`, `Operator`, or `Technical_responder` role.
+Agregar un comentario a la línea de tiempo del incidente. Requiere rol `Admin`, `Operator`, o `Technical_responder`.
 
-**Path Parameters:**
+**Parámetros de Ruta:**
 
 -   `incident_id` (int)
 
-**Headers:**
+**Encabezados:**
 
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
-**Request Body:**
+**Cuerpo de la Solicitud:**
 
 ```json
 {
-  "content": "Investigation underway. Found issue in payment-gateway service logs."
+  "content": "Investigación en curso. Se encontró el problema en los logs del servicio payment-gateway."
 }
 ```
 
-**Response:** `200 OK`
+**Respuesta:** `200 OK`
 
 ```json
 {
@@ -323,115 +324,115 @@ Content-Type: application/json
 }
 ```
 
-**Error Response:** `400 Bad Request`
+**Respuesta de Error:** `400 Bad Request`
 
 ```json
 {
-  "detail": "Comment content is required"
+  "detail": "El contenido del comentario es requerido"
 }
 ```
 
-**Error Response:** `404 Not Found`
+**Respuesta de Error:** `404 Not Found`
 
 ```json
 {
-  "detail": "Incident with ID 999 not found."
+  "detail": "Incidente con ID 999 no encontrado."
 }
 ```
 
-## Status Codes
+## Códigos de Estado
 
-| Code | Meaning |
-|------|---------|
-| 200 | OK - Request succeeded |
-| 400 | Bad Request - Invalid input or invalid state transition |
-| 403 | Forbidden - Insufficient permissions |
-| 404 | Not Found - Resource doesn't exist |
+| Código | Significado |
+|--------|------------|
+| 200 | OK - Solicitud exitosa |
+| 400 | Bad Request - Entrada inválida o transición de estado inválida |
+| 403 | Forbidden - Permisos insuficientes |
+| 404 | Not Found - El recurso no existe |
 | 500 | Internal Server Error |
 
-## Error Format
+## Formato de Errores
 
-Errors follow this format:
+Los errores siguen este formato:
 
 ```json
 {
-  "detail": "Human-readable error message"
+  "detail": "Mensaje de error legible por humanos"
 }
 ```
 
-## Role Permission Matrix
+## Matriz de Permisos por Rol
 
-| Action | Admin | Operator | Incident_commander | Technical_responder | Incident_manager |
+| Acción | Admin | Operator | Incident_commander | Technical_responder | Incident_manager |
 |--------|-------|----------|-------------------|-------------------|------------------|
-| Create Incident | ✓ | ✓ | ✗ | ✗ | ✗ |
-| Triage | ✓ | ✗ | ✓ | ✗ | ✗ |
-| Transition State | ✓ | ✗ | ✓ | ✗ | ✗ |
-| Assign | ✓ | ✗ | ✓ | ✗ | ✗ |
-| Change Severity | ✓ | ✗ | ✗ | ✗ | ✓ |
-| Add Comment | ✓ | ✓ | ✓ | ✓ | ✗ |
+| Crear Incidente | ✓ | ✓ | ✗ | ✗ | ✗ |
+| Triar | ✓ | ✗ | ✓ | ✗ | ✗ |
+| Cambiar Estado | ✓ | ✗ | ✓ | ✗ | ✗ |
+| Asignar | ✓ | ✗ | ✓ | ✗ | ✗ |
+| Cambiar Severidad | ✓ | ✗ | ✗ | ✗ | ✓ |
+| Agregar Comentario | ✓ | ✓ | ✓ | ✓ | ✗ |
 
-## Examples
+## Ejemplos
 
-### Example 1: Create and Process an Incident
+### Ejemplo 1: Crear y Procesar un Incidente
 
 ```bash
-# 1. Create Critical incident
+# 1. Crear incidente Crítico
 TOKEN="eyJ..."
 curl -X POST http://localhost:8000/incidents \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "title": "Database connection pool exhausted",
-    "description": "All database connections are in use, queries failing",
+    "title": "Pool de conexiones de base de datos agotado",
+    "description": "Todas las conexiones de base de datos están en uso, consultas fallando",
     "severity": "Critical"
   }'
 
-# Response: {"id": 1, "state": "OPEN", ...}
+# Respuesta: {"id": 1, "state": "OPEN", ...}
 
-# 2. Triage the incident
+# 2. Triar el incidente
 INCIDENT_ID=1
 curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/triage \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"new_severity": "Critical"}'
 
-# 3. Assign to responder (user_id = 5)
+# 3. Asignar al respondedor (user_id = 5)
 curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/assign \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"assigned_user_id": 5}'
 
-# 4. Add comment
+# 4. Agregar comentario
 curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/comments \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"content": "Added 10 more database servers"}'
+  -d '{"content": "Se agregaron 10 servidores más de base de datos"}'
 
-# 5. Transition to IN_PROGRESS
+# 5. Transicionar a IN_PROGRESS
 curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/transition-state \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"new_state": "IN_PROGRESS"}'
 
-# 6. Transition to RESOLVED
+# 6. Transicionar a RESOLVED
 curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/transition-state \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"new_state": "RESOLVED"}'
 
-# 7. Close the incident
+# 7. Cerrar el incidente
 curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/transition-state \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"new_state": "CLOSED"}'
 ```
 
-## Development Notes
+## Notas de Desarrollo
 
--   All incident IDs are integers (not UUIDs)
--   All timestamps are in UTC (ISO 8601 format)
--   Severity values are title-case: `Low`, `Medium`, `High`, `Critical`
--   State values are UPPERCASE: `OPEN`, `IN_PROGRESS`, `RESOLVED`, `CLOSED`, `CANCELLED`, `ESCALATED`
--   Role names use underscores: `Incident_commander`, `Technical_responder`, `Incident_manager`
--   User IDs are integers
--   All POST endpoints that modify return the updated incident or object
+-   Todos los IDs de incidentes son enteros (no UUIDs)
+-   Todos los timestamps están en UTC (formato ISO 8601)
+-   Los valores de severidad son tipo título: `Low`, `Medium`, `High`, `Critical`
+-   Los valores de estado son MAYÚSCULAS: `OPEN`, `IN_PROGRESS`, `RESOLVED`, `CLOSED`, `CANCELLED`, `ESCALATED`
+-   Los nombres de roles usan guiones bajos: `Incident_commander`, `Technical_responder`, `Incident_manager`
+-   Los IDs de usuario son enteros
+-   Todos los endpoints POST que modifican retornan el incidente u objeto actualizado
