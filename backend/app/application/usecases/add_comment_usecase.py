@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from backend.app.application.ports.add_comment_port import AddCommentPort
-from backend.app.domain.entities import Comment, Log
-from backend.app.domain.enums import LogLevel, Role
+from app.application.ports.add_comment_port import AddCommentPort
+from app.domain.entities import Comment, Log
+from app.domain.enums import LogLevel, Role
 
 
 class AddCommentUseCase:

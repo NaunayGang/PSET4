@@ -4,8 +4,8 @@ from sqlalchemy import DateTime, Integer, String, func
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column
 
-from backend.app.domain.enums.log_level import LogLevel
-from backend.app.infrastructure.database.base import Base
+from app.domain.enums.log_level import LogLevel
+from app.infrastructure.database.base import Base
 
 
 class Log(Base):

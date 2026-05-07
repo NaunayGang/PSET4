@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from backend.app.application.events import IncidentEvent, IncidentEventType
-from backend.app.application.ports.create_incident_port import CreateIncidentPort
-from backend.app.domain.entities import Incident, Log
-from backend.app.domain.enums import LogLevel, Role, Severity, State
+from app.application.events import IncidentEvent, IncidentEventType
+from app.application.ports.create_incident_port import CreateIncidentPort
+from app.domain.entities import Incident, Log
+from app.domain.enums import LogLevel, Role, Severity, State
 
 
 class CreateIncidentUseCase:

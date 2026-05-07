@@ -4,10 +4,10 @@ from typing import List, Optional
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from backend.app.application.ports.repositories.comment_repository import CommentRepository
-from backend.app.application.ports.repositories.log_repository import LogRepository
-from backend.app.domain.entities import comment, log
-from backend.app.infrastructure.models.comment import Comment as DBComment
+from app.application.ports.repositories.comment_repository import CommentRepository
+from app.application.ports.repositories.log_repository import LogRepository
+from app.domain.entities import comment, log
+from app.infrastructure.models.comment import Comment as DBComment
 
 
 class SQLAlchemyCommentRepository(CommentRepository):

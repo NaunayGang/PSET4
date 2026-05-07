@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from backend.app.domain.entities.incident import Incident
+from app.domain.entities.incident import Incident
 
 
 class CreateIncidentPort(ABC):

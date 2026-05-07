@@ -573,176 +573,327 @@ y Gestión de Usuarios</h3>
 <p><strong>Como</strong> usuario del sistema, <strong>Quiero</strong>
 autenticarme con credenciales, <strong>Para</strong> acceder a la
 plataforma según mi rol.</p>
-<p><strong>Descripción:</strong> - Sistema de autenticación básica
-(email + password) - Validación de usuario y asignación de rol
-automático - Roles disponibles: Operator, Commander, Responder, Manager,
-Admin - Sessions/tokens para mantener autenticación - Logout
-funcional</p>
-<p><strong>Criterios de Aceptación:</strong> - [ ] Usuario se autentica
-exitosamente - [ ] Credenciales inválidas muestran error - [ ] Rol se
-asigna correctamente después de login - [ ] Token/session persiste
-durante la sesión - [ ] Logout elimina autenticación</p>
+<p><strong>Descripción:</strong></p>
+<ul>
+<li>Sistema de autenticación básica (email + password)</li>
+<li>Validación de usuario y asignación de rol automático</li>
+<li>Roles disponibles: Operator, Commander, Responder, Manager,
+Admin</li>
+<li>Sessions/tokens para mantener autenticación</li>
+<li>Logout funcional</li>
+</ul>
+<p><strong>Criterios de Aceptación:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Usuario se autentica
+exitosamente</label></li>
+<li><label><input type="checkbox" />Credenciales inválidas muestran
+error</label></li>
+<li><label><input type="checkbox" />Rol se asigna correctamente después
+de login</label></li>
+<li><label><input type="checkbox" />Token/session persiste durante la
+sesión</label></li>
+<li><label><input type="checkbox" />Logout elimina
+autenticación</label></li>
+</ul>
 <hr />
 <h3 id="rf-02-crear-incidente">RF-02: Crear Incidente</h3>
 <p><strong>Como</strong> Operator, <strong>Quiero</strong> crear un
 nuevo incidente, <strong>Para</strong> reportar un problema
 operativo.</p>
-<p><strong>Descripción:</strong> - Formulario con campos: título,
-descripción, severidad - Severidades disponibles: LOW, MEDIUM, HIGH,
-CRITICAL - Estado inicial: OPEN - Creador se registra automáticamente -
-Evento INCIDENT_CREATED publicado</p>
-<p><strong>Criterios de Aceptación:</strong> - [ ] Incidente se crea con
-todos los campos requeridos - [ ] Campos validados (no vacíos, longitud
-razonable) - [ ] Estado inicial es OPEN - [ ] Creador se registra
-correctamente - [ ] Respuesta contiene ID del incidente creado - [ ]
-Evento INCIDENT_CREATED se publica</p>
+<p><strong>Descripción:</strong></p>
+<ul>
+<li>Formulario con campos: título, descripción, severidad</li>
+<li>Severidades disponibles: LOW, MEDIUM, HIGH, CRITICAL</li>
+<li>Estado inicial: OPEN</li>
+<li>Creador se registra automáticamente</li>
+<li>Evento INCIDENT_CREATED publicado</li>
+</ul>
+<p><strong>Criterios de Aceptación:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Incidente se crea con todos los
+campos requeridos</label></li>
+<li><label><input type="checkbox" />Campos validados (no vacíos,
+longitud razonable)</label></li>
+<li><label><input type="checkbox" />Estado inicial es OPEN</label></li>
+<li><label><input type="checkbox" />Creador se registra
+correctamente</label></li>
+<li><label><input type="checkbox" />Respuesta contiene ID del incidente
+creado</label></li>
+<li><label><input type="checkbox" />Evento INCIDENT_CREATED se
+publica</label></li>
+</ul>
 <hr />
 <h3 id="rf-03-listar-incidentes-con-filtros">RF-03: Listar Incidentes
 con Filtros</h3>
 <p><strong>Como</strong> usuario, <strong>Quiero</strong> ver una lista
 de incidentes con filtros, <strong>Para</strong> encontrar rápidamente
 incidentes relevantes.</p>
-<p><strong>Descripción:</strong> - Lista paginada o lazy-loaded de
-incidentes - Filtros por: severidad, estado, responsable asignado -
-Búsqueda por título/descripción - Visualización de resumen: id, título,
-severidad, estado, creador, timestamps - Acceso según rol (todos pueden
-listar, pero permisos varían)</p>
-<p><strong>Criterios de Aceptación:</strong> - [ ] Lista muestra
-incidentes con paginación - [ ] Filtros funcionan independientemente - [
-] Búsqueda por texto funciona - [ ] Respuestas son rápidas (&lt;200ms) -
-[ ] Datos mostrados son correctos - [ ] Usuarios sin permisos no ven
-incidentes sensibles</p>
+<p><strong>Descripción:</strong></p>
+<ul>
+<li>Lista paginada o lazy-loaded de incidentes</li>
+<li>Filtros por: severidad, estado, responsable asignado</li>
+<li>Búsqueda por título/descripción</li>
+<li>Visualización de resumen: id, título, severidad, estado, creador,
+timestamps</li>
+<li>Acceso según rol (todos pueden listar, pero permisos varían)</li>
+</ul>
+<p><strong>Criterios de Aceptación:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Lista muestra incidentes con
+paginación</label></li>
+<li><label><input type="checkbox" />Filtros funcionan
+independientemente</label></li>
+<li><label><input type="checkbox" />Búsqueda por texto
+funciona</label></li>
+<li><label><input type="checkbox" />Respuestas son rápidas
+(&lt;200ms)</label></li>
+<li><label><input type="checkbox" />Datos mostrados son
+correctos</label></li>
+<li><label><input type="checkbox" />Usuarios sin permisos no ven
+incidentes sensibles</label></li>
+</ul>
 <hr />
 <h3 id="rf-04-ver-detalle-de-incidente">RF-04: Ver Detalle de
 Incidente</h3>
 <p><strong>Como</strong> usuario, <strong>Quiero</strong> ver el detalle
 completo de un incidente, <strong>Para</strong> entender el contexto y
 estado actual.</p>
-<p><strong>Descripción:</strong> - Página con toda la información del
-incidente - Timeline centralizado: comentarios, cambios de estado,
-cambios de severidad, asignaciones - Cada entrada en timeline muestra:
-usuario, timestamp, acción, detalles - Información mostrada: id, título,
-descripción, severidad, estado, creador, responsable, timestamps</p>
-<p><strong>Criterios de Aceptación:</strong> - [ ] Página carga
-correctamente - [ ] Timeline muestra todas las acciones en orden
-cronológico - [ ] Información está actualizada - [ ] Usuarios sin
-permisos no pueden ver datos sensibles</p>
+<p><strong>Descripción:</strong></p>
+<ul>
+<li>Página con toda la información del incidente</li>
+<li>Timeline centralizado: comentarios, cambios de estado, cambios de
+severidad, asignaciones</li>
+<li>Cada entrada en timeline muestra: usuario, timestamp, acción,
+detalles</li>
+<li>Información mostrada: id, título, descripción, severidad, estado,
+creador, responsable, timestamps</li>
+</ul>
+<p><strong>Criterios de Aceptación:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Página carga
+correctamente</label></li>
+<li><label><input type="checkbox" />Timeline muestra todas las acciones
+en orden cronológico</label></li>
+<li><label><input type="checkbox" />Información está
+actualizada</label></li>
+<li><label><input type="checkbox" />Usuarios sin permisos no pueden ver
+datos sensibles</label></li>
+</ul>
 <hr />
 <h3 id="rf-05-cambiar-estado-del-incidente">RF-05: Cambiar Estado del
 Incidente</h3>
 <p><strong>Como</strong> Incident Commander, <strong>Quiero</strong>
 cambiar el estado del incidente, <strong>Para</strong> coordinar la
 respuesta.</p>
-<p><strong>Descripción:</strong> - Transiciones válidas según máquina de
-estados - Solo Commander/Admin pueden cambiar estado - Validaciones: -
-No puede pasar a IN_PROGRESS sin responsable asignado - No puede
-cerrarse sin resumen (CRITICAL) - Incidente CLOSED no vuelve a
-IN_PROGRESS - Evento INCIDENT_STATE_CHANGED publicado - AuditLog
-registra el cambio</p>
-<p><strong>Criterios de Aceptación:</strong> - [ ] Transiciones válidas
-funcionan - [ ] Transiciones inválidas son rechazadas con error claro -
-[ ] Solo usuarios autorizados pueden cambiar estado - [ ] Evento se
-publica correctamente - [ ] AuditLog registra usuario, timestamp,
-cambio</p>
+<p><strong>Descripción:</strong></p>
+<ul>
+<li>Transiciones válidas según máquina de estados</li>
+<li>Solo Commander/Admin pueden cambiar estado</li>
+<li>Validaciones:
+<ul>
+<li>No puede pasar a IN_PROGRESS sin responsable asignado</li>
+<li>No puede cerrarse sin resumen (CRITICAL)</li>
+<li>Incidente CLOSED no vuelve a IN_PROGRESS</li>
+</ul></li>
+<li>Evento INCIDENT_STATE_CHANGED publicado</li>
+<li>AuditLog registra el cambio</li>
+</ul>
+<p><strong>Criterios de Aceptación:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Transiciones válidas
+funcionan</label></li>
+<li><label><input type="checkbox" />Transiciones inválidas son
+rechazadas con error claro</label></li>
+<li><label><input type="checkbox" />Solo usuarios autorizados pueden
+cambiar estado</label></li>
+<li><label><input type="checkbox" />Evento se publica
+correctamente</label></li>
+<li><label><input type="checkbox" />AuditLog registra usuario,
+timestamp, cambio</label></li>
+</ul>
 <hr />
 <h3 id="rf-06-asignar-responsable">RF-06: Asignar Responsable</h3>
 <p><strong>Como</strong> Incident Commander, <strong>Quiero</strong>
 asignar un técnico responsable, <strong>Para</strong> que sepa quién
 debe resolver el incidente.</p>
-<p><strong>Descripción:</strong> - Dropdown con lista de Technical
-Responders disponibles - Solo Commander/Admin pueden asignar -
-Validación: responsable debe estar activo - Evento INCIDENT_ASSIGNED
-publicado - Notificación enviada al responsable asignado</p>
-<p><strong>Criterios de Aceptación:</strong> - [ ] Dropdown muestra
-usuarios válidos - [ ] Asignación se registra correctamente - [ ]
-Responsable recibe notificación - [ ] AuditLog registra la asignación -
-[ ] Evento se publica</p>
+<p><strong>Descripción:</strong></p>
+<ul>
+<li>Dropdown con lista de Technical Responders disponibles</li>
+<li>Solo Commander/Admin pueden asignar</li>
+<li>Validación: responsable debe estar activo</li>
+<li>Evento INCIDENT_ASSIGNED publicado</li>
+<li>Notificación enviada al responsable asignado</li>
+</ul>
+<p><strong>Criterios de Aceptación:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Dropdown muestra usuarios
+válidos</label></li>
+<li><label><input type="checkbox" />Asignación se registra
+correctamente</label></li>
+<li><label><input type="checkbox" />Responsable recibe
+notificación</label></li>
+<li><label><input type="checkbox" />AuditLog registra la
+asignación</label></li>
+<li><label><input type="checkbox" />Evento se publica</label></li>
+</ul>
 <hr />
 <h3 id="rf-07-cambiar-severidad">RF-07: Cambiar Severidad</h3>
 <p><strong>Como</strong> Incident Commander, <strong>Quiero</strong>
 ajustar la severidad de un incidente, <strong>Para</strong> reflejar el
 impacto actual.</p>
-<p><strong>Descripción:</strong> - Cambio de severidad: LOW ↔︎ MEDIUM ↔︎
-HIGH ↔︎ CRITICAL - Solo Commander/Admin pueden cambiar - Si CRITICAL:
-notifica inmediatamente a Commander y Manager - Evento SEVERITY_CHANGED
-publicado - AuditLog registra cambio + quién lo hizo</p>
-<p><strong>Criterios de Aceptación:</strong> - [ ] Cambio de severidad
-funciona - [ ] Solo autorizados pueden hacerlo - [ ] Si CRITICAL: se
-envían notificaciones inmediatas - [ ] AuditLog registra valores
-antiguos y nuevos - [ ] Evento se publica</p>
+<p><strong>Descripción:</strong></p>
+<ul>
+<li>Cambio de severidad: LOW ↔︎ MEDIUM ↔︎ HIGH ↔︎ CRITICAL</li>
+<li>Solo Commander/Admin pueden cambiar</li>
+<li>Si CRITICAL: notifica inmediatamente a Commander y Manager</li>
+<li>Evento SEVERITY_CHANGED publicado</li>
+<li>AuditLog registra cambio + quién lo hizo</li>
+</ul>
+<p><strong>Criterios de Aceptación:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Cambio de severidad
+funciona</label></li>
+<li><label><input type="checkbox" />Solo autorizados pueden
+hacerlo</label></li>
+<li><label><input type="checkbox" />Si CRITICAL: se envían
+notificaciones inmediatas</label></li>
+<li><label><input type="checkbox" />AuditLog registra valores antiguos y
+nuevos</label></li>
+<li><label><input type="checkbox" />Evento se publica</label></li>
+</ul>
 <hr />
 <h3 id="rf-08-agregar-comentarios">RF-08: Agregar Comentarios</h3>
 <p><strong>Como</strong> usuario autorizado, <strong>Quiero</strong>
 agregar comentarios a un incidente, <strong>Para</strong> colaborar y
 dejar registro de acciones.</p>
-<p><strong>Descripción:</strong> - Todos los usuarios autenticados
-pueden comentar - Campo de texto libre para comentario - Se registra
-automáticamente: autor, timestamp, texto - Comentarios aparecen en
-timeline inmediatamente - Evento COMMENT_ADDED publicado</p>
-<p><strong>Criterios de Aceptación:</strong> - [ ] Comentario se crea y
-aparece en timeline - [ ] Se registra autor y timestamp correctamente -
-[ ] Comentarios no pueden estar vacíos - [ ] Evento se publica - [ ]
-AuditLog registra el comentario</p>
+<p><strong>Descripción:</strong></p>
+<ul>
+<li>Todos los usuarios autenticados pueden comentar</li>
+<li>Campo de texto libre para comentario</li>
+<li>Se registra automáticamente: autor, timestamp, texto</li>
+<li>Comentarios aparecen en timeline inmediatamente</li>
+<li>Evento COMMENT_ADDED publicado</li>
+</ul>
+<p><strong>Criterios de Aceptación:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Comentario se crea y aparece en
+timeline</label></li>
+<li><label><input type="checkbox" />Se registra autor y timestamp
+correctamente</label></li>
+<li><label><input type="checkbox" />Comentarios no pueden estar
+vacíos</label></li>
+<li><label><input type="checkbox" />Evento se publica</label></li>
+<li><label><input type="checkbox" />AuditLog registra el
+comentario</label></li>
+</ul>
 <hr />
 <h3 id="rf-09-reglas-critical">RF-09: Reglas CRITICAL</h3>
 <p><strong>Como</strong> sistema, <strong>Quiero</strong> enforcer
 reglas especiales para CRITICAL, <strong>Para</strong> asegurar
 respuesta inmediata y resolución formal.</p>
-<p><strong>Descripción:</strong> - CRITICAL notifica inmediatamente a
-Commander y Manager al crearse - CRITICAL no puede cerrarse sin resumen
-de resolución - CRITICAL debe tener responsable asignado antes de
-IN_PROGRESS - Cambios de severidad en CRITICAL se auditan
-estrictamente</p>
-<p><strong>Criterios de Aceptación:</strong> - [ ] CRITICAL genera
-notificaciones inmediatas - [ ] Intento de cerrar sin resumen es
-rechazado - [ ] No puede entrar a IN_PROGRESS sin asignado - [ ]
-AuditLog muestra todos los cambios - [ ] Sistema valida reglas
-correctamente</p>
+<p><strong>Descripción:</strong></p>
+<ul>
+<li>CRITICAL notifica inmediatamente a Commander y Manager al
+crearse</li>
+<li>CRITICAL no puede cerrarse sin resumen de resolución</li>
+<li>CRITICAL debe tener responsable asignado antes de IN_PROGRESS</li>
+<li>Cambios de severidad en CRITICAL se auditan estrictamente</li>
+</ul>
+<p><strong>Criterios de Aceptación:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />CRITICAL genera notificaciones
+inmediatas</label></li>
+<li><label><input type="checkbox" />Intento de cerrar sin resumen es
+rechazado</label></li>
+<li><label><input type="checkbox" />No puede entrar a IN_PROGRESS sin
+asignado</label></li>
+<li><label><input type="checkbox" />AuditLog muestra todos los
+cambios</label></li>
+<li><label><input type="checkbox" />Sistema valida reglas
+correctamente</label></li>
+</ul>
 <hr />
 <h3 id="rf-10-timeline-y-auditoría">RF-10: Timeline y Auditoría</h3>
 <p><strong>Como</strong> Manager/Admin, <strong>Quiero</strong> ver el
 timeline completo y audit log, <strong>Para</strong> revisar qué pasó y
 cumplir regulaciones.</p>
-<p><strong>Descripción:</strong> - Timeline visual: comentarios,
-cambios, asignaciones - Audit Log con: quién, qué, cuándo, valores
-antiguos/nuevos - Cada acción registrada con metadata completa -
-Búsqueda en audit log por usuario/fecha/acción</p>
-<p><strong>Criterios de Aceptación:</strong> - [ ] Timeline muestra
-todas las acciones - [ ] Audit Log es completo y exacto - [ ] Datos de
-auditoría no pueden ser modificados - [ ] Búsqueda en audit log funciona
-- [ ] Managers ven solo auditoría, Admins ven todo</p>
+<p><strong>Descripción:</strong></p>
+<ul>
+<li>Timeline visual: comentarios, cambios, asignaciones</li>
+<li>Audit Log con: quién, qué, cuándo, valores antiguos/nuevos</li>
+<li>Cada acción registrada con metadata completa</li>
+<li>Búsqueda en audit log por usuario/fecha/acción</li>
+</ul>
+<p><strong>Criterios de Aceptación:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Timeline muestra todas las
+acciones</label></li>
+<li><label><input type="checkbox" />Audit Log es completo y
+exacto</label></li>
+<li><label><input type="checkbox" />Datos de auditoría no pueden ser
+modificados</label></li>
+<li><label><input type="checkbox" />Búsqueda en audit log
+funciona</label></li>
+<li><label><input type="checkbox" />Managers ven solo auditoría, Admins
+ven todo</label></li>
+</ul>
 <hr />
 <h3 id="rf-11-notificaciones-por-eventos">RF-11: Notificaciones por
 Eventos</h3>
 <p><strong>Como</strong> usuario, <strong>Quiero</strong> recibir
 notificaciones de eventos relevantes, <strong>Para</strong> estar
 siempre informado.</p>
-<p><strong>Descripción:</strong> - Eventos que notifican: -
-INCIDENT_CREATED (CRITICAL): notifica Commander, Manager -
-INCIDENT_ASSIGNED: notifica responsable asignado - SEVERITY_CHANGED:
-notifica Commander, Manager - INCIDENT_RESOLVED: notifica creador,
-Manager - COMMENT_ADDED (optional): notifica participantes -
-Notificaciones almacenadas en DB - Interfaz para ver notificaciones no
-leídas - Marcar como leída</p>
-<p><strong>Criterios de Aceptación:</strong> - [ ] Notificaciones se
-crean automáticamente - [ ] Se almacenan en base de datos - [ ] Usuario
-ve notificaciones en dashboard - [ ] Puede marcar como leída - [ ] Sin
-integración Slack/email en MVP</p>
+<p><strong>Descripción:</strong></p>
+<ul>
+<li>Eventos que notifican:
+<ul>
+<li>INCIDENT_CREATED (CRITICAL): notifica Commander, Manager</li>
+<li>INCIDENT_ASSIGNED: notifica responsable asignado</li>
+<li>SEVERITY_CHANGED: notifica Commander, Manager</li>
+<li>INCIDENT_RESOLVED: notifica creador, Manager</li>
+<li>COMMENT_ADDED (optional): notifica participantes</li>
+</ul></li>
+<li>Notificaciones almacenadas en DB</li>
+<li>Interfaz para ver notificaciones no leídas</li>
+<li>Marcar como leída</li>
+</ul>
+<p><strong>Criterios de Aceptación:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Notificaciones se crean
+automáticamente</label></li>
+<li><label><input type="checkbox" />Se almacenan en base de
+datos</label></li>
+<li><label><input type="checkbox" />Usuario ve notificaciones en
+dashboard</label></li>
+<li><label><input type="checkbox" />Puede marcar como leída</label></li>
+<li><label><input type="checkbox" />Sin integración Slack/email en
+MVP</label></li>
+</ul>
 <hr />
 <h3 id="rf-12-dashboards-por-rol">RF-12: Dashboards por Rol</h3>
 <p><strong>Como</strong> usuario con rol específico,
 <strong>Quiero</strong> ver un dashboard adaptado a mi rol,
 <strong>Para</strong> ver información relevante de un vistazo.</p>
-<p><strong>Descripción:</strong> - <strong>Operator</strong>: lista de
-incidentes, crear nuevo - <strong>Commander</strong>: incidentes
-asignados, pendientes, timeline detallado - <strong>Manager</strong>:
-métricas, distribución por severidad, incidentes CRITICAL sin resolver -
-<strong>Admin</strong>: todos los datos, gestión de usuarios, audit
-log</p>
-<p><strong>Criterios de Aceptación:</strong> - [ ] Cada rol ve su
-dashboard customizado - [ ] Datos son correctos y actualizados - [ ] No
-hay información que el rol no debería ver - [ ] Dashboard carga
-rápido</p>
+<p><strong>Descripción:</strong></p>
+<ul>
+<li><strong>Operator</strong>: lista de incidentes, crear nuevo</li>
+<li><strong>Commander</strong>: incidentes asignados, pendientes,
+timeline detallado</li>
+<li><strong>Manager</strong>: métricas, distribución por severidad,
+incidentes CRITICAL sin resolver</li>
+<li><strong>Admin</strong>: todos los datos, gestión de usuarios, audit
+log</li>
+</ul>
+<p><strong>Criterios de Aceptación:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Cada rol ve su dashboard
+customizado</label></li>
+<li><label><input type="checkbox" />Datos son correctos y
+actualizados</label></li>
+<li><label><input type="checkbox" />No hay información que el rol no
+debería ver</label></li>
+<li><label><input type="checkbox" />Dashboard carga rápido</label></li>
+</ul>
 <hr />
 <h2 id="requerimientos-no-funcionales">Requerimientos No
 Funcionales</h2>
@@ -810,17 +961,24 @@ Edge)</li>
 <hr />
 <h2 id="reglas-de-negocio">Reglas de Negocio</h2>
 <h3 id="rn-01-máquina-de-estados">RN-01: Máquina de Estados</h3>
-<p>Estados válidos: - <strong>OPEN</strong>: Inicial, recién reportado -
-<strong>TRIAGED</strong>: Evaluado por Commander -
-<strong>ASSIGNED</strong>: Asignado a responsable -
-<strong>IN_PROGRESS</strong>: Responsable trabajando -
-<strong>RESOLVED</strong>: Solución implementada -
-<strong>CLOSED</strong>: Formal closure completado -
-<strong>ESCALATED</strong>: Escalado (puede volver a ASSIGNED o
-IN_PROGRESS) - <strong>CANCELLED</strong>: False alarm o cancelado</p>
-<p>Transiciones bloqueadas: - CLOSED → cualquier otro estado (terminal)
-- Cualquier → IN_PROGRESS sin responsable asignado - RESOLVED → CLOSED
-sin resumen (CRITICAL)</p>
+<p>Estados válidos:</p>
+<ul>
+<li><strong>OPEN</strong>: Inicial, recién reportado</li>
+<li><strong>TRIAGED</strong>: Evaluado por Commander</li>
+<li><strong>ASSIGNED</strong>: Asignado a responsable</li>
+<li><strong>IN_PROGRESS</strong>: Responsable trabajando</li>
+<li><strong>RESOLVED</strong>: Solución implementada</li>
+<li><strong>CLOSED</strong>: Formal closure completado</li>
+<li><strong>ESCALATED</strong>: Escalado (puede volver a ASSIGNED o
+IN_PROGRESS)</li>
+<li><strong>CANCELLED</strong>: False alarm o cancelado</li>
+</ul>
+<p>Transiciones bloqueadas:</p>
+<ul>
+<li>CLOSED → cualquier otro estado (terminal)</li>
+<li>Cualquier → IN_PROGRESS sin responsable asignado</li>
+<li>RESOLVED → CLOSED sin resumen (CRITICAL)</li>
+</ul>
 <h3 id="rn-02-severidades">RN-02: Severidades</h3>
 <ul>
 <li><strong>LOW</strong>: Molestias menores, puede esperar</li>
@@ -919,9 +1077,14 @@ respuesta inmediata del Commander</li>
 </tbody>
 </table>
 <h3 id="rn-05-auditoría">RN-05: Auditoría</h3>
-<p>Cada operación registra: - Usuario que la realizó - Timestamp exacto
-- Acción realizada - Valores antiguos y nuevos (para cambios) - Metadata
-adicional relevante</p>
+<p>Cada operación registra:</p>
+<ul>
+<li>Usuario que la realizó</li>
+<li>Timestamp exacto</li>
+<li>Acción realizada</li>
+<li>Valores antiguos y nuevos (para cambios)</li>
+<li>Metadata adicional relevante</li>
+</ul>
 <p>Datos no pueden ser modificados o eliminados después de creados.</p>
 <h3 id="rn-06-timeline">RN-06: Timeline</h3>
 <ul>
@@ -932,11 +1095,14 @@ centralizado</li>
 <li>Información es la fuente de verdad para revisar qué pasó</li>
 </ul>
 <h3 id="rn-07-notificaciones">RN-07: Notificaciones</h3>
-<p>Eventos que generan notificación: - INCIDENT_CREATED (CRITICAL):
-Commander, Manager (inmediato) - INCIDENT_ASSIGNED: responsable asignado
-- SEVERITY_CHANGED (cualquier escala): Commander, Manager -
-INCIDENT_RESOLVED: creador, Manager - COMMENT_ADDED: participantes
-activos (opcional)</p>
+<p>Eventos que generan notificación:</p>
+<ul>
+<li>INCIDENT_CREATED (CRITICAL): Commander, Manager (inmediato)</li>
+<li>INCIDENT_ASSIGNED: responsable asignado</li>
+<li>SEVERITY_CHANGED (cualquier escala): Commander, Manager</li>
+<li>INCIDENT_RESOLVED: creador, Manager</li>
+<li>COMMENT_ADDED: participantes activos (opcional)</li>
+</ul>
 <p>En MVP: almacenadas en DB, sin Slack/Email/SMS.</p>
 <hr />
 <h2 id="matriz-de-trazabilidad">Matriz de Trazabilidad</h2>

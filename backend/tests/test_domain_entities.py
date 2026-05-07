@@ -2,8 +2,8 @@ from datetime import datetime
 
 import pytest
 
-from backend.app.domain.entities import Comment, Incident, Log, Notification
-from backend.app.domain.enums import Role, Severity, State
+from app.domain.entities import Comment, Incident, Log, Notification
+from app.domain.enums import Role, Severity, State
 
 
 @pytest.fixture
@@ -50,7 +50,7 @@ def sample_comment(sample_incident_id, sample_user_id):
 @pytest.fixture
 def sample_audit_log(sample_incident_id, sample_user_id):
     """Fixture for creating a sample audit log"""
-    from backend.app.domain.enums.log_level import LogLevel
+    from app.domain.enums.log_level import LogLevel
     return Log(
         id=1,
         log_level=LogLevel.INFO,
@@ -191,7 +191,7 @@ class TestAuditLogEntity:
 
     def test_audit_log_creation(self, sample_audit_log):
         """Test audit log can be created"""
-        from backend.app.domain.enums.log_level import LogLevel
+        from app.domain.enums.log_level import LogLevel
         assert sample_audit_log.message == "INCIDENT_CREATED"
         assert sample_audit_log.log_level == LogLevel.INFO
 

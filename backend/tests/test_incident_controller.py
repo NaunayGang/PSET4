@@ -3,12 +3,12 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from backend.app.application.events import InMemoryEventBus
-from backend.app.application.services.notification_service import (
+from app.application.events import InMemoryEventBus
+from app.application.services.notification_service import (
     InMemoryNotificationDispatcher,
     NotificationService,
 )
-from backend.app.application.usecases import (
+from app.application.usecases import (
     AddCommentUseCase,
     AssignIncidentUseCase,
     ChangeSeverityUseCase,
@@ -16,14 +16,14 @@ from backend.app.application.usecases import (
     TransitionStateUseCase,
     TriageUseCase,
 )
-from backend.app.domain.entities.comment import Comment
-from backend.app.domain.entities.incident import Incident
-from backend.app.domain.entities.log import Log
-from backend.app.domain.entities.user import User
-from backend.app.domain.enums.role import Role
-from backend.app.domain.enums.severity import Severity
-from backend.app.domain.enums.state import State
-from backend.app.interface.presenter import IncidentPresenter
+from app.domain.entities.comment import Comment
+from app.domain.entities.incident import Incident
+from app.domain.entities.log import Log
+from app.domain.entities.user import User
+from app.domain.enums.role import Role
+from app.domain.enums.severity import Severity
+from app.domain.enums.state import State
+from app.interface.presenter import IncidentPresenter
 
 # ---------- Fixtures ----------
 

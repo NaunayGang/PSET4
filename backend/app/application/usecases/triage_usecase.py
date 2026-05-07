@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from backend.app.application.events import IncidentEvent, IncidentEventType
-from backend.app.application.ports.triage_output_port import TriageOutputPort
-from backend.app.domain.entities import log
-from backend.app.domain.enums import Role, Severity
+from app.application.events import IncidentEvent, IncidentEventType
+from app.application.ports.triage_output_port import TriageOutputPort
+from app.domain.entities import log
+from app.domain.enums import Role, Severity
 
 
 class TriageUseCase:

@@ -661,9 +661,15 @@ data-cites="yuuhikaze">@yuuhikaze</span></strong> - Documentación, UML,
 Tests (PlantUML, pytest)</li>
 </ul>
 <h2 id="descripción-del-problema">Descripción del Problema</h2>
-<p>Durante un incidente no queda claro: - Quién está a cargo - Qué
-severidad tiene - Qué acciones se tomaron - Quién fue notificado - Si el
-incidente está resuelto - Qué se aprendió al final</p>
+<p>Durante un incidente no queda claro:</p>
+<ul>
+<li>Quién está a cargo</li>
+<li>Qué severidad tiene</li>
+<li>Qué acciones se tomaron</li>
+<li>Quién fue notificado</li>
+<li>Si el incidente está resuelto</li>
+<li>Qué se aprendió al final</li>
+</ul>
 <h2 id="stack-técnico">Stack Técnico</h2>
 <table>
 <thead>
@@ -715,16 +721,16 @@ capas:</p>
 └─────────────────────┬───────────────────┘
                       │
 ┌─────────────────────┴───────────────────┐
-│              API Layer (FastAPI)         │
+│              API Layer (FastAPI)        │
 ├─────────────────────────────────────────┤
-│          Application Layer               │
-│     (Use Cases, Service Orchestration)   │
+│          Application Layer              │
+│     (Use Cases, Service Orchestration)  │
 ├─────────────────────────────────────────┤
-│            Domain Layer                  │
-│  (Entities, Value Objects, Rules)        │
+│            Domain Layer                 │
+│  (Entities, Value Objects, Rules)       │
 ├─────────────────────────────────────────┤
-│         Infrastructure Layer             │
-│    (DB, Repositories, Event Bus)         │
+│         Infrastructure Layer            │
+│    (DB, Repositories, Event Bus)        │
 └─────────────────────────────────────────┘</code></pre>
 <h2 id="descripción-del-flujo">Descripción del Flujo</h2>
 <h3 id="estados-principales">Estados Principales</h3>
@@ -807,57 +813,65 @@ asignado</li>
 <h3 id="lista-principal-de-incidentes">Lista Principal de
 Incidentes</h3>
 <figure>
-<img src="docs-src/resources/images/incident-list-main-page.jpeg"
+<img src="./resources/images/incident-list-main-page.jpeg"
 alt="Incident List" />
 <figcaption aria-hidden="true">Incident List</figcaption>
 </figure>
 <h3 id="formulario-de-creación">Formulario de Creación</h3>
 <figure>
-<img src="docs-src/resources/images/create-new-incident-form.jpeg"
+<img src="./resources/images/create-new-incident-form.jpeg"
 alt="Create Incident" />
 <figcaption aria-hidden="true">Create Incident</figcaption>
 </figure>
 <h3 id="detalle-e-historial">Detalle e Historial</h3>
 <figure>
-<img src="docs-src/resources/images/incident-detail-and-timeline.jpeg"
+<img src="./resources/images/incident-detail-and-timeline.jpeg"
 alt="Incident Detail" />
 <figcaption aria-hidden="true">Incident Detail</figcaption>
 </figure>
 <h3 id="filtros-y-paginación">Filtros y Paginación</h3>
 <figure>
 <img
-src="docs-src/resources/images/incident-list-with-filters-and-pagination.jpeg"
+src="./resources/images/incident-list-with-filters-and-pagination.jpeg"
 alt="Incident List Filters" />
 <figcaption aria-hidden="true">Incident List Filters</figcaption>
 </figure>
 <h3 id="dashboard-de-manager">Dashboard de Manager</h3>
 <figure>
-<img src="docs-src/resources/images/manager-dashboard-reduced-view.jpeg"
+<img src="./resources/images/manager-dashboard-reduced-view.jpeg"
 alt="Manager Dashboard" />
 <figcaption aria-hidden="true">Manager Dashboard</figcaption>
 </figure>
 <h3 id="dashboard-de-admin">Dashboard de Admin</h3>
 <figure>
-<img src="docs-src/resources/images/admin-dashboard.jpeg"
+<img src="./resources/images/admin-dashboard.jpeg"
 alt="Admin Dashboard" />
 <figcaption aria-hidden="true">Admin Dashboard</figcaption>
 </figure>
 <h2 id="cómo-correr-localmente">Cómo Correr Localmente</h2>
 <h3 id="requisitos-previos">Requisitos Previos</h3>
-<p><strong>Nix (para reproducibilidad):</strong> - Linux/macOS/Windows
-(WSL2) - Instala Nix desde: https://nixos.org/download/</p>
-<p>Si no tienes Nix, necesitas: - Python 3.11+ - Docker &amp; Docker
-Compose - Node.js 18+ (opcional, para frontend tools)</p>
+<p><strong>Nix (para reproducibilidad):</strong></p>
+<ul>
+<li>Linux/macOS/Windows (WSL2)</li>
+<li>Instala Nix desde: <a href="https://nixos.org/download/"
+class="uri">https://nixos.org/download/</a></li>
+</ul>
+<p>Si no tienes Nix, necesitas:</p>
+<ul>
+<li>Python 3.11+</li>
+<li>Docker &amp; Docker Compose</li>
+<li>Node.js 18+ (opcional, para frontend tools)</li>
+</ul>
 <h3 id="con-docker-compose-recomendado">Con Docker Compose
 (Recomendado)</h3>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clonar repositorio</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/NaunayGang/PSET4.git</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> PSET4</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Levantar stack completo</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Levantar stack completo (prod)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">--profile</span> prod up <span class="at">-d</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Levantar stack completo (dev)</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">--profile</span> dev up <span class="at">-d</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Backend: http://localhost:8000</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Frontend: http://localhost:8501</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># PostgreSQL: localhost:5432</span></span></code></pre></div>
@@ -865,45 +879,48 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Entrar al entorno Nix</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Backend</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> backend</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">DATABASE_URL</span><span class="op">=</span><span class="st">&quot;postgresql://user:password@localhost:5432/incidentflow&quot;</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uvicorn</span> app.api.main:app <span class="at">--reload</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Frontend (en otra terminal)</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> frontend</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="ex">streamlit</span> run app/main.py</span></code></pre></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Backend</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> backend</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">DATABASE_URL</span><span class="op">=</span><span class="st">&quot;postgresql://user:password@localhost:5432/incidentflow&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ex">uvicorn</span> app.api.main:app <span class="at">--reload</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Frontend (en otra terminal)</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> frontend</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="ex">streamlit</span> run app/main.py</span></code></pre></div>
 <h2 id="cómo-correr-docker-compose">Cómo Correr Docker Compose</h2>
 <div class="sourceCode" id="cb5"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Levantar servicios</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver logs</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> logs <span class="at">-f</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Apagar servicios</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> down</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruir imágenes</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span> <span class="at">--build</span></span></code></pre></div>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver logs</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> logs <span class="at">-f</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Apagar servicios</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> down</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruir imágenes</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span> <span class="at">--build</span></span></code></pre></div>
 <h2 id="flujo-de-github-actions">Flujo de GitHub Actions</h2>
 <h3 id="en-branch-dev">En branch <code>dev</code></h3>
-<p>Cuando hay push a <code>dev</code>: 1. Instalar dependencias 2. Lint
-(flake8/ruff) 3. Tests (pytest) 4. Build Docker backend 5. Push a Docker
-Hub con tag <code>dev</code> 6. Deploy automático a Render dev
-environment</p>
+<p>Cuando hay push a <code>dev</code>:</p>
+<ol type="1">
+<li>Instalar dependencias</li>
+<li>Lint (flake8/ruff)</li>
+<li>Tests (pytest)</li>
+<li>Build Docker backend</li>
+<li>Push a Docker Hub con tag <code>dev</code></li>
+<li>Deploy automático a Render dev environment</li>
+</ol>
 <h3 id="en-branch-main">En branch <code>main</code></h3>
-<p>Cuando hay push a <code>main</code> (solo mediante merge de PR): 1.
-Todas las validaciones de <code>dev</code> 2. Build Docker con tag
-<code>latest</code> y <code>prod</code> 3. Push a Docker Hub 4. Deploy
-automático a Render prod environment</p>
+<p>Cuando hay push a <code>main</code> (solo mediante merge de PR):</p>
+<ol type="1">
+<li>Todas las validaciones de <code>dev</code></li>
+<li>Build Docker con tag <code>latest</code> y <code>prod</code></li>
+<li>Push a Docker Hub</li>
+<li>Deploy automático a Render prod environment</li>
+</ol>
 <p><strong>Nota</strong>: No se acepta deploy directo a producción desde
 branches feature.</p>
 <h2 id="documentación">Documentación</h2>
-<p>La documentación está ubicada en <code>/</code> y se compila a
-HTML.</p>
+<p>La documentación está ubicada en <code>./​docs-src/</code> y se
+compila a HTML.</p>
 <h3 id="compilar-documentación">Compilar Documentación</h3>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop path:. <span class="at">--command</span> tern-core</span></code></pre></div>
@@ -913,7 +930,8 @@ Localmente</h3>
 <p>Sirve la documentación compilada (HTML) con:</p>
 <div class="sourceCode" id="cb7"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop <span class="st">&#39;path:.#resources&#39;</span> <span class="at">--command</span> miniserve <span class="at">--color-scheme</span> monokai docs</span></code></pre></div>
-<p>Luego abre tu navegador en: http://localhost:8080</p>
+<p>Luego abre tu navegador en: <a href="http://localhost:8080"
+class="uri">http://localhost:8080</a></p>
 <h3 id="secciones-de-documentación">Secciones de Documentación</h3>
 <ul>
 <li><strong>discovery.html</strong>: Descubrimiento de requerimientos,
@@ -929,49 +947,64 @@ a partir de docstrings)</li>
 <p>Nix es un gestor de paquetes declarativo que asegura
 reproducibilidad.</p>
 <h3 id="obtener-nix">Obtener Nix</h3>
-<p>Nix está disponible para todas las plataformas. Visita:
-https://nixos.org/download/</p>
-<p>Soportado en: - <strong>Linux</strong>: NixOS, Ubuntu, Fedora,
-Debian, Arch, y más - <strong>macOS</strong>: Intel y Apple Silicon -
-<strong>Windows</strong>: WSL2 (con Nix instalado en el subsistema)</p>
+<p>Nix está disponible para todas las plataformas. Visita: <a
+href="https://nixos.org/download/"
+class="uri">https://nixos.org/download/</a></p>
+<p>Soportado en:</p>
+<ul>
+<li><strong>Linux</strong>: NixOS, Ubuntu, Fedora, Debian, Arch, y
+más</li>
+<li><strong>macOS</strong>: Intel y Apple Silicon</li>
+<li><strong>Windows</strong>: WSL2 (con Nix instalado en el
+subsistema)</li>
+</ul>
 <p>Sigue las instrucciones del sitio oficial para tu plataforma
 específica.</p>
 <h2 id="github-project-issues">GitHub Project &amp; Issues</h2>
-<p>El proyecto usa GitHub Project con columnas: -
-<strong>Backlog</strong>: Issues sin asignar o no priorizadas -
-<strong>Todo</strong>: Listas de trabajos por hacer - <strong>In
-Progress</strong>: Trabajo actual - <strong>In Review</strong>: En
-revisión (PR abierta) - <strong>Done</strong>: Completado</p>
-<p>Cada issue es una historia de usuario en formato: &gt; Como [rol],
-quiero [acción], para [beneficio].</p>
+<p>El proyecto usa GitHub Project con columnas:</p>
+<ul>
+<li><strong>Backlog</strong>: Issues sin asignar o no priorizadas</li>
+<li><strong>Todo</strong>: Listas de trabajos por hacer</li>
+<li><strong>In Progress</strong>: Trabajo actual</li>
+<li><strong>In Review</strong>: En revisión (PR abierta)</li>
+<li><strong>Done</strong>: Completado</li>
+</ul>
+<p>Cada issue es una historia de usuario en formato:</p>
+<blockquote>
+<p>Como [rol], quiero [acción], para [beneficio].</p>
+</blockquote>
 <h2 id="environment-setup">Environment Setup</h2>
 <ol type="1">
-<li>Copy the template and create your local env file:</li>
-</ol>
+<li><p>Copy the template and create your local env file:</p>
 <div class="sourceCode" id="cb8"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env</span></code></pre></div>
-<ol start="2" type="1">
-<li>Edit <code>.env</code> and set your local values. At minimum:</li>
-</ol>
-<pre class="env"><code>DATABASE_URL=postgresql://app_user:YOUR_PASSWORD@localhost:5432/incident_flow_db</code></pre>
-<ol start="3" type="1">
-<li>Run Alembic commands with this project’s
-<code>DATABASE_URL</code>:</li>
-</ol>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env</span></code></pre></div></li>
+<li><p>Edit <code>.env</code> and set your local values. At minimum:</p>
+<pre class="env"><code>DATABASE_URL=postgresql://app_user:YOUR_PASSWORD@localhost:5432/incident_flow_db</code></pre></li>
+<li><p>Run Alembic commands with this project’s
+<code>DATABASE_URL</code>:</p>
 <div class="sourceCode" id="cb10"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">DATABASE_URL</span><span class="op">=</span>postgresql://app_user:YOUR_PASSWORD@localhost:5432/incident_flow_db</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">alembic</span> current</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">alembic</span> heads</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">alembic</span> upgrade head</span></code></pre></div>
-<p>Notes: - Do not commit <code>.env</code>. - Commit
-<code>.env.example</code> only. - Keep one dedicated database per
-project to avoid migration conflicts.</p>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">alembic</span> upgrade head</span></code></pre></div></li>
+</ol>
+<p>Notes:</p>
+<ul>
+<li>Do not commit <code>.env</code>.</li>
+<li>Commit <code>.env.example</code> only.</li>
+<li>Keep one dedicated database per project to avoid migration
+conflicts.</li>
+</ul>
 <h2 id="links-a-render">Links a Render</h2>
 <ul>
-<li><strong>Dev</strong>: https://incidentflow-dev.onrender.com
-(auto-deploya desde <code>dev</code>)</li>
-<li><strong>Prod</strong>: https://incidentflow-prod.onrender.com
-(auto-deploya desde <code>main</code>)</li>
+<li><strong>Dev</strong>: <a
+href="https://incidentflow-dev.onrender.com"
+class="uri">https://incidentflow-dev.onrender.com</a> (auto-deploya
+desde <code>dev</code>)</li>
+<li><strong>Prod</strong>: <a
+href="https://incidentflow-prod.onrender.com"
+class="uri">https://incidentflow-prod.onrender.com</a> (auto-deploya
+desde <code>main</code>)</li>
 </ul>
 <h2 id="contributing">Contributing</h2>
 <ol type="1">

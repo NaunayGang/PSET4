@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from backend.app.domain.entities import incident
+from app.domain.entities import incident
 
 
 class IncidentRepository(ABC):

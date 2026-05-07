@@ -14,40 +14,35 @@ IncidentFlow exposes a REST API built with FastAPI for all operations. This docu
 curl -H "Authorization: Bearer <token>" http://localhost:8000/incidents
 ```
 
----
-
 ## Severity Levels
 
 Valid severity values (case-sensitive, title-case):
-- `Low` - Minor issues, can wait
-- `Medium` - Affects some users, should be resolved today
-- `High` - Affects many users, needs immediate attention
-- `Critical` - Service down, requires Commander immediate attention
 
----
+-   `Low` - Minor issues, can wait
+-   `Medium` - Affects some users, should be resolved today
+-   `High` - Affects many users, needs immediate attention
+-   `Critical` - Service down, requires Commander immediate attention
 
 ## Incident States
 
 Valid states for transition (case-sensitive, UPPERCASE):
-- `OPEN` - Initial state when created
-- `IN_PROGRESS` - Work in progress
-- `RESOLVED` - Solution implemented
-- `CLOSED` - Formally closed
-- `CANCELLED` - Cancelled/false alarm
-- `ESCALATED` - Escalated to higher level
 
----
+-   `OPEN` - Initial state when created
+-   `IN_PROGRESS` - Work in progress
+-   `RESOLVED` - Solution implemented
+-   `CLOSED` - Formally closed
+-   `CANCELLED` - Cancelled/false alarm
+-   `ESCALATED` - Escalated to higher level
 
 ## Roles
 
 Valid role names in the system (case-sensitive):
-- `Admin` - Full access
-- `Operator` - Create incidents, add comments
-- `Incident_commander` - Coordinate incidents, assign, change states
-- `Technical_responder` - Add comments, do technical work
-- `Incident_manager` - View and change severity
 
----
+-   `Admin` - Full access
+-   `Operator` - Create incidents, add comments
+-   `Incident_commander` - Coordinate incidents, assign, change states
+-   `Technical_responder` - Add comments, do technical work
+-   `Incident_manager` - View and change severity
 
 ## Incidents
 
@@ -58,12 +53,14 @@ Valid role names in the system (case-sensitive):
 Create a new incident. Requires `Admin` or `Operator` role.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
 **Request Body:**
+
 ```json
 {
   "title": "Payment service down",
@@ -73,6 +70,7 @@ Content-Type: application/json
 ```
 
 **Response:** `200 OK`
+
 ```json
 {
   "id": 1,
@@ -88,6 +86,7 @@ Content-Type: application/json
 ```
 
 **Error Response:** `400 Bad Request`
+
 ```json
 {
   "detail": "Invalid severity level: CRITICAL"
@@ -95,13 +94,12 @@ Content-Type: application/json
 ```
 
 **Error Response:** `403 Forbidden`
+
 ```json
 {
   "detail": "Not enough permissions"
 }
 ```
-
----
 
 ### Triage Incident
 
@@ -110,15 +108,18 @@ Content-Type: application/json
 Evaluate and triage an incident (change its severity). Requires `Admin` or `Incident_commander` role.
 
 **Path Parameters:**
-- `incident_id` (int) - The incident ID
+
+-   `incident_id` (int) - The incident ID
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
 **Request Body:**
+
 ```json
 {
   "new_severity": "Critical"
@@ -126,6 +127,7 @@ Content-Type: application/json
 ```
 
 **Response:** `200 OK`
+
 ```json
 {
   "id": 1,
@@ -136,13 +138,12 @@ Content-Type: application/json
 ```
 
 **Error Response:** `404 Not Found`
+
 ```json
 {
   "detail": "Incident with ID 999 not found."
 }
 ```
-
----
 
 ### Transition State
 
@@ -151,15 +152,18 @@ Content-Type: application/json
 Change incident state. Requires `Admin` or `Incident_commander` role.
 
 **Path Parameters:**
-- `incident_id` (int)
+
+-   `incident_id` (int)
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
 **Request Body:**
+
 ```json
 {
   "new_state": "IN_PROGRESS"
@@ -167,6 +171,7 @@ Content-Type: application/json
 ```
 
 **Valid State Transitions:**
+
 ```
 OPEN → IN_PROGRESS
 OPEN → CANCELLED
@@ -179,6 +184,7 @@ Any state → ESCALATED
 ```
 
 **Response:** `200 OK`
+
 ```json
 {
   "id": 1,
@@ -188,6 +194,7 @@ Any state → ESCALATED
 ```
 
 **Error Response:** `400 Bad Request` (Invalid transition)
+
 ```json
 {
   "detail": "Invalid state transition or incident state"
@@ -195,13 +202,12 @@ Any state → ESCALATED
 ```
 
 **Error Response:** `403 Forbidden`
+
 ```json
 {
   "detail": "Not enough permissions"
 }
 ```
-
----
 
 ### Assign Incident
 
@@ -210,15 +216,18 @@ Any state → ESCALATED
 Assign incident to a technical responder. Requires `Admin` or `Incident_commander` role.
 
 **Path Parameters:**
-- `incident_id` (int)
+
+-   `incident_id` (int)
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
 **Request Body:**
+
 ```json
 {
   "assigned_user_id": 5
@@ -226,6 +235,7 @@ Content-Type: application/json
 ```
 
 **Response:** `200 OK`
+
 ```json
 {
   "id": 1,
@@ -236,13 +246,12 @@ Content-Type: application/json
 ```
 
 **Error Response:** `400 Bad Request`
+
 ```json
 {
   "detail": "User not found or invalid assignment"
 }
 ```
-
----
 
 ### Change Severity
 
@@ -251,15 +260,18 @@ Content-Type: application/json
 Change incident severity. Requires `Admin` or `Incident_manager` role.
 
 **Path Parameters:**
-- `incident_id` (int)
+
+-   `incident_id` (int)
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
 **Request Body:**
+
 ```json
 {
   "new_severity": "Critical"
@@ -267,6 +279,7 @@ Content-Type: application/json
 ```
 
 **Response:** `200 OK`
+
 ```json
 {
   "id": 1,
@@ -274,8 +287,6 @@ Content-Type: application/json
   "updated_at": "2026-05-03T10:40:00Z"
 }
 ```
-
----
 
 ## Comments
 
@@ -286,15 +297,18 @@ Content-Type: application/json
 Add a comment to incident timeline. Requires `Admin`, `Operator`, or `Technical_responder` role.
 
 **Path Parameters:**
-- `incident_id` (int)
+
+-   `incident_id` (int)
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
 **Request Body:**
+
 ```json
 {
   "content": "Investigation underway. Found issue in payment-gateway service logs."
@@ -302,6 +316,7 @@ Content-Type: application/json
 ```
 
 **Response:** `200 OK`
+
 ```json
 {
   "comment_id": 42
@@ -309,6 +324,7 @@ Content-Type: application/json
 ```
 
 **Error Response:** `400 Bad Request`
+
 ```json
 {
   "detail": "Comment content is required"
@@ -316,13 +332,12 @@ Content-Type: application/json
 ```
 
 **Error Response:** `404 Not Found`
+
 ```json
 {
   "detail": "Incident with ID 999 not found."
 }
 ```
-
----
 
 ## Status Codes
 
@@ -334,8 +349,6 @@ Content-Type: application/json
 | 404 | Not Found - Resource doesn't exist |
 | 500 | Internal Server Error |
 
----
-
 ## Error Format
 
 Errors follow this format:
@@ -345,8 +358,6 @@ Errors follow this format:
   "detail": "Human-readable error message"
 }
 ```
-
----
 
 ## Role Permission Matrix
 
@@ -358,8 +369,6 @@ Errors follow this format:
 | Assign | ✓ | ✗ | ✓ | ✗ | ✗ |
 | Change Severity | ✓ | ✗ | ✗ | ✗ | ✓ |
 | Add Comment | ✓ | ✓ | ✓ | ✓ | ✗ |
-
----
 
 ## Examples
 
@@ -417,14 +426,12 @@ curl -X POST http://localhost:8000/incidents/$INCIDENT_ID/transition-state \
   -d '{"new_state": "CLOSED"}'
 ```
 
----
-
 ## Development Notes
 
-- All incident IDs are integers (not UUIDs)
-- All timestamps are in UTC (ISO 8601 format)
-- Severity values are title-case: `Low`, `Medium`, `High`, `Critical`
-- State values are UPPERCASE: `OPEN`, `IN_PROGRESS`, `RESOLVED`, `CLOSED`, `CANCELLED`, `ESCALATED`
-- Role names use underscores: `Incident_commander`, `Technical_responder`, `Incident_manager`
-- User IDs are integers
-- All POST endpoints that modify return the updated incident or object
+-   All incident IDs are integers (not UUIDs)
+-   All timestamps are in UTC (ISO 8601 format)
+-   Severity values are title-case: `Low`, `Medium`, `High`, `Critical`
+-   State values are UPPERCASE: `OPEN`, `IN_PROGRESS`, `RESOLVED`, `CLOSED`, `CANCELLED`, `ESCALATED`
+-   Role names use underscores: `Incident_commander`, `Technical_responder`, `Incident_manager`
+-   User IDs are integers
+-   All POST endpoints that modify return the updated incident or object

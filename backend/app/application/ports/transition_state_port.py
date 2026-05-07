@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from backend.app.domain.entities import Incident
+from app.domain.entities import Incident
 
 
 class TransitionStatePort(ABC):

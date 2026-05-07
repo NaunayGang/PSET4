@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from backend.app.domain.entities import Notification
+from app.domain.entities import Notification
 
 
 class NotificationRepository(ABC):

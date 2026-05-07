@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import Callable
 
-from backend.app.application.events.incident_event import IncidentEvent, IncidentEventType
+from app.application.events.incident_event import IncidentEvent, IncidentEventType
 
 EventHandler = Callable[[IncidentEvent], None]
 

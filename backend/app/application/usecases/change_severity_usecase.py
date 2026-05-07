@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from backend.app.application.events import IncidentEvent, IncidentEventType
-from backend.app.application.ports.change_severity_port import ChangeSeverityPort
-from backend.app.domain.entities import Log
-from backend.app.domain.enums import LogLevel, Role, Severity
+from app.application.events import IncidentEvent, IncidentEventType
+from app.application.ports.change_severity_port import ChangeSeverityPort
+from app.domain.entities import Log
+from app.domain.enums import LogLevel, Role, Severity
 
 
 class ChangeSeverityUseCase:

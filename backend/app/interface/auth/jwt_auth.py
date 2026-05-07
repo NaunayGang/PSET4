@@ -2,8 +2,8 @@ import jwt
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from backend.app.domain.entities import User
-from backend.app.domain.enums import role
+from app.domain.entities import User
+from app.domain.enums import role
 
 security = HTTPBearer()
 

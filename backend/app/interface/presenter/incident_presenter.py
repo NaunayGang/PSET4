@@ -1,12 +1,12 @@
-from backend.app.application.ports.add_comment_port import AddCommentPort
-from backend.app.application.ports.assign_incident_port import AssignIncidentPort
-from backend.app.application.ports.change_severity_port import ChangeSeverityPort
-from backend.app.application.ports.create_incident_port import CreateIncidentPort
-from backend.app.application.ports.transition_state_port import TransitionStatePort
-from backend.app.application.ports.triage_output_port import TriageOutputPort
-from backend.app.domain.entities.comment import Comment
-from backend.app.domain.entities.incident import Incident
-from backend.app.interface.dtos import IncidentDTO
+from app.application.ports.add_comment_port import AddCommentPort
+from app.application.ports.assign_incident_port import AssignIncidentPort
+from app.application.ports.change_severity_port import ChangeSeverityPort
+from app.application.ports.create_incident_port import CreateIncidentPort
+from app.application.ports.transition_state_port import TransitionStatePort
+from app.application.ports.triage_output_port import TriageOutputPort
+from app.domain.entities.comment import Comment
+from app.domain.entities.incident import Incident
+from app.interface.dtos import IncidentDTO
 
 
 class IncidentPresenter(

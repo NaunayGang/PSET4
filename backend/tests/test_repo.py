@@ -4,10 +4,10 @@ from unittest.mock import MagicMock, patch
 import pytest
 from sqlalchemy.exc import SQLAlchemyError
 
-from backend.app.domain.entities.comment import Comment
-from backend.app.domain.entities.incident import Incident, Severity, State
-from backend.app.domain.entities.log import Log, LogLevel
-from backend.app.infrastructure.database.repositories import (
+from app.domain.entities.comment import Comment
+from app.domain.entities.incident import Incident, Severity, State
+from app.domain.entities.log import Log, LogLevel
+from app.infrastructure.database.repositories import (
     SQLAlchemyCommentRepository,
     SQLAlchemyIncidentRepository,
     SQLAlchemyLogRepository,

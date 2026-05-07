@@ -5,8 +5,8 @@ from sqlalchemy import DateTime, Integer, String, func
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.app.domain.enums.role import Role
-from backend.app.infrastructure.database.base import Base
+from app.domain.enums.role import Role
+from app.infrastructure.database.base import Base
 
 if TYPE_CHECKING:
     from .comment import Comment

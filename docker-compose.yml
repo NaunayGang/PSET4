@@ -4,7 +4,6 @@ services:
     profiles:
       - dev
       - prod
-    image: postgres:15-alpine
     environment:
       POSTGRES_USER: incidentflow
       POSTGRES_PASSWORD: incidentflow

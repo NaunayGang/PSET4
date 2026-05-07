@@ -1,19 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, field_validator
 
-from backend.app.application.events import InMemoryEventBus
-from backend.app.application.ports.repositories import (
+from app.application.events import InMemoryEventBus
+from app.application.ports.repositories import (
     CommentRepository,
     IncidentRepository,
     LogRepository,
     NotificationRepository,
     UserRepository,
 )
-from backend.app.application.services.notification_service import (
+from app.application.services.notification_service import (
     InMemoryNotificationDispatcher,
     NotificationService,
 )
-from backend.app.application.usecases import (
+from app.application.usecases import (
     AddCommentUseCase,
     AssignIncidentUseCase,
     ChangeSeverityUseCase,
@@ -21,13 +21,13 @@ from backend.app.application.usecases import (
     TransitionStateUseCase,
     TriageUseCase,
 )
-from backend.app.domain.entities import User
-from backend.app.domain.enums.severity import Severity
-from backend.app.domain.enums.state import State
-from backend.app.interface.auth.jwt_auth import get_current_user
-from backend.app.interface.auth.role_decorator import role_required
-from backend.app.interface.dtos.incident_dto import IncidentDTO
-from backend.app.interface.presenter import IncidentPresenter
+from app.domain.entities import User
+from app.domain.enums.severity import Severity
+from app.domain.enums.state import State
+from app.interface.auth.jwt_auth import get_current_user
+from app.interface.auth.role_decorator import role_required
+from app.interface.dtos.incident_dto import IncidentDTO
+from app.interface.presenter import IncidentPresenter
 
 router = APIRouter()
 

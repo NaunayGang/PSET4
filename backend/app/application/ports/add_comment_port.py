@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from backend.app.domain.entities import Comment
+from app.domain.entities import Comment
 
 
 class AddCommentPort(ABC):

@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from backend.app.application.events.incident_event import IncidentEvent, IncidentEventType
-from backend.app.domain.entities import Notification
-from backend.app.domain.enums import Role, Severity
+from app.application.events.incident_event import IncidentEvent, IncidentEventType
+from app.domain.entities import Notification
+from app.domain.enums import Role, Severity
 
 
 class InMemoryNotificationDispatcher:

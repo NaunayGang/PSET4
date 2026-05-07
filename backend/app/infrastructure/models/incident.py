@@ -5,9 +5,9 @@ from sqlalchemy import DateTime, ForeignKey, Integer, String, func
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.app.domain.enums.severity import Severity
-from backend.app.domain.enums.state import State
-from backend.app.infrastructure.database.base import Base
+from app.domain.enums.severity import Severity
+from app.domain.enums.state import State
+from app.infrastructure.database.base import Base
 
 if TYPE_CHECKING:
     from .comment import Comment
